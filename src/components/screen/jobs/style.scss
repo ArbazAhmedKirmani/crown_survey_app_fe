@@ -1,0 +1,17 @@
+.new-job-cont {
+  display: flex;
+  justify-content: flex-start;
+  min-height: 80vh;
+
+  .first-list,
+  .second-list,
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+  }
+
+  .content-section {
+    flex: 1;
+  }
+}

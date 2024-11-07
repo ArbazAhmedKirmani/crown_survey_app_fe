@@ -1,0 +1,34 @@
+@use "../../assets/styles/variables.scss" as *;
+
+.custom-form-item {
+  margin-bottom: 15px;
+
+  .ant-form-item-label {
+    font-family: "Inter";
+    padding: 0 !important;
+  }
+  .ant-form-item-explain-error {
+    text-align: left;
+  }
+}
+
+.custom-button {
+  border: $colorPrimary;
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+    border: $colorPrimary !important;
+  }
+}
+
+.layout-loader {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 3rem;
+}

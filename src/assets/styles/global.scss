@@ -1,0 +1,10 @@
+// @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@use "./variables.scss" as *;
+
+// @import "../../index.scss";
+@forward "../../components/layout/auth-layout/style.scss";
+@forward "../../components/layout/dashboard-layout/style.scss";
+@forward "../../components/screen/authentication/login/style.scss";
+@forward "../../components/screen/authentication/signup/style.scss";
+@forward "../../components/theme/style.scss";
+@forward "../../components/screen/jobs/style.scss";

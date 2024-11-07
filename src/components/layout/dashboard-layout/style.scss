@@ -1,0 +1,25 @@
+@use "../../../assets/styles/variables.scss" as *;
+
+.main-layout {
+  height: 100vh;
+  width: 100%;
+
+  .layout-header {
+    background-color: $colorPrimary;
+  }
+
+  .layout-sidebar {
+    padding: 0;
+    height: Calc(100vh - 64px);
+  }
+
+  .outlet-cont {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+}
