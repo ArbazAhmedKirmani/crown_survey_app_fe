@@ -1,16 +1,16 @@
 import { Breadcrumb } from "antd";
 import { memo, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { BreadcrumbNameMap } from "../../../utils/breadcrumb-name-map";
 import { HomeOutlined } from "@ant-design/icons";
+import BreadcrumbNameMap from "../../../utils/constants/breadcrumb-name-map.constant";
 
-export interface IBreadcrumbNameMap {
+export interface ICSBreadcrumbNameMap {
   path: string;
   title: string;
 }
 
-const AppBreadcrumb = () => {
-  const [pathList, setPathList] = useState<IBreadcrumbNameMap[]>([]);
+const CSAppBreadcrumb = () => {
+  const [pathList, setPathList] = useState<ICSBreadcrumbNameMap[]>([]);
 
   const location = useLocation();
 
@@ -33,6 +33,7 @@ const AppBreadcrumb = () => {
 
   return (
     <Breadcrumb
+      className="cs-breadcrumb"
       itemRender={(route) => {
         return <Link to={route.path!}>{route.title}</Link>;
       }}
@@ -47,4 +48,4 @@ const AppBreadcrumb = () => {
   );
 };
 
-export default memo(AppBreadcrumb);
+export default memo(CSAppBreadcrumb);

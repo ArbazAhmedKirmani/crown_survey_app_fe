@@ -7,19 +7,28 @@ import {
   PieChartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { getItem, MenuItem } from "../../../utils/helpers";
+import { getItem, MenuItem } from "../../../utils/helper/general.helper";
+import useDashboardLayout from "./useDashboardLayout";
 
 const LayoutSidebar = () => {
+  const { handleMenuChange, findSelectedMenu } = useDashboardLayout();
+
   const items: MenuItem[] = [
-    getItem("Dashboard", "1", <PieChartOutlined />),
-    getItem("Jobs", "2", <DesktopOutlined />),
-    getItem("Reports", "3", <UserOutlined />),
-    getItem("Templates", "4", <FileOutlined />),
+    getItem("Dashboard", "/", <PieChartOutlined />),
+    getItem("Jobs", "/jobs", <DesktopOutlined />),
+    getItem("Forms", "/forms", <DesktopOutlined />),
+    getItem("Reports", "/reports", <UserOutlined />),
+    getItem("Templates", "/templates", <FileOutlined />),
   ];
 
   return (
     <Sider breakpoint="lg" className="layout-sidebar" theme="light">
-      <Menu defaultSelectedKeys={["1"]} mode="inline" items={items} />
+      <Menu
+        onSelect={handleMenuChange}
+        defaultSelectedKeys={findSelectedMenu()}
+        mode="inline"
+        items={items}
+      />
     </Sider>
   );
 };

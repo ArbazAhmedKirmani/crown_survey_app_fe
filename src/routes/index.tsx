@@ -4,15 +4,20 @@ import { lazy, PropsWithChildren, Suspense } from "react";
 /** Layout */
 import DashboardLayout from "../components/layout/dashboard-layout";
 import AuthLayout from "../components/layout/auth-layout";
-import { CONSTANTS } from "../utils/constants";
+import { APP_CONSTANTS } from "../utils/constants/app.constant";
 
 /** Screens */
+const FormsScreen = lazy(() => import("../screens/Forms"));
+const Forms = lazy(() => import("../components/screen/forms"));
+const NewForm = lazy(() => import("../components/screen/forms/new-form"));
+const TemplateScreen = lazy(() => import("../screens/template"));
+const Template = lazy(() => import("../components/screen/templates"));
 const SignupScreen = lazy(() => import("../screens/authentication/signup"));
 const DashboardScreen = lazy(() => import("../screens/dashboard"));
-const ShippingScreen = lazy(() => import("../screens/shipping"));
-const NewShipment = lazy(
-  () => import("../components/screen/shipping/new-shipment")
-);
+// const ShippingScreen = lazy(() => import("../screens/shipping"));
+// const NewShipment = lazy(
+//   () => import("../components/screen/shipping/new-shipment")
+// );
 const Jobs = lazy(() => import("../components/screen/jobs"));
 const JobsScreen = lazy(() => import("../screens/jobs"));
 const NewJobScreen = lazy(() => import("../screens/jobs/new-job"));
@@ -20,7 +25,7 @@ const LoginScreen = lazy(() => import("../screens/authentication/login"));
 const Error404 = lazy(() => import("../screens/Errors/error-404"));
 
 const ProtectedRoutes = ({ children }: PropsWithChildren) => {
-  if (localStorage.getItem(CONSTANTS.LOCAL_STORAGE.IS_AUTHENTICATED)) {
+  if (localStorage.getItem(APP_CONSTANTS.AUTH.AUTH_TOKEN)) {
     return children;
   } else return <Navigate to={"/auth"} replace={true} />;
 };
@@ -36,16 +41,30 @@ const AppRouter = createBrowserRouter([
     children: [
       { index: true, element: <DashboardScreen /> },
       {
-        path: "shipping",
-        element: <ShippingScreen />,
-        children: [{ path: "new-shipment", element: <NewShipment /> }],
-      },
-      {
         path: "jobs",
         element: <JobsScreen />,
         children: [
           { index: true, element: <Jobs /> },
-          { path: "new-job", element: <NewJobScreen /> },
+          { path: "new", element: <NewJobScreen /> },
+          { path: ":id", element: <NewJobScreen /> },
+        ],
+      },
+      {
+        path: "forms",
+        element: <FormsScreen />,
+        children: [
+          { index: true, element: <Forms /> },
+          { path: "new", element: <NewForm /> },
+          { path: ":id", element: <NewForm /> },
+        ],
+      },
+      {
+        path: "templates",
+        element: <TemplateScreen />,
+        children: [
+          { index: true, element: <Template /> },
+          { path: "new", element: <NewJobScreen /> },
+          { path: ":id", element: <NewJobScreen /> },
         ],
       },
       {

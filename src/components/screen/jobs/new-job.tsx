@@ -1,55 +1,54 @@
-// import Sider from "antd/es/layout/Sider";
-
-import { Button, Menu } from "antd";
-import Sider from "antd/es/layout/Sider";
-import { CiOutlined } from "@ant-design/icons";
-import useJobs from "./useJobs";
-import { ProjectData } from "../../../utils/theme-config";
-import { useState } from "react";
-import { getItem } from "../../../utils/helpers";
+import { useParams } from "react-router-dom";
+import usePostApi from "../../../hooks/use-post-api";
+import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
+import CSButton from "../../theme/atoms/cs-button";
+import CSFormSlidingList from "../../theme/organisms/cs-form-sliding-list";
+import { checkEditablePage } from "../../../utils/helper/general.helper";
+import { QUERY_STRING } from "../../../utils/constants/query.constant";
+import DATA from "../../../utils/constants/data.constant";
+import useQueryString from "../../../hooks/use-query-string";
+import { isNull } from "lodash";
 
 const NewJob = () => {
-  const { secondCollapse, firstCollapse, handleCollapse } = useJobs();
-  const [selectedFirstForm, setSelectedFirstForm] = useState<string>("0");
-  const [selectedSecondForm, setSelectedSecondForm] = useState<string>("0");
+  const param = useParams();
+  const { getQuery } = useQueryString();
+
+  const { isPending } = usePostApi({
+    url: API_ROUTES.form.post,
+    showSuccessMessage: true,
+    onSuccess: () => {},
+  });
+
+  const selectedParent = getQuery(QUERY_STRING.OTHER_PARAMS.PARENT_FORM);
 
   return (
     <div className="new-job-cont">
-      <div className="first-list">
-        <Sider theme="light" collapsed={firstCollapse}>
-          <Button type="text" onClick={() => handleCollapse(1)}>
-            <CiOutlined color="black" />
-          </Button>
-          <Menu
-            theme="light"
-            items={ProjectData.forms.map((x) =>
-              getItem(x.name, x.id.toString(), <strong>{x.prefix}</strong>)
-            )}
-            selectedKeys={[selectedFirstForm]}
-            onClick={({ key }) => setSelectedFirstForm(key)}
-            mode="inline"
+      <div className="flex-cont">
+        <div className="first-list">
+          <CSFormSlidingList
+            type={QUERY_STRING.OTHER_PARAMS.PARENT_FORM}
+            list={DATA.job.parent}
           />
-        </Sider>
-      </div>
-      <div className="second-list">
-        <Sider theme="light" collapsed={secondCollapse}>
-          <Button type="text" onClick={() => handleCollapse(2)}>
-            <CiOutlined color="black" />
-          </Button>
-          <Menu
-            theme="light"
-            items={ProjectData.forms
-              .filter((x) => x.id === +selectedFirstForm)?.[0]
-              ?.children.map((x) =>
-                getItem(x.name, x.id.toString(), <strong>{x.prefix}</strong>)
-              )}
-            mode="inline"
-            selectedKeys={[selectedSecondForm]}
-            onClick={({ key }) => setSelectedSecondForm(key)}
+        </div>
+        <div className="second-list">
+          <CSFormSlidingList
+            type={QUERY_STRING.OTHER_PARAMS.CHILD_FORM}
+            list={
+              isNull(selectedParent[QUERY_STRING.OTHER_PARAMS.PARENT_FORM])
+                ? []
+                : DATA.job.child.filter(
+                    (x) =>
+                      x.parentId ===
+                      +selectedParent[QUERY_STRING.OTHER_PARAMS.PARENT_FORM]
+                  )
+            }
           />
-        </Sider>
+        </div>
+        <div className="content-section"></div>
       </div>
-      <div className="content-section"></div>
+      <CSButton loading={isPending} type="primary">
+        {checkEditablePage(param?.id, "Submit Job", "Update Job")}
+      </CSButton>
     </div>
   );
 };

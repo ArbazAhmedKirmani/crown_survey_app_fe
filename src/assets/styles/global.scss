@@ -2,9 +2,14 @@
 @use "./variables.scss" as *;
 
 // @import "../../index.scss";
+@forward "./fluientui.scss";
 @forward "../../components/layout/auth-layout/style.scss";
 @forward "../../components/layout/dashboard-layout/style.scss";
 @forward "../../components/screen/authentication/login/style.scss";
 @forward "../../components/screen/authentication/signup/style.scss";
-@forward "../../components/theme/style.scss";
+@forward "../../components/theme/atoms/style.scss";
+@forward "../../components/theme/molecules/style.scss";
+@forward "../../components/theme/organisms/style.scss";
 @forward "../../components/screen/jobs/style.scss";
+@forward "../../components/screen/templates/style.scss";
+@forward "../../components/screen/forms/style.scss";

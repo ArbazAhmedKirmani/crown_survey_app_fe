@@ -1,0 +1,9 @@
+@use "../../../assets/styles/variables.scss" as *;
+
+.cs-form-header {
+  span {
+    cursor: pointer;
+    padding: 5px 2px 5px 2px;
+    margin: 0.5rem 0 0.5rem 0;
+  }
+}

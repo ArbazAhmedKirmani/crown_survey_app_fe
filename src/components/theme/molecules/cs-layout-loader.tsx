@@ -1,17 +1,15 @@
 import { Skeleton } from "antd";
 import { PropsWithChildren } from "react";
-import "./style.scss";
 
 export type TLoaderType = "auth" | "dashboard";
 
-export interface ILayoutLoader extends PropsWithChildren {
+export interface ICSLayoutLoader extends PropsWithChildren {
   type: TLoaderType;
 }
 
-const LayoutLoader = (props: ILayoutLoader) => {
+const CSLayoutLoader = (props: ICSLayoutLoader) => {
   return (
-    <div className="layout-loader">
-      {/* <Skeleton.Node active={true} /> */}
+    <div className="cs-layout-loader">
       <Skeleton.Input
         active={true}
         size="small"
@@ -29,10 +27,9 @@ const LayoutLoader = (props: ILayoutLoader) => {
         className="stripe"
         style={{ width: props.type === "auth" ? 120 : 180 }}
       />
-      {/* <Skeleton.Input active={true} className="stripe" /> */}
       <Skeleton active />
     </div>
   );
 };
 
-export default LayoutLoader;
+export default CSLayoutLoader;

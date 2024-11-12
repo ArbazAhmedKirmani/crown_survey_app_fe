@@ -1,0 +1,220 @@
+// Fluent UI 2 Theme Variables
+$fontFamily: "Segoe UI", sans-serif;
+$fontSizeBase: 14px; // Base font size for general components
+$fontSizeSmall: 12px; // Small font size
+$fontSizeLarge: 16px; // Large font size
+$lineHeightBase: 1.5; // Line height for readability
+
+// Colors from Fluent UI 2
+$colorPrimary: #0078d4;
+$colorPrimaryHover: #005a9e;
+$colorPrimaryActive: #004578;
+$colorText: #323130;
+$colorTextSecondary: #605e5c;
+$colorTextDisabled: #c8c6c4;
+$colorTextLightSolid: #ffffff;
+$colorBgContainer: #f3f2f1;
+$colorBgElevated: #ffffff;
+$colorBgLayout: #f4fafde0;
+$colorInputBorder: #e1dfdd;
+$colorInputBackground: #ffffff;
+$colorInputPlaceholder: #a19f9d;
+$colorBorder: #e1dfdd;
+$boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+$borderRadius: 2px;
+
+// Control Heights and Padding for Components (Button, Input, Select)
+$controlHeightSmall: 24px;
+$controlHeightMedium: 32px;
+$controlHeightLarge: 40px;
+
+$buttonPaddingSmall: 6px 16px;
+$buttonPaddingMedium: 8px 24px;
+$buttonPaddingLarge: 10px 32px;
+
+$inputPaddingSmall: 6px 12px;
+$inputPaddingMedium: 8px 16px;
+$inputPaddingLarge: 10px 20px;
+
+// Ant Design Button Styling to match Fluent UI 2
+.ant-btn {
+  font-family: $fontFamily;
+  font-size: $fontSizeBase;
+  border-radius: $borderRadius;
+  box-shadow: $boxShadow;
+
+  &.ant-btn-small {
+    padding: $buttonPaddingSmall;
+    height: $controlHeightSmall;
+    font-size: $fontSizeSmall;
+  }
+
+  &.ant-btn-medium {
+    padding: $buttonPaddingMedium;
+    height: $controlHeightMedium;
+    font-size: $fontSizeBase;
+  }
+
+  &.ant-btn-large {
+    padding: $buttonPaddingLarge;
+    height: $controlHeightLarge;
+    font-size: $fontSizeLarge;
+  }
+
+  &.ant-btn-primary {
+    background-color: $colorPrimary;
+    border-color: $colorPrimary;
+    color: $colorTextLightSolid;
+
+    &:hover {
+      background-color: $colorPrimaryHover;
+      border-color: $colorPrimaryHover;
+    }
+
+    &:active {
+      background-color: $colorPrimaryActive;
+      border-color: $colorPrimaryActive;
+    }
+  }
+
+  &.ant-btn-default {
+    background-color: $colorBgElevated;
+    border-color: $colorBorder;
+    color: $colorText;
+
+    &:hover {
+      background-color: $colorInputBorder;
+    }
+  }
+
+  &:disabled {
+    background-color: $colorBgContainer;
+    border-color: $colorBorder;
+    color: $colorTextDisabled;
+  }
+}
+
+// Input Fields Styling to match Fluent UI 2
+.ant-input {
+  font-family: $fontFamily;
+  font-size: $fontSizeBase;
+  border-radius: $borderRadius;
+  background-color: $colorInputBackground;
+  border: 1px solid $colorInputBorder;
+  color: $colorText;
+
+  &.ant-input-small {
+    padding: $inputPaddingSmall;
+    height: $controlHeightSmall;
+    font-size: $fontSizeSmall;
+  }
+
+  &.ant-input-medium {
+    padding: $inputPaddingMedium;
+    height: $controlHeightMedium;
+    font-size: $fontSizeBase;
+  }
+
+  &.ant-input-large {
+    padding: $inputPaddingLarge;
+    height: $controlHeightLarge;
+    font-size: $fontSizeLarge;
+  }
+
+  &::placeholder {
+    color: $colorInputPlaceholder;
+  }
+}
+
+// Select Component Styling
+.ant-select-selector {
+  font-family: $fontFamily;
+  font-size: $fontSizeBase;
+  border-radius: $borderRadius;
+  border: 1px solid $colorInputBorder;
+  background-color: $colorInputBackground;
+  color: $colorText;
+
+  &.ant-select-selector-small {
+    padding: 6px 12px;
+    height: $controlHeightSmall;
+    font-size: $fontSizeSmall;
+  }
+
+  &.ant-select-selector-medium {
+    padding: 8px 16px;
+    height: $controlHeightMedium;
+    font-size: $fontSizeBase;
+  }
+
+  &.ant-select-selector-large {
+    padding: 10px 20px;
+    height: $controlHeightLarge;
+    font-size: $fontSizeLarge;
+  }
+}
+
+// Modal Box Styling
+.ant-modal {
+  background-color: $colorBgElevated;
+  border-radius: $borderRadius;
+  box-shadow: $boxShadow;
+
+  .ant-modal-header {
+    background-color: $colorBgContainer;
+    border-bottom: 1px solid $colorBorder;
+  }
+
+  .ant-modal-footer {
+    background-color: $colorBgContainer;
+  }
+}
+
+// Notification Styling
+.ant-notification {
+  background-color: $colorBgContainer;
+  color: $colorText;
+  border-radius: $borderRadius;
+  box-shadow: $boxShadow;
+
+  .ant-notification-close {
+    color: $colorTextSecondary;
+  }
+}
+
+// Divider Styling
+.ant-divider {
+  border-color: $colorBorder;
+}
+
+// Card Component Styling
+.ant-card {
+  background-color: $colorBgElevated;
+  border-radius: $borderRadius;
+  box-shadow: $boxShadow;
+  border: 1px solid $colorBorder;
+}
+
+// Tooltip Styling
+.ant-tooltip-inner {
+  background-color: $colorBgContainer;
+  color: $colorText;
+  border-radius: $borderRadius;
+  box-shadow: $boxShadow;
+}
+
+// Checkbox and Radio Styling
+.ant-checkbox-wrapper,
+.ant-radio-wrapper {
+  font-size: $fontSizeBase;
+  color: $colorText;
+
+  &.ant-checkbox-wrapper-checked,
+  &.ant-radio-wrapper-checked {
+    color: $colorPrimary;
+  }
+
+  &:disabled {
+    color: $colorTextDisabled;
+  }
+}

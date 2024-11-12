@@ -1,13 +1,13 @@
 import { Checkbox, Form, Input } from "antd";
-import CustomFormItem from "../../../theme/custom-form-item";
-import CustomButton from "../../../theme/custom-button";
+import CSFormItem from "../../../theme/atoms/cs-form-item";
+import CSButton from "../../../theme/atoms/cs-button";
 import useLogin from "./useLogin";
 import { Link } from "react-router-dom";
 import "./style.scss";
 
 const LoginForm = () => {
   const [form] = Form.useForm();
-  const { onLoginSubmit } = useLogin();
+  const { onLoginSubmit, loginSubmitoading } = useLogin();
 
   return (
     <Form
@@ -15,7 +15,7 @@ const LoginForm = () => {
       onFinish={(data) => onLoginSubmit(data)}
       layout="vertical"
     >
-      <CustomFormItem
+      <CSFormItem
         label="Email"
         name={"email"}
         rules={[
@@ -31,8 +31,8 @@ const LoginForm = () => {
         ]}
       >
         <Input type="email" placeholder="Email" />
-      </CustomFormItem>
-      <CustomFormItem
+      </CSFormItem>
+      <CSFormItem
         label="Password"
         name={"password"}
         rules={[
@@ -43,11 +43,11 @@ const LoginForm = () => {
         ]}
       >
         <Input type="password" placeholder="Password" />
-      </CustomFormItem>
+      </CSFormItem>
       <div className="multi-fields">
-        <CustomFormItem name="remember_me" valuePropName="checked">
+        <CSFormItem name="remember_me" valuePropName="checked">
           <Checkbox>Remember Me</Checkbox>
-        </CustomFormItem>
+        </CSFormItem>
         <Link
           className="ant-typography css-dev-only-do-not-override-1ygoi8g"
           to="forgot-password"
@@ -55,9 +55,9 @@ const LoginForm = () => {
           Forgot Password
         </Link>
       </div>
-      <CustomButton type="primary" htmlType="submit">
+      <CSButton type="primary" htmlType="submit" loading={loginSubmitoading}>
         Login
-      </CustomButton>
+      </CSButton>
     </Form>
   );
 };

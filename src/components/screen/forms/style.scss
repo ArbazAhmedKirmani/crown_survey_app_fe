@@ -1,0 +1,64 @@
+@use "../../../assets/styles/variables.scss" as *;
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  color: $colorPrimary;
+
+  .searchbar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .table-footer {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.new-form {
+  display: flex;
+  max-width: 60rem;
+  padding-inline: 1rem;
+  background-color: $colorBgElevated;
+
+  .dynamic-form {
+    width: 100%;
+
+    .ant-upload-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .form-detail-row {
+      display: flex;
+
+      .form-detail-field-cont {
+        display: flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        padding-inline: 4px;
+        margin-bottom: 6px;
+
+        &:hover {
+          background-color: #f1f7f9;
+        }
+
+        .ant-form-item {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .submit-btn {
+      text-align: right;
+    }
+  }
+
+  .ant-typography-h4 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+}

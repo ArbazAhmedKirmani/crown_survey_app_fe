@@ -1,6 +1,6 @@
-@use "../../assets/styles/variables.scss" as *;
+@use "../../../assets/styles/variables.scss" as *;
 
-.custom-form-item {
+.cs-form-item {
   margin-bottom: 15px;
 
   .ant-form-item-label {
@@ -12,18 +12,19 @@
   }
 }
 
-.custom-button {
+.cs-button {
   border: $colorPrimary;
 
   &:hover,
   &:focus,
-  &:active {
+  &:active,
+  &:focus-visible {
     outline: none;
     border: $colorPrimary !important;
   }
 }
 
-.layout-loader {
+.cs-layout-loader {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
@@ -31,4 +32,16 @@
   align-items: flex-start;
   gap: 15px;
   padding: 3rem;
+}
+
+.cs-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.cs-select {
+}
+
+.cs-input {
 }

@@ -1,0 +1,86 @@
+@use "../../../assets/styles/variables.scss" as *;
+
+.cs-form-sliding-list {
+  background-color: #fff;
+  width: 200px;
+  max-width: 300px;
+  transition: width 0.15s ease-in-out;
+  border-radius: $borderRadius;
+  padding: 16px;
+
+  &.collapsed {
+    width: 80px; // Adjust for collapsed state
+    .menu-text {
+      display: none; // Hide menu text when collapsed
+    }
+  }
+
+  .menu-header {
+    display: flex;
+    justify-content: flex-start;
+
+    .toggle-button {
+      background-color: $colorPrimary;
+      color: white;
+      border: none;
+      border-radius: $borderRadius;
+      // padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      // box-shadow: $boxShadow;
+      transition: background-color 0.1s;
+
+      &:hover {
+        background-color: $colorPrimary, 10%;
+      }
+
+      &:active {
+        background-color: $colorPrimary, 15%;
+      }
+    }
+  }
+
+  .menu-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 16px 0 0;
+
+    .menu-item {
+      display: flex;
+      align-items: start;
+      font-size: 16px;
+      color: $colorText;
+      padding: 12px 0;
+      border-bottom: 1px solid $colorText, 40%;
+      cursor: pointer;
+      transition: color 0.1s;
+
+      &.active-item {
+        font-weight: bold;
+      }
+
+      &.active-item,
+      &:hover {
+        color: $colorPrimary;
+        background-color: $colorBgLayout;
+      }
+
+      .menu-prefix {
+        margin-right: 8px;
+        font-weight: bold;
+        font-size: 14px;
+        width: 24px;
+      }
+
+      .menu-text {
+        vertical-align: middle;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
+.cs-breadcrumb {
+  margin-bottom: 1rem;
+}

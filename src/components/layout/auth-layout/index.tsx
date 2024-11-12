@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Layout } from "antd";
 import { Suspense } from "react";
-import LayoutLoader from "../../theme/layout-loader";
+import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
 
 const AuthLayout = () => {
   return (
@@ -12,7 +12,7 @@ const AuthLayout = () => {
         </span>
       </div>
       <div className="outlet-cont">
-        <Suspense fallback={<LayoutLoader type="auth" />}>
+        <Suspense fallback={<CSLayoutLoader type="auth" />}>
           <Outlet />
         </Suspense>
       </div>

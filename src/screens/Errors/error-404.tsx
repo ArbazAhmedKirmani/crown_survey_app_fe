@@ -1,5 +1,5 @@
 import { Result } from "antd";
-import CustomButton from "../../components/theme/custom-button";
+import CSButton from "../../components/theme/atoms/cs-button";
 import { useNavigate } from "react-router-dom";
 import NotFound from "../../assets/icons/page-not-found";
 
@@ -15,9 +15,9 @@ const Error404 = () => {
       title="404"
       subTitle="Sorry, the page you visited does not exist."
       extra={
-        <CustomButton type="primary" onClick={goBack}>
+        <CSButton type="primary" onClick={goBack}>
           Back Home
-        </CustomButton>
+        </CSButton>
       }
       icon={<NotFound />}
     />

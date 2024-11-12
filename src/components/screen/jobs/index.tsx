@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 import useJobs from "./useJobs";
 
 const Jobs = () => {
@@ -6,7 +6,7 @@ const Jobs = () => {
 
   return (
     <div>
-      <h1>JOBS</h1>
+      <Typography.Title level={1}>JOBS</Typography.Title>
       <Button type="primary" onClick={handleCreateNewJob}>
         Create New Jobs
       </Button>
