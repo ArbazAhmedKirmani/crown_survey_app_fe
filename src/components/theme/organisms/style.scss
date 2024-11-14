@@ -84,3 +84,19 @@
 .cs-breadcrumb {
   margin-bottom: 1rem;
 }
+
+.cs-table-form {
+  display: flex;
+  flex-direction: column;
+  color: $colorPrimary;
+
+  .searchbar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .table-footer {
+    margin: 0;
+    font-weight: 500;
+  }
+}

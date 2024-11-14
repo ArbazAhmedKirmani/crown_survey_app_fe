@@ -1,21 +1,5 @@
 @use "../../../assets/styles/variables.scss" as *;
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-  color: $colorPrimary;
-
-  .searchbar {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .table-footer {
-    margin: 0;
-    font-weight: 500;
-  }
-}
-
 .new-form {
   display: flex;
   max-width: 60rem;
