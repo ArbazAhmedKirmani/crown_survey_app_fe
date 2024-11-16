@@ -54,7 +54,7 @@ export default function useGetApi<R>({
 
       refetchOnWindowFocus: false,
       retry: 3,
-      gcTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 1,
       enabled,
 
       ...options,

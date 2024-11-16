@@ -1,12 +1,22 @@
-import { Divider, Form } from "antd";
+import { Divider, Form, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { UploadFile } from "antd/lib";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CSFormHeader from "../../theme/molecules/cs-form-header";
 import CSButton from "../../theme/atoms/cs-button";
-import { useState } from "react";
 import CSFormDetail from "../../theme/organisms/cs-form-detail";
-import CSFormFieldDetail from "../../theme/organisms/cs-form-field-detail";
+import CSFormSectionDetail from "../../theme/organisms/cs-form-section-detail";
+import { useEffect, useRef, useState } from "react";
+import { AnyObject } from "antd/lib/_util/type";
+import usePostApi from "../../../hooks/use-post-api";
+import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
+import useGetApi from "../../../hooks/use-get-api";
+import { formMapper } from "../../../utils/helper/mapper.helper";
+import { IFormGetById } from "../../../utils/interface/form.interface";
+import { IApiResponse } from "../../../utils/interface/response.interface";
+import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
+import { checkEditablePage } from "../../../utils/helper/general.helper";
+// import { QueryClient } from "react-query";
 
 export type TFormField =
   | "CHECKBOX"
@@ -35,40 +45,98 @@ export interface INewForm {
 const NewForm = () => {
   const [form] = useForm();
   const params = useParams();
-  const [documents, setDocuments] = useState<{ [key: string]: string }>();
+  const navigate = useNavigate();
+  const document_ref = useRef<AnyObject>();
+  const [getForm, setGetForm] = useState(false);
+  // const queryClient = new QueryClient();
+
+  const { mutate: saveForm, isPending: savePending } = usePostApi({
+    url: API_ROUTES.form.post,
+    showSuccessMessage: true,
+    method: AxiosMethodEnum.POST,
+    onSuccess: () => {
+      navigate("/forms/");
+    },
+  });
+
+  const { mutate: updateForm, isPending: updatePending } = usePostApi({
+    url: API_ROUTES.form.put(params.id!),
+    method: AxiosMethodEnum.PATCH,
+    showSuccessMessage: true,
+    onSuccess: () => {
+      navigate("/forms/");
+    },
+  });
+
+  const { data, isLoading, isSuccess, refetch } = useGetApi<
+    IApiResponse<IFormGetById>
+  >({
+    key: [API_ROUTES.form.getById(params.id!)],
+    url: API_ROUTES.form.getById(params.id!),
+    enabled: getForm,
+  });
 
   const onFinish = (values: INewForm) => {
-    console.log("values: ", values);
+    if (params.id === "new")
+      saveForm({
+        ...values,
+        form_document: document_ref.current?.getValue(),
+      });
+    else
+      updateForm({
+        ...values,
+        form_document: document_ref.current?.getValue(),
+      });
   };
 
+  useEffect(() => {
+    if (params?.id !== "new" && !isSuccess) {
+      refetch();
+      setGetForm(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const result = formMapper(data.data);
+      form.setFieldsValue(result);
+      document_ref.current?.setValue({
+        ...data.data.document,
+        name: data.data.document.originalName,
+      });
+    }
+  }, [isSuccess]);
+
   return (
-    <div className="new-form">
-      <Form
-        layout="vertical"
-        className="dynamic-form"
-        name="dynamicForm"
-        onFinish={onFinish}
-        autoComplete="off"
-        form={form}
-      >
-        <CSFormHeader />
+    <Spin spinning={savePending || updatePending || isLoading}>
+      <div className="new-form">
+        <Form
+          layout="vertical"
+          className="dynamic-form"
+          name="dynamicForm"
+          onFinish={onFinish}
+          autoComplete="off"
+          form={form}
+        >
+          <CSFormHeader />
 
-        <CSFormDetail setDocument={setDocuments} document={documents} />
+          <CSFormDetail document_ref={document_ref} />
 
-        <Divider />
+          <Divider />
 
-        <CSFormFieldDetail />
+          <CSFormSectionDetail />
 
-        <Divider />
-        <div className="submit-btn">
-          <Form.Item>
-            <CSButton type="primary" htmlType="submit">
-              {params?.id === "new" ? "Create Form" : "Update Form"}
-            </CSButton>
-          </Form.Item>
-        </div>
-      </Form>
-    </div>
+          <Divider />
+          <div className="submit-btn">
+            <Form.Item>
+              <CSButton type="primary" htmlType="submit">
+                {checkEditablePage(params?.id, "Create Form", "Update Form")}
+              </CSButton>
+            </Form.Item>
+          </div>
+        </Form>
+      </div>
+    </Spin>
   );
 };
 

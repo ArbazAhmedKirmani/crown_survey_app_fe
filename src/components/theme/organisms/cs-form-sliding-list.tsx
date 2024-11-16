@@ -1,10 +1,19 @@
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
+import { Spin } from "antd";
+
+export type TCSFormSlidingListProp = {
+  prefix: string;
+  name: string;
+  id: number | string;
+};
 
 export interface ICSFormSlidingList {
-  list?: { prefix: string; title: string; id: number }[];
+  list?: TCSFormSlidingListProp[];
   type: string;
+  loading?: boolean;
+  onSelect?: (item: TCSFormSlidingListProp) => void;
 }
 
 const CSFormSlidingList = (props: ICSFormSlidingList) => {
@@ -14,34 +23,39 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
 
   const selectedItem = getQuery(type);
 
-  const handleFormSelect = (id: number) => setQuery({ [type]: id.toString() });
+  const handleFormSelect = (item: TCSFormSlidingListProp) => {
+    setQuery({ [type]: item.id.toString() });
+    if (props.onSelect) props?.onSelect(item);
+  };
 
   return (
-    list?.length && (
-      <div className={`cs-form-sliding-list ${collapse ? "collapsed" : ""}`}>
-        <div className="menu-header">
-          <MenuOutlined
-            style={{ color: "black" }}
-            onClick={() => setCollapse((prev) => !prev)}
-          />
-        </div>
+    <Spin spinning={props?.loading}>
+      {list?.length && (
+        <div className={`cs-form-sliding-list ${collapse ? "collapsed" : ""}`}>
+          <div className="menu-header">
+            <MenuOutlined
+              style={{ color: "black" }}
+              onClick={() => setCollapse((prev) => !prev)}
+            />
+          </div>
 
-        <ul className="menu-list">
-          {list?.map((item) => (
-            <li
-              key={item.id}
-              className={`${
-                selectedItem[type] === item.id.toString() && "active-item"
-              } menu-item`}
-              onClick={() => handleFormSelect(item.id)}
-            >
-              <span className="menu-prefix">{item.prefix}</span>
-              {!collapse && <span className="menu-text">{item.title}</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
+          <ul className="menu-list">
+            {list?.map((item: TCSFormSlidingListProp) => (
+              <li
+                key={item.id}
+                className={`${
+                  selectedItem === item.id.toString() && "active-item"
+                } menu-item`}
+                onClick={() => handleFormSelect(item)}
+              >
+                <span className="menu-prefix">{item.prefix}</span>
+                {!collapse && <span className="menu-text">{item.name}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </Spin>
   );
 };
 

@@ -9,9 +9,8 @@ import CSTable from "../atoms/cs-table";
 import { ColumnType } from "antd/es/table";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnGroupType } from "antd/lib/table";
-import { IPaginatedApiResponse } from "../../../utils/interface/response.interface";
 import { ReactNode } from "react";
-import usePaginatedApi from "../../../hooks/use-paginated-api";
+import { IPaginatedApiResponse } from "../../../utils/interface/response.interface";
 
 export interface ICustomQueryObject {
   apiName: string;
@@ -19,12 +18,14 @@ export interface ICustomQueryObject {
 }
 
 export interface ICSTableView {
-  url: string;
+  data: IPaginatedApiResponse<AnyObject[]> | undefined;
   columns: (ColumnType<AnyObject> | ColumnGroupType<AnyObject>)[];
   navigateUrl?: string;
   searchBarElements?: ReactNode;
   newBtnTitle: string;
-  customQueryObject?: ICustomQueryObject[];
+  footer?: boolean;
+  centerSection?: ReactNode;
+  loading: boolean;
 }
 
 /**
@@ -34,59 +35,21 @@ export interface ICSTableView {
  */
 const CSTableForm = (props: ICSTableView) => {
   const {
-    url,
+    loading,
     newBtnTitle,
     columns,
     navigateUrl = "new",
     searchBarElements,
-    customQueryObject,
+    centerSection,
+    footer,
+    data,
   } = props;
-  const { setQuery, getQuery } = useQueryString();
+  const { setQuery } = useQueryString();
   const navigate = useNavigate();
-
-  const queryObj = (
-    returnType: "array" | "obj"
-  ):
-    | {
-        [x: string]: string | null;
-      }
-    | (string | null)[]
-    | undefined => {
-    let query: { [x: string]: string | null } = {};
-    if (customQueryObject) {
-      customQueryObject.forEach((item: ICustomQueryObject) => {
-        const queryItem = getQuery(item.queryName)?.[`${item?.queryName}`];
-        if (queryItem) query[item.apiName] = queryItem;
-      });
-    }
-
-    query = {
-      ...query,
-      ...getQuery([
-        QUERY_STRING.PAGINATION.PAGE,
-        QUERY_STRING.PAGINATION.LIMIT,
-        QUERY_STRING.PAGINATION.SEARCH,
-      ]),
-    };
-
-    if (returnType === "array") return Object.values(query);
-
-    if (returnType === "obj") return query;
-  };
-
-  const { data: data, isLoading } = usePaginatedApi<
-    IPaginatedApiResponse<AnyObject[]>
-  >({
-    key: [url, ...(queryObj("array") as string[])],
-    url: url,
-    query: {
-      ...(queryObj("obj") as { [key: string]: string | number | boolean }),
-    },
-  });
 
   const debouncedSearch = _.debounce((value: string) => {
     setQuery({
-      [QUERY_STRING.PAGINATION.SEARCH]: value || "",
+      [QUERY_STRING.PAGINATION.SEARCH]: value,
       [QUERY_STRING.PAGINATION.PAGE]: "1",
     });
   }, 300);
@@ -126,30 +89,32 @@ const CSTableForm = (props: ICSTableView) => {
         value={queryObj._temp_status ?? DefaultStatus}
         defaultValue="Pending"
       /> */}
+      {centerSection}
       <CSTable
-        loading={isLoading}
+        loading={loading}
         dataSource={data?.data || []}
         columns={columns}
         size="small"
         pagination={{
           responsive: true,
           total: data?.totalCount,
-          //   pageSize: +queryObj._limit || 10,
-          //   current: +queryObj._page || 1,
           onChange: (page) => {
             setQuery({ [QUERY_STRING.PAGINATION.PAGE]: page.toString() });
           },
         }}
-        onChange={(page) =>
-          setQuery({
-            [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? "1",
-          })
+        // onChange={(page) =>
+        //   setQuery({
+        //     [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? "1",
+        //   })
+        // }
+        footer={() =>
+          footer ? (
+            <p className="table-footer">
+              Showing {data?.data?.length} / {data?.totalCount} Templates
+            </p>
+          ) : null
         }
-        footer={() => (
-          <p className="table-footer">
-            Showing {data?.data?.length} / {data?.totalCount} Templates
-          </p>
-        )}
+        rowKey={(data) => data.id}
       />
     </div>
   );

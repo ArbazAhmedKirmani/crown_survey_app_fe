@@ -37,6 +37,6 @@ export const checkEditablePage = (
   falseSide: string | ReactNode
 ) => {
   if (!param) return falseSide;
-  if (param === "new") return falseSide;
-  return trueSide;
+  if (param === "new") return trueSide;
+  return falseSide;
 };

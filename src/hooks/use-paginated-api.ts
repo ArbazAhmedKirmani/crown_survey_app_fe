@@ -26,15 +26,9 @@ function usePaginatedApi<T>({
   pagination,
 }: Props): UseQueryResult<T> {
   const limit: string =
-    pagination?.limit?.toString() ??
-    query?.limit?.toString() ??
-    // getQuery(QUERY_STRING.PAGINATION.LIMIT) ??
-    "10";
+    pagination?.limit?.toString() ?? query?.limit?.toString() ?? "10";
   const page: string =
-    query?.page?.toString() ??
-    pagination?.take?.toString() ??
-    // getQuery(QUERY_STRING.PAGINATION.PAGE) ??
-    "1";
+    query?.page?.toString() ?? pagination?.take?.toString() ?? "1";
 
   let apiRoute: string = url;
   const queryKey = key;
@@ -58,7 +52,7 @@ function usePaginatedApi<T>({
   }
 
   return useGetApi<T>({
-    key: queryKey,
+    key: [...queryKey, page, limit],
     url: apiRoute,
     ...options,
   });

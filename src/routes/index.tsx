@@ -7,6 +7,7 @@ import AuthLayout from "../components/layout/auth-layout";
 import { APP_CONSTANTS } from "../utils/constants/app.constant";
 
 /** Screens */
+const FloorPlan = lazy(() => import("../components/screen/jobs/floor-plan"));
 const FormsScreen = lazy(() => import("../screens/Forms"));
 const Forms = lazy(() => import("../components/screen/forms"));
 const NewForm = lazy(() => import("../components/screen/forms/new-form"));
@@ -47,6 +48,7 @@ const AppRouter = createBrowserRouter([
           { index: true, element: <Jobs /> },
           { path: "new", element: <NewJobScreen /> },
           { path: ":id", element: <NewJobScreen /> },
+          { path: "floor/floor-plan", element: <FloorPlan /> },
         ],
       },
       {

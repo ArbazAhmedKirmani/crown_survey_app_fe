@@ -5,21 +5,14 @@ import CSUpload from "../atoms/cs-upload";
 import { UploadOutlined } from "@ant-design/icons";
 import CSButton from "../atoms/cs-button";
 import CSTextarea from "../atoms/cs-textarea";
-import { Dispatch, PropsWithChildren, SetStateAction } from "react";
+import { MutableRefObject } from "react";
+import { AnyObject } from "antd/es/_util/type";
 
 export interface CSFormDetails {
-  document?: { [key: string]: string };
-  setDocument: Dispatch<SetStateAction<{ [key: string]: string } | undefined>>;
+  document_ref: MutableRefObject<AnyObject | undefined>;
 }
 
-const CSFormDetail = (props: PropsWithChildren<CSFormDetails>) => {
-  const handleDocument = (id: string, name: string) => {
-    props.setDocument((prev) => ({
-      ...prev,
-      [name]: id,
-    }));
-  };
-
+const CSFormDetail = (props: CSFormDetails) => {
   return (
     <>
       <Typography.Title level={4} style={{ marginTop: 5 }}>
@@ -40,27 +33,27 @@ const CSFormDetail = (props: PropsWithChildren<CSFormDetails>) => {
           <CSFormItem
             name={"form_prefix"}
             label="Form Prefix"
-            rules={[{ required: true, message: "Prefix is required" }]}
+            rules={[
+              { required: true, message: "Prefix is required" },
+              { max: 3, message: "Max 3 Characters" },
+            ]}
           >
             <CSInput placeholder="Form Prefix" />
           </CSFormItem>
         </Col>
         <Col lg={8} md={10} sm={15} xs={24}>
-          <CSFormItem
-            name={"form_document"}
+          <CSUpload
+            ref={props.document_ref}
+            multiple={false}
+            accept=".pdf,.docx,.xlsx"
+            name="document"
+            formName="form_document"
+            required={true}
+            requiredMessage="Document is required"
             label="Document"
-            rules={[{ required: true, message: "Document is required" }]}
           >
-            <CSUpload
-              multiple={false}
-              accept=".pdf,.docx,.xlsx"
-              name="document"
-              setIdHandler={handleDocument}
-              document={props.document}
-            >
-              <CSButton icon={<UploadOutlined />}>Select File</CSButton>
-            </CSUpload>
-          </CSFormItem>
+            <CSButton icon={<UploadOutlined />}>Select File</CSButton>
+          </CSUpload>
         </Col>
         <Col span={24}>
           <CSFormItem name={"form_description"} label="Description">

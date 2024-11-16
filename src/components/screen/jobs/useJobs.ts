@@ -7,7 +7,11 @@ const useJobs = () => {
   const [secondCollapse, setSecondCollapse] = useState(false);
 
   const handleCreateNewJob = () => {
-    navigate("new-job");
+    navigate("new");
+  };
+
+  const handleFloorPlan = () => {
+    navigate("floor/floor-plan");
   };
 
   const handleCollapse = (collapseNumber: 1 | 2) => {
@@ -19,7 +23,13 @@ const useJobs = () => {
     }
   };
 
-  return { handleCreateNewJob, firstCollapse, secondCollapse, handleCollapse };
+  return {
+    handleCreateNewJob,
+    firstCollapse,
+    secondCollapse,
+    handleCollapse,
+    handleFloorPlan,
+  };
 };
 
 export default useJobs;

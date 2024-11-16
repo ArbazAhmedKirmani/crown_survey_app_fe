@@ -13,12 +13,12 @@ $colorText: #323130;
 $colorTextSecondary: #605e5c;
 $colorTextDisabled: #c8c6c4;
 $colorTextLightSolid: #ffffff;
-$colorBgContainer: #f3f2f1;
+$colorBgContainer: #f2f2f1;
 $colorBgElevated: #ffffff;
-$colorBgLayout: #f4fafde0;
+$colorBgLayout: #f4f3f4e0;
 $colorInputBorder: #e1dfdd;
 $colorInputBackground: #ffffff;
-$colorInputPlaceholder: #a19f9d;
+$colorInputPlaceholder: #b8b8b8;
 $colorBorder: #e1dfdd;
 $boxShadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 $borderRadius: 2px;
@@ -198,7 +198,7 @@ $inputPaddingLarge: 10px 20px;
 // Tooltip Styling
 .ant-tooltip-inner {
   background-color: $colorBgContainer;
-  color: $colorText;
+  color: $colorText !important;
   border-radius: $borderRadius;
   box-shadow: $boxShadow;
 }

@@ -1,82 +1,176 @@
-import { Upload, UploadProps } from "antd";
+import { notification, Upload, UploadProps } from "antd";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { UploadFile } from "antd/lib";
 import HTTP from "../../../service/http.service";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 import { IApiResponse } from "../../../utils/interface/response.interface";
+import CSFormItem from "./cs-form-item";
+import { AnyObject } from "antd/es/_util/type";
+import { AxiosError } from "axios";
 
-interface ICSUpload extends UploadProps {
-  setIdHandler?: (id: string, name: string) => void;
-  document?: { [key: string]: string };
-  name: string;
+export interface ICSUploadReturn {
+  getValue: () => IFiles[];
+  setValue: (value: IFiles | IFiles[]) => void;
 }
 
-const CSUpload = (props: ICSUpload) => {
-  const _api = new HTTP();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+export interface ICSUpload extends UploadProps {
+  formName: string;
+  required: boolean;
+  requiredMessage?: string;
+  label: string;
+}
 
-  const customPostRequest = async (options: any) => {
-    const response = await _api.call<
-      undefined,
-      IApiResponse<{ id: string; url: string }>
-    >({
-      method: AxiosMethodEnum.POST,
-      url: "http://localhost:3002/" + API_ROUTES.attachment.post,
-      body: options,
-      config: {
-        headers: {
-          "Content-Type": "multipart/form-data",
+interface ICSUploadFile extends UploadFile {
+  id: string;
+}
+
+type IFiles = { id: string; url: string; originalName?: string; name?: string };
+
+const CSUpload = forwardRef((props: ICSUpload, ref) => {
+  const _api = new HTTP();
+  const [files, setFiles] = useState<IFiles[]>([]);
+
+  useImperativeHandle<unknown, ICSUploadReturn>(ref, () => ({
+    getValue: () => files,
+    setValue: (value: IFiles | IFiles[]) => {
+      const values = Array.isArray(value) ? value : [value];
+      setFiles(values);
+    },
+  }));
+
+  const customPostRequest = (options: AnyObject) => {
+    _api
+      .call<AnyObject, IApiResponse<IFiles>>({
+        method: AxiosMethodEnum.POST,
+        url: "http://localhost:3002/" + API_ROUTES.attachment.post,
+        body: options,
+        config: {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         },
-      },
-    });
-    if (props?.setIdHandler)
-      props.setIdHandler(response.data.data.id, props.name);
-    setFileList([options.file]);
-    return options;
+      })
+      .then((response) => {
+        setFiles((prev: IFiles[]) => [
+          ...prev,
+          {
+            id: response.data.data.id,
+            url: response.data.data.url,
+            name: response.data.data?.originalName,
+          },
+        ]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const customUpdateRequest = async (options: any, id: string) => {
-    const response = await _api.call<
-      undefined,
-      IApiResponse<{ id: string; url: string }>
-    >({
-      method: AxiosMethodEnum.PUT,
-      url: "http://localhost:3002/" + API_ROUTES.attachment.put(id),
-      body: options,
-      config: {
-        headers: {
-          "Content-Type": "multipart/form-data",
+  const customUpdateRequest = (options: AnyObject, id: string) => {
+    _api
+      .call<AnyObject, IApiResponse<IFiles>>({
+        method: AxiosMethodEnum.PUT,
+        url: "http://localhost:3002/" + API_ROUTES.attachment.put(id),
+        body: options,
+        config: {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         },
-      },
-    });
-    if (props?.setIdHandler)
-      props.setIdHandler(response.data.data.id, props.name);
-    setFileList([options.file]);
-    return options;
+      })
+      .then((response) => {
+        setFiles((prev: IFiles[]) => {
+          const result = [
+            ...prev.map((file) => {
+              if (file.id === id)
+                return {
+                  id: response.data.data.id,
+                  url: response.data.data.url,
+                  name: response.data.data?.originalName,
+                };
+              else return file;
+            }),
+          ];
+
+          return result;
+        });
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+      });
+  };
+
+  const customDeleteRequest = (options: AnyObject) => {
+    _api
+      .call<AnyObject, IApiResponse<{ id: string; url: string }>>({
+        method: AxiosMethodEnum.DELETE,
+        url:
+          "http://localhost:3002/" + API_ROUTES.attachment.delete(options.id),
+        config: {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      })
+      .then(() => {
+        setFiles((prev: IFiles[]) => {
+          let state = [...prev];
+          state = state.filter((file) => file.id !== options.id);
+          return state;
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        notification.error({ message: "Error" });
+      });
   };
 
   const uploadProps: UploadProps = {
-    onRemove: async () => {
-      if (props?.document?.[props.name]) {
-        await _api.call<undefined, IApiResponse<{ id: string; url: string }>>({
-          method: AxiosMethodEnum.DELETE,
-          url:
-            "http://localhost:3002/" +
-            API_ROUTES.attachment.put(props?.document?.[props.name]),
-        });
-        setFileList([]);
-      }
-    },
+    onRemove: customDeleteRequest,
     customRequest: async (options) => {
-      if (props?.document?.[props.name])
-        customUpdateRequest(options, props.document[props.name]);
+      if (files.length && !props.multiple)
+        customUpdateRequest(options, files?.[0]?.id);
       else customPostRequest(options);
+      return options;
     },
-    fileList,
+    fileList: files as ICSUploadFile[],
   };
 
-  return <Upload {...uploadProps}>{props.children}</Upload>;
-};
+  const validateUpload = () => {
+    if (props.required) {
+      if (files.length > 0) {
+        return Promise.resolve();
+      }
+      return Promise.reject();
+    }
+    return Promise.resolve();
+  };
+
+  return (
+    <div className="cs-upload">
+      <CSFormItem
+        name={props.formName}
+        rules={[
+          {
+            validator: validateUpload,
+          },
+          {
+            required: props?.required || false,
+            message: props?.requiredMessage ?? "required",
+          },
+        ]}
+        label={props.label}
+      >
+        <Upload
+          {...props}
+          {...uploadProps}
+          fileList={files as unknown as ICSUploadFile[]}
+        >
+          {props.children}
+        </Upload>
+      </CSFormItem>
+    </div>
+  );
+});
 
 export default CSUpload;

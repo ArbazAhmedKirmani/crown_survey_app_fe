@@ -6,13 +6,24 @@ export const API_ROUTES = {
   templates: {
     get: "api/schema",
   },
+  jobs: {
+    getForms: "api/jobs/forms",
+    getSectionByForm: (id?: string) => `api/jobs/forms/${id}`,
+    getFieldsBySection: (id?: string) => `api/jobs/section/${id}`,
+    // post: "api/form",
+    // put: (id: string) => `api/form/${id}`,
+  },
   form: {
     get: "api/form",
+    getById: (id?: string) => `api/form/${id}`,
     post: "api/form",
+    put: (id: string) => `api/form/${id}`,
+    delete: `api/form`,
   },
   attachment: {
     post: "api/upload",
     put: (id: string) => `api/upload/${id}`,
+    delete: (id: string) => `api/upload/${id}`,
   },
 };
 

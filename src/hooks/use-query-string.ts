@@ -9,7 +9,7 @@ const useQueryString = (): {
 
   const getQuery = (
     _name: string | string[]
-  ): Record<string, string | null> => {
+  ): Record<string, string | null> | string | null => {
     if (Array.isArray(_name)) {
       const names: string[] = Array.isArray(_name) ? _name : [_name];
       const result = Object.create({});
@@ -18,7 +18,7 @@ const useQueryString = (): {
       });
       return result;
     } else {
-      return { [_name]: searchParams.get(_name) };
+      return searchParams.get(_name);
     }
   };
 

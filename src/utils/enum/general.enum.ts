@@ -56,3 +56,14 @@ export enum AxiosMethodEnum {
   PUT = "put",
   DELETE = "delete",
 }
+
+export enum FormFieldType {
+  CHECKBOX = "CHECKBOX",
+  RADIO = "RADIO",
+  TEXTAREA = "TEXTAREA",
+  INPUT = "INPUT",
+  FILE = "FILE",
+  TABLE = "TABLE",
+  SENTENCE = "SENTENCE",
+  DATE = "DATE",
+}

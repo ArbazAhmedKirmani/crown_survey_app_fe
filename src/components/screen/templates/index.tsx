@@ -1,23 +1,18 @@
-import { Button, Form, Table } from "antd";
-import useTemplate, { IUseTemplate } from "./useTemplate";
-import CSButton from "../../theme/atoms/cs-input";
-import CSButton from "../../theme/atoms/cs-button";
-import CSFormItem from "../../theme/atoms/cs-form-item";
-import { QUERY_STRING } from "../../../utils/constants/query.constant";
+import { Button } from "antd";
 import { DeleteColumnOutlined } from "@ant-design/icons";
+import CSTableForm from "../../theme/organisms/cs-table-view";
+import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
+import { IPaginatedApiResponse } from "../../../utils/interface/response.interface";
+import { AnyObject } from "antd/es/_util/type";
+import usePaginatedApi from "../../../hooks/use-paginated-api";
+import useQueryString from "../../../hooks/use-query-string";
+import { QUERY_STRING } from "../../../utils/constants/query.constant";
 
 const Template = () => {
-  const {
-    // handleStatus,
-    queryObj,
-    handleSearch,
-    templateList,
-    searchForm,
-    templateListLoading,
-    setQuery,
-    createNewTemplate,
-  }: // DefaultStatus,
-  IUseTemplate = useTemplate();
+  const { getQuery } = useQueryString();
+  const page = getQuery(QUERY_STRING.PAGINATION.PAGE);
+  const limit = getQuery(QUERY_STRING.PAGINATION.LIMIT);
+  const search = getQuery(QUERY_STRING.PAGINATION.SEARCH);
 
   const columns = [
     {
@@ -43,51 +38,25 @@ const Template = () => {
     },
   ];
 
+  const { data, isLoading } = usePaginatedApi<
+    IPaginatedApiResponse<AnyObject[]>
+  >({
+    key: [API_ROUTES.templates.get, limit as string, page as string],
+    url: API_ROUTES.templates.get,
+    query: {
+      ...(page && { page: page as string }),
+      ...(limit && { limit: limit as string }),
+      ...(search && { search: search as string }),
+    },
+  });
+
   return (
-    <>
-      <Form form={searchForm} onFinish={handleSearch}>
-        <div className="searchbar">
-          <CSFormItem name="search">
-            <CSButton placeholder="Search" />
-          </CSFormItem>
-          <CSButton
-            htmlType="button"
-            type="primary"
-            onClick={createNewTemplate}
-          >
-            Create New Template
-          </CSButton>
-        </div>
-      </Form>
-      {/* <Segmented
-        options={["Pending", "In-Progress", "Completed", "Rejected"]}
-        block
-        onChange={handleStatus}
-        value={queryObj._temp_status ?? DefaultStatus}
-        defaultValue="Pending"
-      /> */}
-      <Table
-        loading={templateListLoading}
-        dataSource={templateList?.data as readonly [] | undefined}
-        columns={columns}
-        size="small"
-        pagination={{
-          total: templateList?.totalCount,
-          pageSize: +queryObj._limit,
-          current: +queryObj._page,
-          // onChange: (page, pageSize) =>
-        }}
-        scroll={{ x: 300 }}
-        onChange={(page) =>
-          setQuery({
-            [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? "1",
-          })
-        }
-        footer={() => (
-          <p className="">Total {templateList?.totalCount} Templates</p>
-        )}
-      />
-    </>
+    <CSTableForm
+      columns={columns}
+      newBtnTitle="New Template"
+      data={data}
+      loading={isLoading}
+    />
   );
 };
 
