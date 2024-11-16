@@ -18,7 +18,7 @@ const LayoutSidebar = () => {
     getItem("Jobs", "/jobs", <DesktopOutlined />),
     getItem("Forms", "/forms", <DesktopOutlined />),
     getItem("Reports", "/reports", <UserOutlined />),
-    getItem("Templates", "/templates", <FileOutlined />),
+    getItem("Floor Plans", "/floor-plans", <FileOutlined />),
   ];
 
   return (

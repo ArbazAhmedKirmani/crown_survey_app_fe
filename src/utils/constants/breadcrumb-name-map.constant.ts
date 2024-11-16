@@ -6,7 +6,7 @@ const BreadcrumbNameMap = {
   "/jobs/new-job": "New Job",
   "/forms": "Form",
   "/forms/new": "New Form",
-  "/jobs/floor/floor-plan": "Floor Plan",
+  "/floor-plans": "Floor Plans",
 };
 Object.seal(BreadcrumbNameMap);
 

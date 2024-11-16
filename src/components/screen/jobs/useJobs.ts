@@ -11,7 +11,7 @@ const useJobs = () => {
   };
 
   const handleFloorPlan = () => {
-    navigate("floor/floor-plan");
+    navigate("/floor/floor-plan");
   };
 
   const handleCollapse = (collapseNumber: 1 | 2) => {

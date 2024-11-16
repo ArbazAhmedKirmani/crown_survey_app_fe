@@ -40,3 +40,14 @@ export const checkEditablePage = (
   if (param === "new") return trueSide;
   return falseSide;
 };
+
+export function getSqftDimensions(area: number, aspectRatio: number = 2) {
+  // aspectRatio should be provided as a number, e.g., 2 for a 2:1 ratio (length:width)
+  const width = Math.sqrt(area / aspectRatio);
+  const length = aspectRatio * width;
+
+  return {
+    height: +length.toFixed(0) * 10, // Round to 2 decimal places for simplicity
+    width: +width.toFixed(0) * 10,
+  };
+}

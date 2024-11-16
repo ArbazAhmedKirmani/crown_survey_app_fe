@@ -133,3 +133,17 @@
     gap: 8px;
   }
 }
+
+.cs-floor-plan {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}

@@ -5,6 +5,7 @@ import { lazy, PropsWithChildren, Suspense } from "react";
 import DashboardLayout from "../components/layout/dashboard-layout";
 import AuthLayout from "../components/layout/auth-layout";
 import { APP_CONSTANTS } from "../utils/constants/app.constant";
+// import FloorPlan from "../components/screen/jobs/floor-plan";
 
 /** Screens */
 const FloorPlan = lazy(() => import("../components/screen/jobs/floor-plan"));
@@ -15,10 +16,7 @@ const TemplateScreen = lazy(() => import("../screens/template"));
 const Template = lazy(() => import("../components/screen/templates"));
 const SignupScreen = lazy(() => import("../screens/authentication/signup"));
 const DashboardScreen = lazy(() => import("../screens/dashboard"));
-// const ShippingScreen = lazy(() => import("../screens/shipping"));
-// const NewShipment = lazy(
-//   () => import("../components/screen/shipping/new-shipment")
-// );
+
 const Jobs = lazy(() => import("../components/screen/jobs"));
 const JobsScreen = lazy(() => import("../screens/jobs"));
 const NewJobScreen = lazy(() => import("../screens/jobs/new-job"));
@@ -41,6 +39,7 @@ const AppRouter = createBrowserRouter([
     ),
     children: [
       { index: true, element: <DashboardScreen /> },
+      { path: "floor-plans", element: <FloorPlan /> },
       {
         path: "jobs",
         element: <JobsScreen />,
@@ -48,7 +47,6 @@ const AppRouter = createBrowserRouter([
           { index: true, element: <Jobs /> },
           { path: "new", element: <NewJobScreen /> },
           { path: ":id", element: <NewJobScreen /> },
-          { path: "floor/floor-plan", element: <FloorPlan /> },
         ],
       },
       {
