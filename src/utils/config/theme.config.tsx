@@ -2,14 +2,17 @@ export const ThemeConfig = {
   light: {
     token: {
       // Primary and Secondary Colors
-      colorPrimary: "#0078D4", // Fluent UI primary blue
-      colorPrimaryHover: "#005A9E",
-      colorPrimaryActive: "#004578",
+      colorPrimary: "#bcb495", // Fluent UI primary blue
+      colorPrimaryHover: "#c1b481",
+      colorPrimaryActive: "#c1b481",
+      // colorPrimary: "#0078D4", // Fluent UI primary blue
+      // colorPrimaryHover: "#005A9E",
+      // colorPrimaryActive: "#004578",
 
       // Background Colors
-      colorBgContainer: "#F3F2F1", // Neutral light background
+      colorBgContainer: "#FaFaFa", // Neutral light background
       colorBgElevated: "#ffffff", // White for elevated surfaces
-      colorBgLayout: "#f4fafde0", // Slightly darker background for layout areas
+      colorBgLayout: "#ffffffe0", // Slightly darker background for layout areas
       colorBgSpotlight: "#ffffff",
 
       // Text Colors
@@ -21,7 +24,7 @@ export const ThemeConfig = {
 
       // Border Colors
       colorBorder: "#E1DFDD", // Light border color
-      colorBorderSecondary: "#C8C6C4", // Secondary border color
+      colorBorderSecondary: "#d7d7d7", // Secondary border color
 
       // Input and Form Colors
       colorInputBorder: "#E1DFDD", // Input border color

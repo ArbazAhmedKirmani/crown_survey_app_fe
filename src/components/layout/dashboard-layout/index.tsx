@@ -1,5 +1,5 @@
 import { Layout } from "antd";
-import LayoutSidebar from "./sidebar-menu";
+// import LayoutSidebar from "./sidebar-menu";
 import LayoutHeader from "./header";
 import "./style.scss";
 import Content from "./content";
@@ -9,7 +9,7 @@ const DashboardLayout = () => {
     <Layout className="main-layout">
       <LayoutHeader />
       <Layout>
-        <LayoutSidebar />
+        {/* <LayoutSidebar /> */}
         <Content />
       </Layout>
     </Layout>

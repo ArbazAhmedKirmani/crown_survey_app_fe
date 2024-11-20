@@ -1,27 +1,16 @@
 import {
   useRef,
-  useState,
   useEffect,
-  MouseEvent,
   useImperativeHandle,
   forwardRef,
+  useState,
 } from "react";
+import { Canvas, Circle, ITextEvents, Line, Rect, Textbox } from "fabric";
 import CSButton from "../atoms/cs-button";
-import Square from "../../../assets/icons/square.svg";
-import Circle from "../../../assets/icons/circle.svg";
-import { DeleteOutlined } from "@ant-design/icons";
+import SquareIcon from "../../../assets/icons/square.svg";
+import CircleIcon from "../../../assets/icons/circle.svg";
+import { DeleteOutlined, FundViewOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
-
-interface Shape {
-  type: "rectangle" | "circle";
-  x: number;
-  y: number;
-  width?: number;
-  height?: number;
-  radius?: number;
-  isResizing?: boolean;
-  index?: number;
-}
 
 interface ICSFloorPlan {
   height: number;
@@ -29,250 +18,341 @@ interface ICSFloorPlan {
 }
 
 const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [shapes, setShapes] = useState<Shape[]>([]);
-  const [selectedShapeIndex, setSelectedShapeIndex] = useState<number | null>(
-    null
-  );
-  const [draggingShape, setDraggingShape] = useState<Shape | null>(null);
-  const [resizeShape, setResizeShape] = useState<Shape | null>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  // const canvasRef = useRef<Canvas | null>(null);
+  // const [imagePreview, setImagePreview] = useState<string | null>(null); // To store the image preview URL
 
   useImperativeHandle(ref, () => ({
-    values: shapes,
+    values: canvas?.getObjects().map((obj) => {
+      if (obj instanceof Circle) {
+        return {
+          type: obj.type,
+          left: obj.left,
+          top: obj.top,
+          radius: obj.radius,
+        };
+      } else if (obj instanceof Rect) {
+        return {
+          type: obj.type,
+          left: obj.left,
+          top: obj.top,
+          width: obj.width,
+          height: obj.height,
+        };
+      } else {
+        // Handle other object types as needed
+        return {
+          type: obj.type,
+          left: obj.left,
+          top: obj.top,
+        };
+      }
+    }),
   }));
 
+  // useEffect(() => {
+  //   canvasRef.current = new Canvas("canvas", {
+  //     selection: true,
+  //   });
+
+  //   // Clean up the canvas on component unmount
+  //   return () => {
+  //     canvasRef.current?.dispose();
+  //   };
+  // }, []);
+
+  // const addRectangle = () => {
+  //   const rect = new Rect({
+  //     left: 50,
+  //     top: 50,
+  //     width: 100,
+  //     height: 60,
+  //     fill: "#e3e3e3",
+  //     stroke: "gray",
+  //     strokeWidth: 1,
+  //     selectable: true,
+  //   });
+
+  //   canvasRef.current?.add(rect);
+  //   canvasRef.current?.setActiveObject(rect);
+  // };
+
+  // const addCircle = () => {
+  //   const circle = new Circle({
+  //     left: 150,
+  //     top: 100,
+  //     radius: 50,
+  //     fill: "#e3e3e3",
+  //     stroke: "gray",
+  //     strokeWidth: 1,
+  //     selectable: true,
+  //   });
+  //   canvasRef.current?.add(circle);
+  //   canvasRef.current?.setActiveObject(circle);
+  // };
+
+  // const deleteShape = () => {
+  //   const activeObject = canvasRef.current?.getActiveObject();
+  //   if (activeObject) {
+  //     canvasRef.current?.remove(activeObject);
+  //   }
+  // };
+
+  // const previewImage = () => {
+  //   const canvas = canvasRef.current;
+  //   if (!canvas) return;
+
+  //   // Convert the canvas to a base64 image
+  //   const imageURL = canvas.toDataURL({
+  //     format: "png",
+  //     multiplier: 1,
+  //     quality: 1,
+  //   });
+
+  //   // Set the preview image URL
+  //   setImagePreview(imageURL);
+  // };
+
+  // useEffect(()=> {
+  //    // Draw grid lines
+  // for (let i = 0; i < canvasRef.width; i += gridSize) {
+  //   canvasRef.add(new fabric.Line([i, 0, i, canvas.height || 0], {
+  //     stroke: "#ddd",
+  //     selectable: false,
+  //     evented: false,
+  //   }));
+  // }
+
+  // for (let i = 0; i < canvas.height; i += gridSize) {
+  //   canvas.add(new fabric.Line([0, i, canvas.width || 0, i], {
+  //     stroke: "#ddd",
+  //     selectable: false,
+  //     evented: false,
+  //   }));
+  // }
+
+  // // Disable object selection for grid lines
+  // canvas.forEachObject((obj) => {
+  //   obj.selectable = false;
+  //   obj.evented = false;
+  // });
+  // },[])
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [canvas, setCanvas] = useState<Canvas | null>(null);
+  const [drawingMode, setDrawingMode] = useState<
+    "rectangle" | "line" | "label" | null
+  >(null);
+
   useEffect(() => {
-    drawShapes();
-  }, [shapes]);
-
-  const addRectangle = () => {
-    setShapes([
-      ...shapes,
-      {
-        type: "rectangle",
-        x: 50,
-        y: 50,
-        width: 100,
-        height: 60,
-      },
-    ]);
-  };
-
-  const addCircle = () => {
-    setShapes([
-      ...shapes,
-      {
-        type: "circle",
-        x: 150,
-        y: 100,
-        radius: 50,
-      },
-    ]);
-  };
-
-  const deleteShape = () => {
-    if (selectedShapeIndex !== null) {
-      const updatedShapes = shapes.filter(
-        (_, index) => index !== selectedShapeIndex
-      );
-      setShapes(updatedShapes);
-      setSelectedShapeIndex(null);
-    }
-  };
-
-  const handleMouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    let selectedShape: Shape | null = null;
-
-    shapes.forEach((shape, index) => {
-      if (shape.type === "rectangle" && shape.width && shape.height) {
-        const resizeAreaSize = 20;
-        if (
-          mouseX > shape.x + shape.width - resizeAreaSize &&
-          mouseX < shape.x + shape.width &&
-          mouseY > shape.y + shape.height - resizeAreaSize &&
-          mouseY < shape.y + shape.height
-        ) {
-          selectedShape = { ...shape, isResizing: true, index };
-          setResizeShape(selectedShape);
-          setOffset({ x: mouseX, y: mouseY });
-        } else if (
-          mouseX > shape.x &&
-          mouseX < shape.x + shape.width &&
-          mouseY > shape.y &&
-          mouseY < shape.y + shape.height
-        ) {
-          selectedShape = { ...shape, index };
-          setDraggingShape(selectedShape);
-          setSelectedShapeIndex(index);
-          setOffset({ x: mouseX - shape.x, y: mouseY - shape.y });
-        }
-      } else if (shape.type === "circle" && shape.radius) {
-        const dx = mouseX - shape.x;
-        const dy = mouseY - shape.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < shape.radius + 5 && distance > shape.radius - 5) {
-          selectedShape = { ...shape, isResizing: true, index };
-          setResizeShape(selectedShape);
-          setOffset({ x: dx, y: dy });
-        } else if (distance < shape.radius) {
-          selectedShape = { ...shape, index };
-          setDraggingShape(selectedShape);
-          setSelectedShapeIndex(index);
-          setOffset({ x: dx, y: dy });
-        }
-      }
-    });
-  };
-
-  const handleMouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
 
-    if (draggingShape) {
-      const updatedShapes = shapes.map((shape, index) => {
-        if (index === draggingShape.index) {
-          return {
-            ...shape,
-            x: mouseX - offset.x,
-            y: mouseY - offset.y,
-          };
-        }
-        return shape;
-      });
-      setShapes(updatedShapes);
-    } else if (resizeShape) {
-      const updatedShapes = shapes.map((shape, index) => {
-        if (
-          index === resizeShape.index &&
-          shape.type === "rectangle" &&
-          shape.width &&
-          shape.height
-        ) {
-          return {
-            ...shape,
-            width: mouseX - shape.x,
-            height: mouseY - shape.y,
-          };
-        } else if (index === resizeShape.index && shape.type === "circle") {
-          const newRadius = Math.sqrt(
-            (mouseX - shape.x) ** 2 + (mouseY - shape.y) ** 2
-          );
-          return {
-            ...shape,
-            radius: newRadius,
-          };
-        }
-        return shape;
-      });
-      setShapes(updatedShapes);
+    // Initialize Fabric.js canvas
+    const fabricCanvas = new Canvas(canvasRef.current, {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      backgroundColor: "#f3f3f3",
+    });
+
+    // Draw grid
+    const gridSize = 50;
+    for (let i = 0; i < fabricCanvas.width!; i += gridSize) {
+      fabricCanvas.add(
+        new Line([i, 0, i, fabricCanvas.height!], {
+          stroke: "#ddd",
+          selectable: false,
+          evented: false,
+        })
+      );
     }
-  };
+    for (let i = 0; i < fabricCanvas.height!; i += gridSize) {
+      fabricCanvas.add(
+        new Line([0, i, fabricCanvas.width!, i], {
+          stroke: "#ddd",
+          selectable: false,
+          evented: false,
+        })
+      );
+    }
 
-  const handleMouseUp = () => {
-    setDraggingShape(null);
-    setResizeShape(null);
-  };
-
-  const drawShapes = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    shapes.forEach((shape) => {
-      ctx.beginPath();
-      ctx.fillStyle = "#e3e3e3"; // Light gray fill color
-      ctx.strokeStyle = "gray"; // Black border color
-      ctx.lineWidth = 3;
-
-      if (shape.type === "rectangle" && shape.width && shape.height) {
-        ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
-        ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-        ctx.fillStyle = "black";
-        ctx.fillText(
-          `${shape.width.toFixed(0)}x${shape.height.toFixed(0)}`,
-          shape.x + shape.width / 4,
-          shape.y + shape.height / 2
-        );
-      } else if (shape.type === "circle" && shape.radius) {
-        ctx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = "black";
-        ctx.fillText(
-          `r:${shape.radius.toFixed(0)}`,
-          shape.x - shape.radius / 4,
-          shape.y + 5
-        );
+    // Enable panning and zooming
+    fabricCanvas.on("mouse:down", (opt) => {
+      const evt = opt.e as MouseEvent;
+      if (evt.altKey) {
+        fabricCanvas.isDragging = true;
+        fabricCanvas.selection = false;
+        fabricCanvas.lastPosX = evt.clientX;
+        fabricCanvas.lastPosY = evt.clientY;
+      } else if (drawingMode === "rectangle") {
+        startRectangleDraw(opt);
+      } else if (drawingMode === "line") {
+        startLineDraw(opt);
+      } else if (drawingMode === "label") {
+        addLabel(opt);
       }
     });
+
+    fabricCanvas.on("mouse:move", (opt) => {
+      if (fabricCanvas?.isDragging) {
+        const evt = opt.e as MouseEvent;
+        const vpt = fabricCanvas.viewportTransform!;
+        vpt[4] += evt.clientX - fabricCanvas?.lastPosX;
+        vpt[5] += evt.clientY - fabricCanvas?.lastPosY;
+        fabricCanvas.requestRenderAll();
+        fabricCanvas.lastPosX = evt.clientX;
+        fabricCanvas.lastPosY = evt.clientY;
+      } else if (drawingMode === "rectangle") {
+        continueRectangleDraw(opt);
+      } else if (drawingMode === "line") {
+        continueLineDraw(opt);
+      }
+    });
+
+    fabricCanvas.on("mouse:up", () => {
+      fabricCanvas.isDragging = false;
+      fabricCanvas.selection = true;
+
+      // Reset temporary drawing state
+      if (drawingMode === "rectangle") finishRectangleDraw();
+      if (drawingMode === "line") finishLineDraw();
+    });
+
+    setCanvas(fabricCanvas);
+
+    const resizeCanvas = () => {
+      fabricCanvas.setWidth(window.innerWidth);
+      fabricCanvas.setHeight(window.innerHeight);
+      fabricCanvas.renderAll();
+    };
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    return () => {
+      fabricCanvas.dispose();
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, [drawingMode]);
+
+  // Rectangle drawing logic
+  let rect: Rect | null = null;
+  const startRectangleDraw = (opt: ITextEvents) => {
+    const pointer = canvas!.getPointer(opt.e);
+    rect = new Rect({
+      left: pointer.x,
+      top: pointer.y,
+      width: 0,
+      height: 0,
+      fill: "rgba(0,0,255,0.3)",
+      stroke: "#0000ff",
+      strokeWidth: 2,
+    });
+    canvas!.add(rect);
+  };
+
+  const continueRectangleDraw = (opt: ITextEvents) => {
+    if (!rect) return;
+    const pointer = canvas!.getPointer(opt.e);
+    rect.set({
+      width: pointer.x - rect.left!,
+      height: pointer.y - rect.top!,
+    });
+    canvas!.renderAll();
+  };
+
+  const finishRectangleDraw = () => {
+    rect = null;
+  };
+
+  // Line drawing logic
+  let line: Line | null = null;
+  const startLineDraw = (opt: ITextEvents) => {
+    const pointer = canvas!.getPointer(opt.e);
+    line = new Line([pointer.x, pointer.y, pointer.x, pointer.y], {
+      stroke: "black",
+      strokeWidth: 2,
+    });
+    canvas!.add(line);
+  };
+
+  const continueLineDraw = (opt: ITextEvents) => {
+    if (!line) return;
+    const pointer = canvas!.getPointer(opt.e);
+    line.set({ x2: pointer.x, y2: pointer.y });
+    canvas!.renderAll();
+  };
+
+  const finishLineDraw = () => {
+    line = null;
+  };
+
+  // Add label logic
+  const addLabel = (opt: ITextEvents) => {
+    const pointer = canvas!.getPointer(opt.e);
+    const text = new Textbox("Label", {
+      left: pointer.x,
+      top: pointer.y,
+      width: 150,
+      fontSize: 16,
+      fill: "black",
+      backgroundColor: "rgba(255,255,255,0.7)",
+      editable: true,
+    });
+    canvas!.add(text);
   };
 
   return (
     <div className="cs-floor-plan">
-      <canvas
-        ref={canvasRef}
-        width={props.width}
-        height={props.height}
-        style={{ border: "2px solid black" }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      />
       <div className="controls">
         <Tooltip placement="right" title="Rectangle">
           <CSButton
             type="link"
-            onClick={addRectangle}
+            onClick={() => setDrawingMode("rectangle")}
             icon={
               <img
-                src={Square}
+                src={SquareIcon}
                 alt="My Icon"
                 style={{ height: 15, width: 15 }}
               />
             }
-          >
-            {/* Add Rectangle */}
-          </CSButton>
+          />
         </Tooltip>
         <Tooltip placement="right" title="Circle">
           <CSButton
             type="link"
-            onClick={addCircle}
+            onClick={() => setDrawingMode("line")}
             icon={
               <img
-                src={Circle}
+                src={CircleIcon}
                 alt="My Icon"
                 style={{ height: 15, width: 15 }}
               />
             }
-          >
-            {/* Add Circle */}
-          </CSButton>
+          />
         </Tooltip>
         <Tooltip placement="right" title="Delete">
           <CSButton
             type="text"
-            onClick={deleteShape}
-            disabled={selectedShapeIndex === null}
+            onClick={() => setDrawingMode("label")}
             icon={<DeleteOutlined />}
-          >
-            {/* Delete Shape */}
-          </CSButton>
+          />
         </Tooltip>
+        <canvas
+          ref={canvasRef}
+          // id="canvas"
+          // width={props.width}
+          // height={props.height}
+          // style={{ border: "2px solid black" }}
+        />
+        {/* <Tooltip placement="right" title="View">
+          <CSButton
+            type="text"
+            onClick={previewImage}
+            icon={<FundViewOutlined />}
+          />
+        </Tooltip> */}
       </div>
+      {/* {imagePreview && (
+        <img src={imagePreview} draggable={false} alt="Canvas Preview" />
+      )} */}
     </div>
   );
 });

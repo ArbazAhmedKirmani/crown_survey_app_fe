@@ -3,13 +3,13 @@ import { ConfigProvider } from "antd";
 import { RouterProvider } from "react-router-dom";
 import AppRouter from "./routes";
 import { ThemeConfig } from "./utils/config/theme.config";
-import frFR from "antd/locale/fr_FR";
+import en_US from "antd/locale/en_US";
 
 const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider locale={frFR} theme={ThemeConfig.light}>
+      <ConfigProvider locale={en_US} theme={ThemeConfig.light}>
         <RouterProvider router={AppRouter} />
       </ConfigProvider>
     </QueryClientProvider>

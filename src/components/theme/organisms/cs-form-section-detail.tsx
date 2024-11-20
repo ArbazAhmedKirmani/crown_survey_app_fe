@@ -7,17 +7,20 @@ import CSFormItem from "../atoms/cs-form-item";
 
 const CSFormSectionDetail = () => {
   return (
-    <div className="form-section-detail">
+    <div className="cs-form-section-detail">
       <Typography.Title level={4}>Form Sections</Typography.Title>
 
-      <Form.List name={["form_section"]}>
+      <Form.List
+        initialValue={[{ name: "", prefix: "", order: null }]}
+        name={["form_section"]}
+      >
         {(subFields, { add, remove }) => (
           <>
             {subFields.map(({ key, name, ...restField }) => (
               <div key={key} className="form-section-box">
                 <div className="form-detail-row">
                   <div className="form-detail-field-cont">
-                    <Form.Item {...restField} name={[name, "id"]}>
+                    <Form.Item {...restField} name={[name, "id"]} hidden={true}>
                       <input type="hidden" />
                     </Form.Item>
                     <Form.Item
@@ -68,7 +71,7 @@ const CSFormSectionDetail = () => {
             <Row>
               <Col span={24}>
                 <CSButton
-                  type="text"
+                  type="link"
                   onClick={() => add()}
                   icon={<PlusOutlined />}
                 >

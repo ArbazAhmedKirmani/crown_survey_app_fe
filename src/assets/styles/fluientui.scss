@@ -6,14 +6,17 @@ $fontSizeLarge: 16px; // Large font size
 $lineHeightBase: 1.5; // Line height for readability
 
 // Colors from Fluent UI 2
-$colorPrimary: #0078d4;
-$colorPrimaryHover: #005a9e;
-$colorPrimaryActive: #004578;
+// $colorPrimary: #0078d4;
+// $colorPrimaryHover: #005a9e;
+// $colorPrimaryActive: #004578;
+$colorPrimary: #bcb495; // #0078d4;
+$colorPrimaryHover: #c1b481; //#005a9e;
+$colorPrimaryActive: #c1b481; // #004578;
 $colorText: #323130;
 $colorTextSecondary: #605e5c;
 $colorTextDisabled: #c8c6c4;
 $colorTextLightSolid: #ffffff;
-$colorBgContainer: #f2f2f1;
+$colorBgContainer: #fafafa;
 $colorBgElevated: #ffffff;
 $colorBgLayout: #f4f3f4e0;
 $colorInputBorder: #e1dfdd;
@@ -216,5 +219,11 @@ $inputPaddingLarge: 10px 20px;
 
   &:disabled {
     color: $colorTextDisabled;
+  }
+}
+
+.ant-table {
+  .ant-table-row {
+    background: #fcfcfc;
   }
 }

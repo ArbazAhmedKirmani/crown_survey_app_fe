@@ -2,7 +2,6 @@ import { Divider, Form, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { UploadFile } from "antd/lib";
 import { useNavigate, useParams } from "react-router-dom";
-import CSFormHeader from "../../theme/molecules/cs-form-header";
 import CSButton from "../../theme/atoms/cs-button";
 import CSFormDetail from "../../theme/organisms/cs-form-detail";
 import CSFormSectionDetail from "../../theme/organisms/cs-form-section-detail";
@@ -16,7 +15,6 @@ import { IFormGetById } from "../../../utils/interface/form.interface";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 import { checkEditablePage } from "../../../utils/helper/general.helper";
-// import { QueryClient } from "react-query";
 
 export type TFormField =
   | "CHECKBOX"
@@ -64,7 +62,7 @@ const NewForm = () => {
     method: AxiosMethodEnum.PATCH,
     showSuccessMessage: true,
     onSuccess: () => {
-      navigate("/forms/");
+      navigate(-1);
     },
   });
 
@@ -117,9 +115,8 @@ const NewForm = () => {
           onFinish={onFinish}
           autoComplete="off"
           form={form}
+          // initialValues={form.getFieldsValue()}
         >
-          <CSFormHeader />
-
           <CSFormDetail document_ref={document_ref} />
 
           <Divider />

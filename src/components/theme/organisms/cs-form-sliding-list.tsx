@@ -1,5 +1,5 @@
 import { MenuOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 import { Spin } from "antd";
 
@@ -13,11 +13,18 @@ export interface ICSFormSlidingList {
   list?: TCSFormSlidingListProp[];
   type: string;
   loading?: boolean;
+  title?: string;
   onSelect?: (item: TCSFormSlidingListProp) => void;
+  width?: number;
 }
 
 const CSFormSlidingList = (props: ICSFormSlidingList) => {
-  const { list, type } = props;
+  const {
+    list,
+    type,
+    // title,
+    width = 50,
+  } = props;
   const { getQuery, setQuery } = useQueryString();
   const [collapse, setCollapse] = useState<boolean>(false);
 
@@ -28,18 +35,33 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
     if (props.onSelect) props?.onSelect(item);
   };
 
+  useEffect(() => {
+    if (window.innerWidth <= 900) {
+      setCollapse(true);
+    }
+  }, []);
+
   return (
     <Spin spinning={props?.loading}>
       {list?.length && (
-        <div className={`cs-form-sliding-list ${collapse ? "collapsed" : ""}`}>
+        <div
+          id="cs-form-sliding-list"
+          className={`cs-form-sliding-list ${collapse ? "collapsed" : ""}`}
+        >
           <div className="menu-header">
             <MenuOutlined
               style={{ color: "black" }}
               onClick={() => setCollapse((prev) => !prev)}
             />
+            {/* {title && (
+              <h4 style={{ display: collapse ? "none" : "block" }}>{title}</h4>
+            )} */}
           </div>
 
-          <ul className="menu-list">
+          <ul
+            className="menu-list"
+            style={{ ...(collapse && { width: width }) }}
+          >
             {list?.map((item: TCSFormSlidingListProp) => (
               <li
                 key={item.id}

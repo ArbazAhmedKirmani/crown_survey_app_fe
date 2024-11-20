@@ -14,7 +14,7 @@ export interface CSFormDetails {
 
 const CSFormDetail = (props: CSFormDetails) => {
   return (
-    <>
+    <div className="cs-form-detail">
       <Typography.Title level={4} style={{ marginTop: 5 }}>
         Form Detail
       </Typography.Title>
@@ -61,7 +61,7 @@ const CSFormDetail = (props: CSFormDetails) => {
           </CSFormItem>
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 

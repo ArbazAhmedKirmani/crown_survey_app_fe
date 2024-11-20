@@ -6,18 +6,28 @@
   max-width: 300px;
   transition: width 0.15s ease-in-out;
   border-radius: $borderRadius;
-  padding: 16px;
+  // padding-inline: 1rem;
 
   &.collapsed {
-    width: 80px; // Adjust for collapsed state
+    width: 50px;
+    .menu-prefix {
+      text-align: center;
+    }
     .menu-text {
-      display: none; // Hide menu text when collapsed
+      display: none;
     }
   }
 
   .menu-header {
     display: flex;
     justify-content: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 10px;
+
+    h4 {
+      color: black;
+      margin: 0 10px 0 10px;
+    }
 
     .toggle-button {
       background-color: $colorPrimary;
@@ -43,7 +53,9 @@
   .menu-list {
     list-style-type: none;
     padding: 0;
-    margin: 16px 0 0;
+    overflow-y: auto;
+    height: Calc(100vh - 16rem);
+    margin: 0px 0 16px 0;
 
     .menu-item {
       display: flex;
@@ -51,7 +63,7 @@
       font-size: 16px;
       color: $colorText;
       padding: 12px 0;
-      border-bottom: 1px solid $colorText, 40%;
+      // border-bottom: 1px solid $colorText, 40%;
       cursor: pointer;
       transition: color 0.1s;
 
@@ -69,7 +81,8 @@
         margin-right: 8px;
         font-weight: bold;
         font-size: 14px;
-        width: 24px;
+        width: 30px;
+        padding-inline: 5px;
       }
 
       .menu-text {
@@ -101,18 +114,23 @@
   }
 }
 
-.form-section-detail {
+.cs-form-section-detail {
+  margin-bottom: 10px;
+
+  .ant-row {
+    margin: 0 !important;
+  }
   .form-section-box {
     border: 1px solid #e1dfdd;
     border-radius: 2px;
-    padding: 1rem 1rem 0 1rem;
-    margin-bottom: 1rem;
+    padding: 1rem;
+    margin: 1rem 0;
     position: relative;
 
-    .form-detail-row {
-      display: flex;
-      width: 100%;
-      row-gap: 10;
+    .ant-table-footer {
+      .ant-form-item {
+        margin-bottom: 0;
+      }
     }
 
     .section-delete-btn {
@@ -124,13 +142,65 @@
   }
 }
 
+.cs-form-field-detail {
+  .form-detail-row {
+    display: flex;
+    width: 100%;
+    row-gap: 10px;
+  }
+
+  .form-fields-row {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .ant-row {
+    margin: 0 !important;
+  }
+
+  // .form-field-table {
+  //   thead {
+  //     tr {
+  //       td {
+  //         font-weight: bold;
+  //         text-align: center;
+  //       }
+  //     }
+  //   }
+  //   td {
+  //     text-align: center;
+  //   }
+  // }
+}
+
 .cs-dynamic-fields-renderer {
-  display: flex;
-  padding: 1rem;
+  height: calc(100vh - 14rem);
+
+  h3 {
+    color: white;
+    background-color: $colorPrimaryActive;
+    padding: 5px 0.5rem;
+  }
 
   .ant-form {
-    display: flex;
-    gap: 8px;
+    width: 100%;
+
+    .ant-row {
+      margin: 0;
+    }
+
+    .option-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .ant-drawer {
+    overflow-x: hidden;
   }
 }
 
@@ -145,5 +215,11 @@
     justify-content: flex-start;
     gap: 1rem;
     padding: 1rem;
+  }
+}
+
+.cs-form-detail {
+  .ant-row {
+    margin: 0;
   }
 }

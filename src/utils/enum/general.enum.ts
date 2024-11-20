@@ -67,3 +67,10 @@ export enum FormFieldType {
   SENTENCE = "SENTENCE",
   DATE = "DATE",
 }
+
+export enum JobStatusEnum {
+  PENDING = "Pending",
+  COMPLETED = "Completed",
+  REJECTED = "Rejected",
+  CANCELED = "Cancelled",
+}

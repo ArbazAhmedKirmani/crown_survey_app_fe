@@ -1,10 +1,16 @@
+import { FormFieldType } from "../enum/general.enum";
+
 export interface IFormFields {
   id: string;
   name: string;
   mapperName: string;
   orderNumber: number;
-  type: string;
-  required: boolean;
+  type?: FormFieldType;
+  required?: boolean;
+  rating?: boolean;
+  attachments?: boolean;
+  placeholder?: string;
+  values?: string[];
 }
 
 export interface IFormSection {

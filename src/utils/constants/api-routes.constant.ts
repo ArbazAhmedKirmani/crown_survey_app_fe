@@ -7,9 +7,11 @@ export const API_ROUTES = {
     get: "api/schema",
   },
   jobs: {
+    get: "api/jobs",
     getForms: "api/jobs/forms",
     getSectionByForm: (id?: string) => `api/jobs/forms/${id}`,
     getFieldsBySection: (id?: string) => `api/jobs/section/${id}`,
+    getFieldsDetail: (id?: string) => `api/jobs/field/${id}`,
     // post: "api/form",
     // put: (id: string) => `api/form/${id}`,
   },

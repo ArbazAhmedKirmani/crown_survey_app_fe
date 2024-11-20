@@ -9,10 +9,8 @@ import { checkEditablePage } from "../../../utils/helper/general.helper";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
-import { useState } from "react";
-import CSDynamicFieldsRenderer, {
-  IFormFieldResponse,
-} from "../../theme/organisms/cs-dynamic-fields-renderer";
+import useQueryString from "../../../hooks/use-query-string";
+import CSDynamicFieldsRenderer from "../../theme/organisms/cs-dynamic-fields-renderer";
 
 export interface IJobFormResponse {
   id: number;
@@ -31,8 +29,7 @@ export interface IFieldData {
 
 const NewJob = () => {
   const param = useParams();
-  const [selectedForm, setSelectedForm] = useState<string>();
-  const [selectedSection, setSelectedSection] = useState<string>();
+  const { getQuery, setQuery } = useQueryString();
 
   const { isPending } = usePostApi({
     url: API_ROUTES.form.post,
@@ -40,61 +37,63 @@ const NewJob = () => {
     onSuccess: () => {},
   });
 
-  const { data, isLoading: formLoading } = useGetApi<
-    IApiResponse<IJobFormResponse[]>
-  >({
-    key: [API_ROUTES.jobs.getForms],
-    url: API_ROUTES.jobs.getForms,
-  });
+  const form = getQuery(QUERY_STRING.OTHER_PARAMS.PARENT_FORM) as string;
+  const section = getQuery(QUERY_STRING.OTHER_PARAMS.CHILD_FORM) as string;
 
   const { data: sections, isLoading: sectionLoading } = useGetApi<
     IApiResponse<IJobFormResponse[]>
   >({
-    key: [API_ROUTES.jobs.getForms, selectedForm],
-    url: API_ROUTES.jobs.getSectionByForm(selectedForm),
-    enabled: Boolean(selectedForm),
+    key: [API_ROUTES.jobs.getForms, form],
+    url: API_ROUTES.jobs.getSectionByForm(form),
+    enabled: Boolean(form),
   });
 
   const { data: fields, isLoading: fieldsLoading } = useGetApi<
-    IApiResponse<IFormFieldResponse[]>
+    IApiResponse<IJobFormResponse[]>
   >({
-    key: [API_ROUTES.jobs.getForms, selectedSection],
-    url: API_ROUTES.jobs.getFieldsBySection(selectedSection),
-    enabled: Boolean(selectedSection),
+    key: [API_ROUTES.jobs.getForms, section],
+    url: API_ROUTES.jobs.getFieldsBySection(section),
+    enabled: Boolean(section),
   });
 
   const handleFormSelect = (item: TCSFormSlidingListProp) => {
-    setSelectedForm(item.id.toString());
+    // setQuery({ [QUERY_STRING.OTHER_PARAMS.PARENT_FORM]: item.id.toString() });
+    setQuery({ [QUERY_STRING.OTHER_PARAMS.CHILD_FORM]: item.id.toString() });
   };
 
   const handleSectionSelect = (item: TCSFormSlidingListProp) => {
-    setSelectedSection(item.id.toString());
+    setQuery({
+      [QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD]: item.id.toString(),
+    });
   };
 
   return (
     <div className="new-job-cont">
       <div className="flex-cont">
-        <div className="first-list">
-          <CSFormSlidingList
-            loading={formLoading}
-            type={QUERY_STRING.OTHER_PARAMS.PARENT_FORM}
-            list={data?.data}
-            onSelect={handleFormSelect}
-          />
-        </div>
-        <div className="second-list">
-          <CSFormSlidingList
-            loading={sectionLoading}
-            type={QUERY_STRING.OTHER_PARAMS.CHILD_FORM}
-            list={sections?.data}
-            onSelect={handleSectionSelect}
-          />
-        </div>
+        {sections?.data && (
+          <div className="first-list">
+            <CSFormSlidingList
+              loading={sectionLoading}
+              type={QUERY_STRING.OTHER_PARAMS.PARENT_FORM}
+              list={sections?.data}
+              onSelect={handleFormSelect}
+              title="Forms"
+            />
+          </div>
+        )}
+        {sections?.data && (
+          <div className="second-list">
+            <CSFormSlidingList
+              loading={fieldsLoading}
+              type={QUERY_STRING.OTHER_PARAMS.CHILD_FORM}
+              list={fields?.data}
+              onSelect={handleSectionSelect}
+              title="Sections"
+            />
+          </div>
+        )}
         <div className="content-section">
-          <CSDynamicFieldsRenderer
-            list={fields?.data}
-            loading={fieldsLoading}
-          />
+          <CSDynamicFieldsRenderer title="Sections Fields" />
         </div>
       </div>
       <CSButton loading={isPending} type="primary">

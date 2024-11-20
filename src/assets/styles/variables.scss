@@ -13,12 +13,15 @@
 // $colorBgContainer: #f3f2f1;
 // $colorText: #323130;
 
-$colorPrimary: #0078d4; // Fluent UI primary blue
-$colorPrimaryHover: #005a9e;
-$colorPrimaryActive: #004578;
+// $colorPrimary: #0078d4; // Fluent UI primary blue
+// $colorPrimaryHover: #005a9e;
+// $colorPrimaryActive: #004578;
+$colorPrimary: #bcb495; // #0078d4;
+$colorPrimaryHover: #c1b481; //#005a9e;
+$colorPrimaryActive: #c1b481; // #004578;
 
 // Background Colors
-$colorBgContainer: #f3f2f1; // Neutral light background
+$colorBgContainer: #fafafa; // Neutral light background
 $colorBgElevated: #ffffff; // White for elevated surfaces
 $colorBgLayout: #f4fafde0; // Slightly darker background for layout areas
 $colorBgSpotlight: #ffffff;
@@ -32,7 +35,7 @@ $colorTextLightSolid: #ffffff; // Light text on dark background
 
 // Border Colors
 $colorBorder: #e1dfdd; // Light border color
-$colorBorderSecondary: #c8c6c4; // Secondary border color
+$colorBorderSecondary: #d7d7d7; // Secondary border color
 
 // Input and Form Colors
 $colorInputBorder: #e1dfdd; // Input border color

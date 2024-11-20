@@ -45,7 +45,6 @@ const AppRouter = createBrowserRouter([
         element: <JobsScreen />,
         children: [
           { index: true, element: <Jobs /> },
-          { path: "new", element: <NewJobScreen /> },
           { path: ":id", element: <NewJobScreen /> },
         ],
       },
@@ -54,7 +53,6 @@ const AppRouter = createBrowserRouter([
         element: <FormsScreen />,
         children: [
           { index: true, element: <Forms /> },
-          { path: "new", element: <NewForm /> },
           { path: ":id", element: <NewForm /> },
         ],
       },
@@ -63,7 +61,6 @@ const AppRouter = createBrowserRouter([
         element: <TemplateScreen />,
         children: [
           { index: true, element: <Template /> },
-          { path: "new", element: <NewJobScreen /> },
           { path: ":id", element: <NewJobScreen /> },
         ],
       },

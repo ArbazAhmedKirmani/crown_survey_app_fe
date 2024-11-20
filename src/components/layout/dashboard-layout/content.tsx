@@ -2,16 +2,24 @@ import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
 import CSAppBreadcrumb from "../../theme/organisms/cs-app-breadcrumb";
-import CSContainer from "../../theme/atoms/cs-container";
+import CSBackNavigator from "../../theme/atoms/cs-back-navigator";
+import { Col, Row } from "antd";
 
 const Content = () => {
   return (
     <div className="outlet-cont">
       <Suspense fallback={<CSLayoutLoader type="dashboard" />}>
-        <CSContainer>
-          <CSAppBreadcrumb />
-          <Outlet />
-        </CSContainer>
+        <Row>
+          <Col span={24}>
+            <div className="content-header">
+              <CSBackNavigator />
+              <CSAppBreadcrumb />
+            </div>
+          </Col>
+          <Col span={24} className="content-col">
+            <Outlet />
+          </Col>
+        </Row>
       </Suspense>
     </div>
   );

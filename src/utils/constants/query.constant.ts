@@ -4,10 +4,11 @@ export const QUERY_STRING = {
     PAGE: "_page",
     SEARCH: "_search",
   },
-  TEMPLATE: { STATUS: "_temp_status" },
   OTHER_PARAMS: {
+    STATUS: "_jb_sts",
     PARENT_FORM: "_pa_f",
     CHILD_FORM: "_ch_f",
+    SELECTED_FIELD: "_sl_f",
   },
   FILTERS: {
     DATE_FROM: "_dateFrom",

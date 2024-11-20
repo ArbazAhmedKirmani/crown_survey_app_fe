@@ -82,13 +82,7 @@ const CSTableForm = (props: ICSTableView) => {
           </CSButton>
         </Col>
       </Row>
-      {/* <Segmented
-        options={["Pending", "In-Progress", "Completed", "Rejected"]}
-        block
-        onChange={handleStatus}
-        value={queryObj._temp_status ?? DefaultStatus}
-        defaultValue="Pending"
-      /> */}
+
       {centerSection}
       <CSTable
         loading={loading}
@@ -102,11 +96,6 @@ const CSTableForm = (props: ICSTableView) => {
             setQuery({ [QUERY_STRING.PAGINATION.PAGE]: page.toString() });
           },
         }}
-        // onChange={(page) =>
-        //   setQuery({
-        //     [QUERY_STRING.PAGINATION.PAGE]: page.current?.toString() ?? "1",
-        //   })
-        // }
         footer={() =>
           footer ? (
             <p className="table-footer">

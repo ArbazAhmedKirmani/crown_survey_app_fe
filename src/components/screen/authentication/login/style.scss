@@ -14,7 +14,7 @@
     flex-direction: column;
     align-items: flex-start;
     width: 80%;
-    color: $colorPrimary;
+    color: $colorPrimaryActive;
     h1 {
       margin: 0;
     }
@@ -43,12 +43,12 @@
   .custom-divider {
     width: 100%;
     color: rgb(179, 179, 179);
-    color: $colorPrimary;
+    color: $colorPrimaryActive;
   }
 
   .signup-button {
-    border-color: $colorPrimary !important;
-    color: $colorPrimary;
+    border-color: $colorPrimaryActive !important;
+    color: $colorPrimaryActive;
     width: 80%;
   }
 

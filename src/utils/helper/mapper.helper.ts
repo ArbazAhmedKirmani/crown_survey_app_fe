@@ -21,6 +21,11 @@ export const formMapper = (data: IFormGetById) => {
         mapper: field.mapperName,
         orderNo: field.orderNumber,
         type: field.type,
+        placeholder: field.placeholder,
+        required: field.required,
+        rating: field.rating,
+        attachments: field.attachments,
+        values: field.values,
       })),
     })),
   };

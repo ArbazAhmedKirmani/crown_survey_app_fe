@@ -6,22 +6,44 @@ import { Form, Modal, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import CSInput from "../../theme/atoms/cs-input";
 import { getSqftDimensions } from "../../../utils/helper/general.helper";
+import fabric from "fabric";
 
 const FloorPlan = () => {
+  const canvasRef = useRef<fabric.Canvas | null>(null);
   const [canvasForm] = useForm();
   const [modal, setModal] = useState<boolean>(false);
   const [canvas, setCanvas] = useState<{
     height: number;
     width: number;
   } | null>(null);
-  const ref = useRef<{
-    values: AnyObject[];
-  }>();
 
   const handleModal = () => {
     if (modal) setCanvas(null);
     setModal((prev) => !prev);
   };
+
+  // const saveDrawing = () => {
+  //   const canvas = canvasRef.current;
+  //   if (!canvas) return;
+
+  //   // Get canvas state as JSON
+  //   const canvasState = canvas.toJSON();
+  //   localStorage.setItem("savedCanvas", JSON.stringify(canvasState));
+  // };
+
+  // const loadDrawing = () => {
+  //   const canvas = canvasRef.current;
+  //   if (!canvas) return;
+
+  //   // Get saved canvas data from localStorage
+  //   const savedCanvas = localStorage.getItem("savedCanvas");
+  //   if (savedCanvas) {
+  //     const parsedCanvasData = JSON.parse(savedCanvas);
+
+  //     // Load canvas state
+  //     canvas.loadFromJSON(parsedCanvasData, canvas.renderAll.bind(canvas));
+  //   }
+  // };
 
   return (
     <div className="floor-plan" style={{ width: "100%", height: "100%" }}>
@@ -34,13 +56,14 @@ const FloorPlan = () => {
         footer={null}
         width={"auto"}
         centered
+        style={{ width: "95vw", height: "95vh", overflow: "scroll" }}
       >
         {!canvas ? (
           <Form
             form={canvasForm}
             layout="vertical"
             onFinish={(values: AnyObject) =>
-              setCanvas((prev) => {
+              setCanvas(() => {
                 const data = getSqftDimensions(values.area);
                 return data;
               })
@@ -61,18 +84,18 @@ const FloorPlan = () => {
         ) : (
           <div>
             <CSFloorPlan
-              ref={ref}
+              ref={canvasRef}
               height={canvas.height}
               width={canvas.width}
             />
             <CSButton
-              onClick={() => console.log(ref.current?.values)}
+              onClick={() => console.log(canvasRef.current?.getObjects())}
               style={{ marginRight: 10 }}
             >
               Cancel
             </CSButton>
             <CSButton
-              onClick={() => console.log(ref.current?.values)}
+              onClick={() => console.log(canvasRef.current?.getObjects())}
               type="primary"
             >
               Submit

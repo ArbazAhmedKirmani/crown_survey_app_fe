@@ -17,29 +17,30 @@ import { FormFieldType } from "../../../utils/enum/general.enum";
 import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
 
 export interface ICSDynamicField extends PropsWithChildren {
-  type: FormFieldType;
-  nestedProps: IFormFieldResponse;
+  type?: FormFieldType;
+  nestedProps?: IFormFieldResponse;
 }
 const CSDynamicField = ({ type }: ICSDynamicField) => {
   const getTypeField = () => {
-    switch (type) {
-      case FormFieldType.FILE:
-        return <CSDynamicField.FILE />;
-      case FormFieldType.INPUT:
-        return <CSDynamicField.INPUT />;
-      case FormFieldType.CHECKBOX:
-        return <CSDynamicField.CHECKBOX />;
-      case FormFieldType.RADIO:
-        return <CSDynamicField.RADIO />;
-      case FormFieldType.DATE:
-        return <CSDynamicField.DATE />;
-      case FormFieldType.TEXTAREA:
-        return <CSDynamicField.SENTENCE />;
-      case FormFieldType.SENTENCE:
-        return <CSDynamicField.SENTENCE />;
-      default:
-        break;
-    }
+    if (type)
+      switch (type) {
+        case FormFieldType.FILE:
+          return <CSDynamicField.FILE />;
+        case FormFieldType.INPUT:
+          return <CSDynamicField.INPUT />;
+        case FormFieldType.CHECKBOX:
+          return <CSDynamicField.CHECKBOX />;
+        case FormFieldType.RADIO:
+          return <CSDynamicField.RADIO />;
+        case FormFieldType.DATE:
+          return <CSDynamicField.DATE />;
+        case FormFieldType.TEXTAREA:
+          return <CSDynamicField.SENTENCE />;
+        case FormFieldType.SENTENCE:
+          return <CSDynamicField.SENTENCE />;
+        default:
+          break;
+      }
   };
 
   return <CSFormItem>{getTypeField()}</CSFormItem>;

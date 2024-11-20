@@ -52,3 +52,27 @@
 
 .cs-input {
 }
+
+.cs-back-navigator {
+  span {
+    color: $colorTextSecondary;
+    cursor: pointer;
+    padding-inline: 5;
+    margin: 0.5rem 0 0.5rem 0;
+    margin-right: 5px;
+  }
+}
+
+.cs-segmented .ant-segmented-item {
+  transition: none; // color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  border-radius: 2px;
+  transform: none;
+  // :hover {
+  //   background-color: $colorPrimary !important;
+  //   color: whitesmoke !important;
+  // }
+}
+.ant-segmented-item-selected {
+  background-color: $colorPrimaryActive !important;
+  color: whitesmoke !important;
+}
