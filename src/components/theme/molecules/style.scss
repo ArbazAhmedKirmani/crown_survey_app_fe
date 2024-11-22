@@ -1,1 +1,23 @@
 @use "../../../assets/styles/variables.scss" as *;
+
+
+.cs-canvas {
+    display: flex;
+    flex-grow: 1;
+
+    .drawpad{
+        border: 2px solid $colorPrimaryActive;
+        border-radius: 2px;
+        height: Calc(100vh - 10.4rem);
+        width: Calc(100vw - 10rem);
+        overflow: auto;
+    }
+
+    .toolbar {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        flex-grow: 0;
+    }
+}

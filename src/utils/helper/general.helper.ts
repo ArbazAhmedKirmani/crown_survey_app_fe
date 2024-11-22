@@ -51,3 +51,7 @@ export function getSqftDimensions(area: number, aspectRatio: number = 1) {
     width: +width.toFixed(0) * 15,
   };
 }
+
+export const pixelToMeterConverter = (meter: number): number => {
+  return meter * 25
+}
