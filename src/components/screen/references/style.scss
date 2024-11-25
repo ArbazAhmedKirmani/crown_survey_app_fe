@@ -1,0 +1,17 @@
+.reference {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: flex-end;
+
+  .ref-form {
+    width: 100%;
+  }
+}
+
+.new-reference {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}

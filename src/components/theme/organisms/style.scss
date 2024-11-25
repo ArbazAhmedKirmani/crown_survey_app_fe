@@ -63,16 +63,12 @@
       font-size: 16px;
       color: $colorText;
       padding: 12px 0;
-      // border-bottom: 1px solid $colorText, 40%;
       cursor: pointer;
       transition: color 0.1s;
 
-      &.active-item {
-        font-weight: bold;
-      }
-
       &.active-item,
       &:hover {
+        font-weight: 400;
         color: $colorPrimary;
         background-color: $colorBgLayout;
       }
@@ -192,15 +188,37 @@
 
     .option-bar {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 1rem;
       margin-bottom: 0.5rem;
       margin-top: 0.5rem;
     }
   }
 
+  .cs-form-item {
+    margin-bottom: 0;
+  }
+
   .ant-drawer {
     overflow-x: hidden;
+  }
+
+  .ant-upload-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .ant-upload-wrapper {
+    width: 100%;
+
+    .ant-upload-btn {
+      padding: 4px;
+
+      p {
+        margin: 0;
+      }
+    }
   }
 }
 
@@ -221,5 +239,37 @@
 .cs-form-detail {
   .ant-row {
     margin: 0;
+  }
+}
+
+.cs-reference-sidebar {
+  display: flex;
+  justify-content: flex-start;
+
+  .category-list {
+  }
+
+  .reference-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+
+    .ant-checkbox-wrapper {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .preview {
+    height: Calc(-25rem + 100vh);
+    overflow-y: auto;
+
+    .item {
+      padding: 0.5rem 0;
+
+      .delete {
+        color: tomato;
+        width: 20px;
+      }
+    }
   }
 }

@@ -4,7 +4,7 @@ import useQueryString from "../../../hooks/use-query-string";
 import { Spin } from "antd";
 
 export type TCSFormSlidingListProp = {
-  prefix: string;
+  prefix?: string;
   name: string;
   id: number | string;
 };
@@ -16,6 +16,7 @@ export interface ICSFormSlidingList {
   title?: string;
   onSelect?: (item: TCSFormSlidingListProp) => void;
   width?: number;
+  height?: string | number;
 }
 
 const CSFormSlidingList = (props: ICSFormSlidingList) => {
@@ -32,7 +33,7 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
 
   const handleFormSelect = (item: TCSFormSlidingListProp) => {
     setQuery({ [type]: item.id.toString() });
-    if (props.onSelect) props?.onSelect(item);
+    if (props?.onSelect) props?.onSelect(item);
   };
 
   useEffect(() => {
@@ -60,7 +61,10 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
 
           <ul
             className="menu-list"
-            style={{ ...(collapse && { width: width }) }}
+            style={{
+              ...(collapse && { width: width }),
+              height: props?.height ?? "Calc(100vh - 16rem)",
+            }}
           >
             {list?.map((item: TCSFormSlidingListProp) => (
               <li

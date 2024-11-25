@@ -15,6 +15,15 @@ export const API_ROUTES = {
     // post: "api/form",
     // put: (id: string) => `api/form/${id}`,
   },
+  reference: {
+    get: "api/reference",
+    getCategory: "api/reference/category",
+    getCategoryById: (id?: string) => `api/reference/category/${id}`,
+    getReferenceByCategory: (id?: string) => `api/reference/${id}/category`,
+    post: `api/reference`,
+    postCategory: `api/reference/category`,
+    // getFieldsBySection: (id?: string) => `api/reference/section/${id}`,
+  },
   form: {
     get: "api/form",
     getById: (id?: string) => `api/form/${id}`,

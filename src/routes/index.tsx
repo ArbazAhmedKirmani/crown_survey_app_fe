@@ -8,6 +8,11 @@ import { APP_CONSTANTS } from "../utils/constants/app.constant";
 // import FloorPlan from "../components/screen/jobs/floor-plan";
 
 /** Screens */
+const References = lazy(() => import("../components/screen/references"));
+const NewReference = lazy(
+  () => import("../components/screen/references/new-reference")
+);
+const ReferencesScreen = lazy(() => import("../screens/reference"));
 const FloorPlan = lazy(() => import("../components/screen/jobs/floor-plan"));
 const FormsScreen = lazy(() => import("../screens/Forms"));
 const Forms = lazy(() => import("../components/screen/forms"));
@@ -62,6 +67,14 @@ const AppRouter = createBrowserRouter([
         children: [
           { index: true, element: <Template /> },
           { path: ":id", element: <NewJobScreen /> },
+        ],
+      },
+      {
+        path: "reference",
+        element: <ReferencesScreen />,
+        children: [
+          { index: true, element: <References /> },
+          { path: ":id", element: <NewReference /> },
         ],
       },
       {

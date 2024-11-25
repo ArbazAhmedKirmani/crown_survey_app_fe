@@ -20,24 +20,24 @@ export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
   nestedProps?: IFormFieldResponse;
 }
-const CSDynamicField = ({ type }: ICSDynamicField) => {
+const CSDynamicField = ({ type, nestedProps }: ICSDynamicField) => {
   const getTypeField = () => {
     if (type)
       switch (type) {
-        case FormFieldType.FILE:
-          return <CSDynamicField.FILE />;
+        // case FormFieldType.FILE:
+        //   return <CSDynamicField.FILE {...nestedProps} />;
         case FormFieldType.INPUT:
-          return <CSDynamicField.INPUT />;
+          return <CSDynamicField.INPUT {...nestedProps} />;
         case FormFieldType.CHECKBOX:
-          return <CSDynamicField.CHECKBOX />;
+          return <CSDynamicField.CHECKBOX {...nestedProps} />;
         case FormFieldType.RADIO:
-          return <CSDynamicField.RADIO />;
+          return <CSDynamicField.RADIO {...nestedProps} />;
         case FormFieldType.DATE:
-          return <CSDynamicField.DATE />;
+          return <CSDynamicField.DATE {...nestedProps} />;
         case FormFieldType.TEXTAREA:
-          return <CSDynamicField.SENTENCE />;
+          return <CSDynamicField.SENTENCE {...nestedProps} />;
         case FormFieldType.SENTENCE:
-          return <CSDynamicField.SENTENCE />;
+          return <CSDynamicField.SENTENCE {...nestedProps} />;
         default:
           break;
       }
@@ -50,7 +50,7 @@ CSDynamicField.CHECKBOX = (props: CheckboxProps) => {
   return <CSCheckbox {...props} />;
 };
 CSDynamicField.SENTENCE = (props: TextAreaProps) => {
-  return <TextArea {...props} />;
+  return <TextArea {...props} rows={5} />;
 };
 CSDynamicField.RADIO = (props: RadioProps) => {
   return <Radio {...props} />;

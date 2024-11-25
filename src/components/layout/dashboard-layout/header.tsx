@@ -22,6 +22,7 @@ const LayoutHeader = () => {
 
     getItem("Reports", "/reports", <BarChartOutlined />),
     getItem("Settings", "", <SettingFilled />, [
+      getItem("References", "/reference", <SelectOutlined />),
       getItem("Forms", "/forms", <FileTextFilled />),
       getItem("Floor Plans", "/floor-plans", <SelectOutlined />),
     ]),

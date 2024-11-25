@@ -17,6 +17,7 @@ const LayoutSidebar = () => {
     getItem("Dashboard", "/", <PieChartOutlined />),
     getItem("Jobs", "/jobs", <DesktopOutlined />),
     getItem("Forms", "/forms", <DesktopOutlined />),
+    getItem("References", "/reference", <DesktopOutlined />),
     getItem("Reports", "/reports", <UserOutlined />),
     getItem("Floor Plans", "/floor-plans", <FileOutlined />),
   ];

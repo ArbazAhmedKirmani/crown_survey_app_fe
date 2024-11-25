@@ -9,6 +9,8 @@ export const QUERY_STRING = {
     PARENT_FORM: "_pa_f",
     CHILD_FORM: "_ch_f",
     SELECTED_FIELD: "_sl_f",
+    SELECTED_CATEGORY: "_sl_ct",
+    SELECTED_REFERENCE: "_sl_rf",
   },
   FILTERS: {
     DATE_FROM: "_dateFrom",

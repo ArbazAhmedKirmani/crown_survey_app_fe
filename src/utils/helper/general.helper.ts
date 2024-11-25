@@ -1,5 +1,6 @@
 import { MenuProps } from "antd";
 import React, { ReactNode } from "react";
+import { APP_CONSTANTS } from "../constants/app.constant";
 
 export type MenuItem = Required<MenuProps>["items"][number];
 
@@ -53,5 +54,58 @@ export function getSqftDimensions(area: number, aspectRatio: number = 1) {
 }
 
 export const pixelToMeterConverter = (meter: number): number => {
-  return meter * 25
+  return meter * 25;
+};
+
+export const sentenceIdentifier = (
+  index: number,
+  identifier: string = "**"
+): string => {
+  return `${identifier}${index}${identifier}`;
+};
+
+export function replaceSelectedItem(
+  sentence: string,
+  value: { identifier: string; value: string }[]
+): string {
+  value.forEach((x) => {
+    sentence = sentence.replace(x.identifier, x.value);
+  });
+  return sentence;
 }
+
+export function extractArrays(sentence: string): {
+  finalArrays: { identifier: string; array: string[] }[];
+  updatedSentence: string;
+} {
+  const matches = [...sentence.matchAll(APP_CONSTANTS.ARRAY_IDENTIFY_PATTERN)];
+  return stringExtraction(matches, sentence, "**");
+}
+
+export function extractObject(sentence: string): {
+  finalArrays: { identifier: string; array: string[] }[];
+  updatedSentence: string;
+} {
+  const matches = [...sentence.matchAll(APP_CONSTANTS.OBJECT_IDENTIFY_PATTERN)];
+  return stringExtraction(matches, sentence, "^^");
+}
+
+const stringExtraction = (
+  matches: any[],
+  sentence: string,
+  identity: string
+) => {
+  let updatedSentence = sentence;
+
+  const finalArrays = matches.map((match, index: number) => {
+    let identifier = sentenceIdentifier(index, identity);
+    let currentMatch = match[0];
+    updatedSentence = updatedSentence.replace(currentMatch, identifier);
+    let array = match[1]
+      .split(",")
+      .map((item: String) => item.trim().replace(/^['"]|['"]$/g, ""));
+    return { identifier, array };
+  });
+
+  return { finalArrays, updatedSentence };
+};

@@ -58,39 +58,11 @@ const CSCanvas: React.FC = () => {
       );
     }
 
-    // Log to confirm canvas initialization
     console.log("Canvas initialized");
 
     // Event listener for object selection
-    canvas.on("selection:created", (event) => {
-
-      // if (event.selected.length === 1 && event.selected[0] instanceof (fabric.Line || fabric.Rect)) {
-      //   const target = event.selected[0];
-
-      //   setSelectedObject(target);
-
-      //   if (target instanceof fabric.Rect) {
-      //     setDimensions({
-      //       width: target.width! * target.scaleX!,
-      //       height: target.height! * target.scaleY!,
-      //       x1: 0,
-      //       y1: 0,
-      //       x2: 0,
-      //       y2: 0,
-      //     });
-      //   } else if (target instanceof fabric.Line) {
-      //     setDimensions({
-      //       width: 0,
-      //       height: 0,
-      //       x1: target.x1 || 0,
-      //       y1: target.y1 || 0,
-      //       x2: target.x2 || 0,
-      //       y2: target.y2 || 0,
-      //     });
-      //   }
-      //   handle_editor()
-      // }
-    });
+    // canvas.on("selection:created", (event) => {
+    // });
 
 
     // Event listener for clearing selection
@@ -101,7 +73,7 @@ const CSCanvas: React.FC = () => {
     });
 
     canvas.on('drag:enter', () => {
-      handleEditor()
+      // handleEditor()
     })
 
     // Store the canvas reference

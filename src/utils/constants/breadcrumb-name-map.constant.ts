@@ -7,6 +7,8 @@ const BreadcrumbNameMap = {
   "/forms": "Form",
   "/forms/new": "New Form",
   "/floor-plans": "Floor Plans",
+  "/reference": "References",
+  "/reference/new": "New Reference",
 };
 Object.seal(BreadcrumbNameMap);
 
