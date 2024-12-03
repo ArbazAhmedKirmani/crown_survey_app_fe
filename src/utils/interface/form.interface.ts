@@ -8,7 +8,7 @@ export interface IFormFields {
   type?: FormFieldType;
   required?: boolean;
   rating?: boolean;
-  attachments?: boolean;
+  response?: boolean;
   placeholder?: string;
   values?: string[];
 }

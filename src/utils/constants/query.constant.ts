@@ -5,6 +5,8 @@ export const QUERY_STRING = {
     SEARCH: "_search",
   },
   OTHER_PARAMS: {
+    HEIGHT: "_fp_h",
+    WIDTH: "_fp_w",
     STATUS: "_jb_sts",
     PARENT_FORM: "_pa_f",
     CHILD_FORM: "_ch_f",

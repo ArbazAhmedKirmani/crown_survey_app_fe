@@ -10,21 +10,21 @@ export const formMapper = (data: IFormGetById) => {
     form_prefix: data.prefix,
     form_document: data?.document?.id,
     form_description: data.desc,
-    form_section: data?.FormSections?.map((section: IFormSection) => ({
+    section: data?.FormSections?.map((section: IFormSection) => ({
       id: section.id,
       name: section.name,
       prefix: section.prefix,
       order: section.order,
-      form_fields: section?.FormField?.map((field: IFormFields) => ({
+      form_field: section?.FormField?.map((field: IFormFields) => ({
         id: field.id,
         name: field.name,
-        mapper: field.mapperName,
+        mapperName: field.mapperName,
         orderNo: field.orderNumber,
         type: field.type,
         placeholder: field.placeholder,
         required: field.required,
         rating: field.rating,
-        attachments: field.attachments,
+        reference: field.response,
         values: field.values,
       })),
     })),

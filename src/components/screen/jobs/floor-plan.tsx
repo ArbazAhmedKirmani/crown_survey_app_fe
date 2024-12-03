@@ -7,11 +7,25 @@
 // import CSInput from "../../theme/atoms/cs-input";
 // import { getSqftDimensions } from "../../../utils/helper/general.helper";
 // import fabric from "fabric";
+import { Form, Modal, Space } from "antd";
+import useQueryString from "../../../hooks/use-query-string";
 import CSCanvas from "../../theme/molecules/cs-canvas";
+import CSInput from "../../theme/atoms/cs-input";
+import CSButton from "../../theme/atoms/cs-button";
+import { QUERY_STRING } from "../../../utils/constants/query.constant";
+import { useForm } from "antd/es/form/Form";
+import CSFormItem from "../../theme/atoms/cs-form-item";
+import { isNull, isUndefined } from "lodash";
 
 const FloorPlan = () => {
+  const [form] = useForm();
+  const { getQuery, setQuery } = useQueryString();
+
+  const query: any = getQuery([
+    QUERY_STRING.OTHER_PARAMS.HEIGHT,
+    QUERY_STRING.OTHER_PARAMS.WIDTH,
+  ]);
   // const canvasRef = useRef<fabric.Canvas | null>(null);
-  // const [canvasForm] = useForm();
   // const [modal, setModal] = useState<boolean>(false);
   // const [canvas, setCanvas] = useState<{
   //   height: number;
@@ -47,7 +61,42 @@ const FloorPlan = () => {
   // };
 
   return (
-    <CSCanvas />
+    <div>
+      <CSCanvas
+        height={+query?.[QUERY_STRING.OTHER_PARAMS.HEIGHT]}
+        width={+query?.[QUERY_STRING.OTHER_PARAMS.WIDTH]}
+      />
+      <Modal
+        open={!query?.[QUERY_STRING.OTHER_PARAMS.HEIGHT]}
+        closable={false}
+        centered
+        footer={null}
+      >
+        <Form
+          form={form}
+          onFinish={(val) => {
+            setQuery({
+              [QUERY_STRING.OTHER_PARAMS.HEIGHT]: val.height,
+              [QUERY_STRING.OTHER_PARAMS.WIDTH]: val.width,
+            });
+          }}
+        >
+          <Space>
+            <CSFormItem name="width" rules={[{ required: true, message: "" }]}>
+              <CSInput placeholder="Width (Meter)" />
+            </CSFormItem>
+            <CSFormItem name="height" rules={[{ required: true, message: "" }]}>
+              <CSInput placeholder="Length (Meter)" />
+            </CSFormItem>
+            <CSFormItem>
+              <CSButton type="primary" htmlType="submit">
+                Confirm
+              </CSButton>
+            </CSFormItem>
+          </Space>
+        </Form>
+      </Modal>
+    </div>
     // <div className="floor-plan" style={{ width: "100%", height: "100%" }}>
     //   <CSButton onClick={handleModal}>New Floor Plan</CSButton>
     //   <Modal

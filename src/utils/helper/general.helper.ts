@@ -109,3 +109,13 @@ const stringExtraction = (
 
   return { finalArrays, updatedSentence };
 };
+
+export const toggleStringInArray = (arr: string[] = [], str: string) => {
+  const index = arr.indexOf(str);
+  if (index > -1) {
+    arr.splice(index, 1);
+  } else {
+    arr.push(str);
+  }
+  return arr;
+};

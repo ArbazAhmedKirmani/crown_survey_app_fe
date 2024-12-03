@@ -1,22 +1,14 @@
 import { Drawer, DrawerProps } from "antd";
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import CSFormSlidingList from "./cs-form-sliding-list";
-import { CloseOutlined } from "@ant-design/icons";
-import {
-  extractArrays,
-  extractObject,
-  replaceSelectedItem,
-} from "../../../utils/helper/general.helper";
 import CSCheckbox from "../atoms/cs-checkbox";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import CSButton from "../atoms/cs-button";
 import CSRenderSentence from "../molecules/cs-render-sentence";
-
 export interface ICSReferenceSidebar extends PropsWithChildren {
   drawerProps: DrawerProps;
 }
@@ -139,19 +131,10 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
         <div className="preview">
           {reference?.map((ref, i) => (
             <div key={ref?.id} className="item">
-              {/* <span className="delete">
-                <CloseOutlined
-                  onClick={() =>
-                    setReference((prev) => {
-                      prev.splice(i, 1);
-                      return [...prev];
-                    })
-                  }
-                />
-              </span> */}
               <div>
                 {ref?.value && (
                   <CSRenderSentence
+                    key={i + ref.id}
                     value={ref?.value}
                     id={ref.id}
                     setValue={setFinalReference}
@@ -160,9 +143,6 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
               </div>
             </div>
           ))}
-          <CSButton onClick={() => console.log(finalReference)}>
-            Confirm
-          </CSButton>
         </div>
       </div>
     </Drawer>

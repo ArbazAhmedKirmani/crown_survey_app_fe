@@ -1,9 +1,8 @@
 import { FormItemLayout } from "antd/es/form/Form";
 import FormItem, { FormItemProps } from "antd/es/form/FormItem";
-import { PropsWithChildren } from "react";
 import "./style.scss";
 
-export interface ICSFormItem extends PropsWithChildren<FormItemProps> {
+export interface ICSFormItem extends FormItemProps {
   layout?: FormItemLayout;
 }
 

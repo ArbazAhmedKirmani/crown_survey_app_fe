@@ -2,7 +2,7 @@
 
 .cs-form-sliding-list {
   background-color: #fff;
-  width: 200px;
+  width: 150px;
   max-width: 300px;
   transition: width 0.15s ease-in-out;
   border-radius: $borderRadius;
@@ -113,6 +113,11 @@
 .cs-form-section-detail {
   margin-bottom: 10px;
 
+  .form-detail-field-cont {
+    display: flex;
+    gap: 16px;
+  }
+
   .ant-row {
     margin: 0 !important;
   }
@@ -139,10 +144,15 @@
 }
 
 .cs-form-field-detail {
-  .form-detail-row {
+  .field-list-item {
     display: flex;
-    width: 100%;
-    row-gap: 10px;
+    gap: 16px;
+    // flex-wrap: wrap;
+    overflow-x: auto;
+
+    .ant-form-item {
+      margin-bottom: 5px;
+    }
   }
 
   .form-fields-row {
@@ -154,20 +164,6 @@
   .ant-row {
     margin: 0 !important;
   }
-
-  // .form-field-table {
-  //   thead {
-  //     tr {
-  //       td {
-  //         font-weight: bold;
-  //         text-align: center;
-  //       }
-  //     }
-  //   }
-  //   td {
-  //     text-align: center;
-  //   }
-  // }
 }
 
 .cs-dynamic-fields-renderer {

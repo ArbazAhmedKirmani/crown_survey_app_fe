@@ -15,6 +15,7 @@ import { IFormGetById } from "../../../utils/interface/form.interface";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 import { checkEditablePage } from "../../../utils/helper/general.helper";
+import { QueryClient } from "react-query";
 
 export type TFormField =
   | "CHECKBOX"
@@ -26,10 +27,15 @@ export type TFormField =
 
 export interface IFormFields {
   name: string;
-  mapper: string;
+  mapperName: string;
   orderNo: number;
   has_attachment: boolean;
   type: TFormField;
+  reference: boolean;
+  required: boolean;
+  rating: boolean;
+  placeholder: string;
+  values: string;
 }
 
 export interface INewForm {
@@ -46,7 +52,7 @@ const NewForm = () => {
   const navigate = useNavigate();
   const document_ref = useRef<AnyObject>();
   const [getForm, setGetForm] = useState(false);
-  // const queryClient = new QueryClient();
+  const queryClient = new QueryClient();
 
   const { mutate: saveForm, isPending: savePending } = usePostApi({
     url: API_ROUTES.form.post,
@@ -72,6 +78,10 @@ const NewForm = () => {
     key: [API_ROUTES.form.getById(params.id!)],
     url: API_ROUTES.form.getById(params.id!),
     enabled: getForm,
+    options: {
+      gcTime: 0,
+      staleTime: 0,
+    },
   });
 
   const onFinish = (values: INewForm) => {
@@ -103,10 +113,16 @@ const NewForm = () => {
         name: data.data.document.originalName,
       });
     }
+    return () => {
+      queryClient.removeQueries({
+        queryKey: [API_ROUTES.form.getById(params.id!)],
+        exact: true,
+      });
+    };
   }, [isSuccess]);
 
   return (
-    <Spin spinning={savePending || updatePending || isLoading}>
+    <Spin spinning={isLoading}>
       <div className="new-form">
         <Form
           layout="vertical"
@@ -124,9 +140,14 @@ const NewForm = () => {
           <CSFormSectionDetail />
 
           <Divider />
+
           <div className="submit-btn">
             <Form.Item>
-              <CSButton type="primary" htmlType="submit">
+              <CSButton
+                type="primary"
+                htmlType="submit"
+                loading={savePending || updatePending}
+              >
                 {checkEditablePage(params?.id, "Create Form", "Update Form")}
               </CSButton>
             </Form.Item>
