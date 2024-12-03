@@ -4,8 +4,8 @@ import { Modal } from "antd";
 import CSInput from "../atoms/cs-input";
 import CSButton from "../atoms/cs-button";
 
-import Room from '../../../assets/images/room.png'
-import Wall from '../../../assets/images/wall.png'
+import Room from "../../../assets/images/room.png";
+import Wall from "../../../assets/images/wall.png";
 import { pixelToMeterConverter } from "../../../utils/helper/general.helper";
 import { EditOutlined } from "@ant-design/icons";
 
@@ -16,54 +16,59 @@ const defaultDimention = {
   y1: 0,
   x2: 0,
   y2: 0,
-  text: ''
-}
-const CSCanvas: React.FC = () => {
+  text: "",
+};
+const CSCanvas = (props: { height: number; width: number }) => {
   const canvasRef = useRef<fabric.Canvas | null>(null);
-  const [showEditor, setShowEditore] = useState<{ state: boolean, type: 'rect' | 'line' | 'text' | undefined }>();
-  const [selectedObject, setSelectedObject] = useState<fabric.Object | null>(null);
-  const [dimensions, setDimensions] = useState<typeof defaultDimention>(defaultDimention);
+  const [showEditor, setShowEditore] = useState<{
+    state: boolean;
+    type: "rect" | "line" | "text" | undefined;
+  }>();
+  const [selectedObject, setSelectedObject] = useState<fabric.Object | null>(
+    null
+  );
+  const [dimensions, setDimensions] =
+    useState<typeof defaultDimention>(defaultDimention);
 
-  const handleEditor = (type?: 'rect' | 'line' | 'text' | undefined) => {
-    setShowEditore(prev => {
+  const handleEditor = (type?: "rect" | "line" | "text" | undefined) => {
+    setShowEditore((prev) => {
       if (!prev?.state) {
-        setDimensions(defaultDimention)
+        setDimensions(defaultDimention);
       }
-      return { state: !prev?.state, type }
-    })
-  }
+      return { state: !prev?.state, type };
+    });
+  };
 
   useEffect(() => {
     // Initialize canvas
+    debugger;
+    const height = pixelToMeterConverter(+props.height) + 250;
+    const width = pixelToMeterConverter(+props.width) + 250;
     const canvas = new fabric.Canvas("drawCanvas", {
-      width: 1850,
-      height: 1200,
-      selection: true, // Enable selection
+      width: width,
+      height: height,
+      selection: true,
     });
 
-    // Add grid for background (optional)
     const gridSize = 20;
-    for (let i = 0; i < 1850 / gridSize; i++) {
+    for (let i = 0; i < width / gridSize; i++) {
       canvas.add(
-        new fabric.Line([i * gridSize, 0, i * gridSize, 1200], {
+        new fabric.Line([i * gridSize, 0, i * gridSize, height], {
           stroke: "lightgray",
-          selectable: false, // grid should not be selectable
+          selectable: false,
         })
       );
       canvas.add(
-        new fabric.Line([0, i * gridSize, 1850, i * gridSize], {
+        new fabric.Line([0, i * gridSize, width, i * gridSize], {
           stroke: "lightgray",
-          selectable: false, // grid should not be selectable
+          selectable: false,
         })
       );
     }
 
-    console.log("Canvas initialized");
-
     // Event listener for object selection
     // canvas.on("selection:created", (event) => {
     // });
-
 
     // Event listener for clearing selection
     canvas.on("selection:cleared", () => {
@@ -72,9 +77,9 @@ const CSCanvas: React.FC = () => {
       setDimensions(defaultDimention);
     });
 
-    canvas.on('drag:enter', () => {
+    canvas.on("drag:enter", () => {
       // handleEditor()
-    })
+    });
 
     // Store the canvas reference
     canvasRef.current = canvas;
@@ -98,8 +103,8 @@ const CSCanvas: React.FC = () => {
       selectable: true, // Ensure it's selectable
     });
     const label = new fabric.Text(`${length} x ${width}`, {
-      left: (rect.left + (rect.width / 2)) - 25,
-      top: (rect.top + (rect.height / 2)) - 10, // Position the label above the rectangle
+      left: rect.left + rect.width / 2 - 25,
+      top: rect.top + rect.height / 2 - 10, // Position the label above the rectangle
       fontSize: 14,
       selectable: true,
     });
@@ -115,19 +120,22 @@ const CSCanvas: React.FC = () => {
 
   // Add Line to the canvas
   const addLine = (length: number) => {
-    const line = new fabric.Line([100, 100, 100, 100 + pixelToMeterConverter(length)], {
-      stroke: "gray",
-      strokeWidth: 3,
-      selectable: true, // Ensure it's selectable
-      height: 400
-    });
+    const line = new fabric.Line(
+      [100, 100, 100, 100 + pixelToMeterConverter(length)],
+      {
+        stroke: "gray",
+        strokeWidth: 3,
+        selectable: true, // Ensure it's selectable
+        height: 400,
+      }
+    );
     const label = new fabric.Text(`${length}m`, {
       left: 110,
-      top: (100 + (line.height/2)) - 10, // Position the label above the rectangle
+      top: 100 + line.height / 2 - 10, // Position the label above the rectangle
       fontSize: 14,
-      angle:-90,
+      angle: -90,
       selectable: true,
-      fontWeight:'bold'
+      fontWeight: "bold",
     });
     const group = new fabric.Group([line, label], {
       left: 150,
@@ -147,8 +155,8 @@ const CSCanvas: React.FC = () => {
     });
     canvasRef.current?.add(label);
     canvasRef.current?.renderAll();
-  }
- 
+  };
+
   return (
     <div className="cs-canvas">
       <div className="drawpad">
@@ -156,16 +164,34 @@ const CSCanvas: React.FC = () => {
       </div>
 
       <div className="toolbar">
-        <CSButton type="text" onClick={() => handleEditor('rect')} icon={<img src={Room} height={18} width={18} />}></CSButton>
-        <CSButton type="text" onClick={() => handleEditor('line')} icon={<img src={Wall} height={18} width={18} />}></CSButton>
-        <CSButton type="text" onClick={() => handleEditor('text')} icon={<EditOutlined />}></CSButton>
+        <CSButton
+          type="text"
+          onClick={() => handleEditor("rect")}
+          icon={<img src={Room} height={18} width={18} />}
+        ></CSButton>
+        <CSButton
+          type="text"
+          onClick={() => handleEditor("line")}
+          icon={<img src={Wall} height={18} width={18} />}
+        ></CSButton>
+        <CSButton
+          type="text"
+          onClick={() => handleEditor("text")}
+          icon={<EditOutlined />}
+        ></CSButton>
       </div>
 
-      <Modal open={showEditor?.state} onCancel={() => handleEditor()} centered footer={null}>
+      <Modal
+        open={showEditor?.state}
+        onCancel={() => handleEditor()}
+        centered
+        footer={null}
+      >
         {(selectedObject || showEditor?.type) && (
           <div style={{ marginTop: "20px" }}>
             <h3>Information</h3>
-            {(selectedObject instanceof fabric.Rect || showEditor?.type === 'rect') && (
+            {(selectedObject instanceof fabric.Rect ||
+              showEditor?.type === "rect") && (
               <>
                 <label>
                   Width:
@@ -196,7 +222,8 @@ const CSCanvas: React.FC = () => {
                 </label>
               </>
             )}
-            {(selectedObject instanceof fabric.Line || showEditor?.type === 'line') && (
+            {(selectedObject instanceof fabric.Line ||
+              showEditor?.type === "line") && (
               <>
                 <label>
                   Length:
@@ -213,7 +240,7 @@ const CSCanvas: React.FC = () => {
                 </label>
               </>
             )}
-            {(showEditor?.type === 'text') && (
+            {showEditor?.type === "text" && (
               <>
                 <label>
                   Text:
@@ -232,21 +259,21 @@ const CSCanvas: React.FC = () => {
             )}
             <br />
             <CSButton
-            type="primary"
-            style={{margin:'10px 0'}}
-            onClick={() => {
-              if (showEditor?.type === 'line')
-                addLine(dimensions.y2)
-              if (showEditor?.type === 'rect')
-                addRectangle(dimensions.width, dimensions.height)
-              if (showEditor?.type === 'text')
-                addText(dimensions.text)
-              handleEditor()
-            }}>Create</CSButton>
+              type="primary"
+              style={{ margin: "10px 0" }}
+              onClick={() => {
+                if (showEditor?.type === "line") addLine(dimensions.y2);
+                if (showEditor?.type === "rect")
+                  addRectangle(dimensions.width, dimensions.height);
+                if (showEditor?.type === "text") addText(dimensions.text);
+                handleEditor();
+              }}
+            >
+              Create
+            </CSButton>
           </div>
         )}
       </Modal>
-
     </div>
   );
 };

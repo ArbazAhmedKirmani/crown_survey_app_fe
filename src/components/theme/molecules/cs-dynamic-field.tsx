@@ -1,17 +1,7 @@
 import { PropsWithChildren } from "react";
 import CSFormItem from "../atoms/cs-form-item";
-import CSCheckbox from "../atoms/cs-checkbox";
-import {
-  CheckboxProps,
-  DatePicker,
-  DatePickerProps,
-  InputProps,
-  Radio,
-  RadioProps,
-  Upload,
-  UploadProps,
-} from "antd";
-import TextArea, { TextAreaProps } from "antd/es/input/TextArea";
+import { Checkbox, DatePicker, Radio, Upload, UploadProps } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import CSInput from "../atoms/cs-input";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
@@ -19,25 +9,30 @@ import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
 export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
   nestedProps?: IFormFieldResponse;
+  onChange?: any;
 }
-const CSDynamicField = ({ type, nestedProps }: ICSDynamicField) => {
+const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
   const getTypeField = () => {
     if (type)
       switch (type) {
-        // case FormFieldType.FILE:
-        //   return <CSDynamicField.FILE {...nestedProps} />;
         case FormFieldType.INPUT:
-          return <CSDynamicField.INPUT {...nestedProps} />;
+          return <CSDynamicField.INPUT onChange={onChange} {...nestedProps} />;
         case FormFieldType.CHECKBOX:
-          return <CSDynamicField.CHECKBOX {...nestedProps} />;
+          return (
+            <CSDynamicField.CHECKBOX onChange={onChange} {...nestedProps} />
+          );
         case FormFieldType.RADIO:
-          return <CSDynamicField.RADIO {...nestedProps} />;
+          return <CSDynamicField.RADIO onChange={onChange} {...nestedProps} />;
         case FormFieldType.DATE:
-          return <CSDynamicField.DATE {...nestedProps} />;
+          return <CSDynamicField.DATE onChange={onChange} {...nestedProps} />;
         case FormFieldType.TEXTAREA:
-          return <CSDynamicField.SENTENCE {...nestedProps} />;
+          return (
+            <CSDynamicField.SENTENCE onChange={onChange} {...nestedProps} />
+          );
         case FormFieldType.SENTENCE:
-          return <CSDynamicField.SENTENCE {...nestedProps} />;
+          return (
+            <CSDynamicField.SENTENCE onChange={onChange} {...nestedProps} />
+          );
         default:
           break;
       }
@@ -46,23 +41,66 @@ const CSDynamicField = ({ type, nestedProps }: ICSDynamicField) => {
   return <CSFormItem>{getTypeField()}</CSFormItem>;
 };
 
-CSDynamicField.CHECKBOX = (props: CheckboxProps) => {
-  return <CSCheckbox {...props} />;
+CSDynamicField.CHECKBOX = (props: any) => {
+  return (
+    <CSFormItem
+      name={props.mapperName}
+      valuePropName={"checked"}
+      rules={[{ required: props.required, message: "" }]}
+    >
+      <Checkbox.Group
+        options={props?.values?.split(",")}
+        onChange={props.onChange}
+      />
+    </CSFormItem>
+  );
 };
-CSDynamicField.SENTENCE = (props: TextAreaProps) => {
-  return <TextArea {...props} rows={5} />;
+CSDynamicField.SENTENCE = (props: any) => {
+  return (
+    <CSFormItem
+      name={props.mapperName}
+      rules={[{ required: props.required, message: "" }]}
+    >
+      <TextArea {...props} rows={5} />
+    </CSFormItem>
+  );
 };
-CSDynamicField.RADIO = (props: RadioProps) => {
-  return <Radio {...props} />;
+CSDynamicField.RADIO = (props: any) => {
+  return (
+    <CSFormItem
+      name={props.mapperName}
+      rules={[{ required: props.required, message: "" }]}
+    >
+      <Radio.Group options={props?.values?.split(",")} {...props} />
+    </CSFormItem>
+  );
 };
-CSDynamicField.INPUT = (props: InputProps) => {
-  return <CSInput {...props} />;
+CSDynamicField.INPUT = (props: any) => {
+  return (
+    <CSFormItem
+      name={props.mapperName}
+      rules={[{ required: props.required, message: "" }]}
+    >
+      <CSInput {...props} name={props?.mapperName} />
+    </CSFormItem>
+  );
 };
 CSDynamicField.FILE = (props: UploadProps) => {
   return <Upload {...props} />;
 };
-CSDynamicField.DATE = (props: DatePickerProps) => {
-  return <DatePicker {...props} />;
+CSDynamicField.DATE = (props: any) => {
+  return (
+    <CSFormItem
+      name={props.mapperName}
+      rules={[{ required: props.required, message: "" }]}
+    >
+      <DatePicker
+        {...props}
+        // onChange={(e, str) => props?.onChange?.(str, e)}
+        style={{ width: "100%" }}
+      />
+    </CSFormItem>
+  );
 };
 
 export default CSDynamicField;

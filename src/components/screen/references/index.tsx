@@ -7,6 +7,8 @@ import usePaginatedApi from "../../../hooks/use-paginated-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import useQueryString from "../../../hooks/use-query-string";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
+import CSTableAction from "../../theme/molecules/cs-table-action";
+import CSCheckbox from "../../theme/atoms/cs-checkbox";
 
 const References = () => {
   const { getQuery } = useQueryString();
@@ -26,9 +28,21 @@ const References = () => {
       render: (value) => value.category.name,
     },
     {
+      title: "Site Note",
+      key: "siteNote",
+      render: (_, record) => <CSCheckbox checked={record.isSiteNote} />,
+    },
+    {
       title: "Description",
       dataIndex: "value",
       key: "description",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record, index) => (
+        <CSTableAction key={index} id={record.id} record={record} />
+      ),
     },
   ];
 

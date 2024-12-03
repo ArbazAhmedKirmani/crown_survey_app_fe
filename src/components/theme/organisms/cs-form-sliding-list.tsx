@@ -1,5 +1,5 @@
 import { MenuOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 import { Spin } from "antd";
 
@@ -7,6 +7,8 @@ export type TCSFormSlidingListProp = {
   prefix?: string;
   name: string;
   id: number | string;
+  mapperName?: string;
+  JobFields?: { id: string }[];
 };
 
 export interface ICSFormSlidingList {
@@ -17,6 +19,8 @@ export interface ICSFormSlidingList {
   onSelect?: (item: TCSFormSlidingListProp) => void;
   width?: number;
   height?: string | number;
+  hidePrefix?: boolean;
+  showCustomRender?: (item: TCSFormSlidingListProp) => ReactNode;
 }
 
 const CSFormSlidingList = (props: ICSFormSlidingList) => {
@@ -66,15 +70,20 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
               height: props?.height ?? "Calc(100vh - 16rem)",
             }}
           >
-            {list?.map((item: TCSFormSlidingListProp) => (
+            {list?.map((item: TCSFormSlidingListProp, index: number) => (
               <li
-                key={item.id}
+                key={item.id + index.toString()}
                 className={`${
                   selectedItem === item.id.toString() && "active-item"
                 } menu-item`}
                 onClick={() => handleFormSelect(item)}
               >
-                <span className="menu-prefix">{item.prefix}</span>
+                {!props?.hidePrefix && (
+                  <span className="menu-prefix">{item?.prefix}</span>
+                )}
+                {props?.showCustomRender && (
+                  <span>{props.showCustomRender(item)}</span>
+                )}
                 {!collapse && <span className="menu-text">{item.name}</span>}
               </li>
             ))}

@@ -1,22 +1,42 @@
 import { create } from "zustand";
 
-export interface IAuthStore {
-  authenticated: false;
-  setAuthenticationUser?: () => void;
-  unauthenticateUser?: () => void;
+interface IJobStore {
+  job: Record<string, any>;
 }
 
-type ISet = (partial: unknown, replace?: false) => void;
+type ISet = (
+  partial: Partial<IJobStore> | ((state: IJobStore) => Partial<IJobStore>)
+) => void;
 
-const setJobData = (set: ISet, state: Partial<IAuthStore>) => {
-  set({ ...state });
+const setJobData = (set: ISet, state: Partial<IJobStore>) => {
+  set((prevState) => ({
+    job: {
+      ...prevState.job,
+      ...(state || {}),
+    },
+  }));
 };
 
-const JobStore = create((set: ISet) => ({
+const removeJobData = (set: ISet, state: Partial<IJobStore>) => {
+  set((prevState) => {
+    const updatedJob = { ...prevState.job };
+    Object.keys(state.job || {}).forEach((key) => {
+      delete updatedJob[key];
+    });
+    return { job: updatedJob };
+  });
+};
+
+// Zustand store
+const useJobStore = create<
+  IJobStore & {
+    setJob: (state: Partial<IJobStore>) => void;
+    removeJob: (state: Partial<IJobStore>) => void;
+  }
+>((set) => ({
   job: {},
-  setJob: (state: Partial<IAuthStore>) => setJobData(set, state),
-  removeAllBears: () => set({ bears: 0 }),
-  updateBears: (state: Partial<IAuthStore>) => set({ ...state }),
+  setJob: (state: Partial<IJobStore>) => setJobData(set, state),
+  removeJob: (state: Partial<IJobStore>) => removeJobData(set, state),
 }));
 
-export default JobStore;
+export default useJobStore;

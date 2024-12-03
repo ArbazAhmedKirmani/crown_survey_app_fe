@@ -1,88 +1,74 @@
-import { Col, Form, Row, Tag, Typography } from "antd";
+import { Divider, Form, Typography } from "antd";
 import CSButton from "../atoms/cs-button";
 import CSInput from "../atoms/cs-input";
 import CSFormFieldDetail from "./cs-form-field-detail";
-import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
-import CSFormItem from "../atoms/cs-form-item";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 const CSFormSectionDetail = () => {
   return (
-    <div className="cs-form-section-detail">
-      <Typography.Title level={4}>Form Sections</Typography.Title>
-
-      <Form.List
-        initialValue={[{ name: "", prefix: "", order: null }]}
-        name={["form_section"]}
-      >
-        {(subFields, { add, remove }) => (
-          <>
-            {subFields.map(({ key, name, ...restField }) => (
-              <div key={key} className="form-section-box">
-                <div className="form-detail-row">
-                  <div className="form-detail-field-cont">
-                    <Form.Item {...restField} name={[name, "id"]} hidden={true}>
-                      <input type="hidden" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "name"]}
-                      rules={[{ required: true, message: "" }]}
-                    >
-                      <CSInput placeholder="Section Name" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "prefix"]}
-                      rules={[
-                        { required: true, message: "" },
-                        { max: 3, message: "Max 3 Characters" },
-                      ]}
-                    >
-                      <CSInput placeholder="Prefix" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "order"]}
-                      rules={[{ required: true, message: "" }]}
-                    >
-                      <CSInput placeholder="Section Order" type="number" />
-                    </Form.Item>
-                  </div>
+    <Form.List name="section">
+      {(fields, { add: addSection, remove: removeSection }) => {
+        return (
+          <div className="cs-form-section-detail">
+            <Typography.Title level={4}>Form Sections</Typography.Title>
+            {fields.map((field, index) => (
+              <div key={field.key}>
+                <Divider>Section {field.key + 1}</Divider>
+                <div className="form-detail-field-cont">
+                  <Form.Item name={[index, "id"]} hidden={true}>
+                    <input type="hidden" />
+                  </Form.Item>
+                  <Form.Item
+                    name={[index, "name"]}
+                    rules={[{ required: true, message: "" }]}
+                  >
+                    <CSInput placeholder="Section Name" />
+                  </Form.Item>
+                  <Form.Item
+                    name={[index, "prefix"]}
+                    rules={[
+                      { required: true, message: "" },
+                      { max: 3, message: "Max 3 Characters" },
+                    ]}
+                  >
+                    <CSInput placeholder="Prefix" />
+                  </Form.Item>
+                  <Form.Item
+                    name={[index, "order"]}
+                    rules={[{ required: true, message: "" }]}
+                  >
+                    <CSInput placeholder="Section Order" type="number" />
+                  </Form.Item>
                 </div>
-                <Row>
-                  <Col>
-                    <Typography.Title level={5}>Form Fields</Typography.Title>
 
-                    <CSFormItem name={[name, "form_field"]}>
-                      <CSFormFieldDetail name={name} />
-                    </CSFormItem>
-                  </Col>
-                </Row>
+                <CSFormFieldDetail id={index} />
 
-                <Tag
-                  color="red"
-                  onClick={() => remove(name)}
-                  className="section-delete-btn"
-                >
-                  <CloseOutlined /> Delete Section
-                </Tag>
+                {fields.length > 1 ? (
+                  <CSButton
+                    // type="danger"
+                    className="dynamic-delete-button"
+                    onClick={() => removeSection(field.name)}
+                    icon={<MinusCircleOutlined />}
+                  >
+                    Remove Section
+                  </CSButton>
+                ) : null}
               </div>
             ))}
-            <Row>
-              <Col span={24}>
-                <CSButton
-                  type="link"
-                  onClick={() => add()}
-                  icon={<PlusOutlined />}
-                >
-                  New Section
-                </CSButton>
-              </Col>
-            </Row>
-          </>
-        )}
-      </Form.List>
-    </div>
+            <Divider />
+            <Form.Item>
+              <CSButton
+                type="primary"
+                onClick={() => addSection()}
+                style={{ width: "10rem" }}
+              >
+                <PlusOutlined /> Add Section
+              </CSButton>
+            </Form.Item>
+          </div>
+        );
+      }}
+    </Form.List>
   );
 };
 
