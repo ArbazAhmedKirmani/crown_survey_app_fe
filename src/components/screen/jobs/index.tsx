@@ -8,6 +8,8 @@ import { SegmentedValue } from "antd/es/segmented";
 import { IPaginatedApiResponse } from "../../../utils/interface/response.interface";
 import usePaginatedApi from "../../../hooks/use-paginated-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
+import CSTableAction from "../../theme/molecules/cs-table-action";
+import { AnyObject } from "antd/es/_util/type";
 
 interface IJobsResponse {
   id: number;
@@ -16,6 +18,10 @@ interface IJobsResponse {
 
 const Jobs = () => {
   const { setQuery, getQuery } = useQueryString();
+
+  const page = getQuery(QUERY_STRING.PAGINATION.PAGE) as string;
+  const limit = getQuery(QUERY_STRING.PAGINATION.LIMIT) as string;
+  const search = getQuery(QUERY_STRING.PAGINATION.SEARCH) as string;
   const status: string =
     (getQuery(QUERY_STRING.OTHER_PARAMS.STATUS) as string) ||
     JobStatusEnum.PENDING;
@@ -24,14 +30,30 @@ const Jobs = () => {
     setQuery({ [QUERY_STRING.OTHER_PARAMS.STATUS]: value as string });
   };
 
-  const columns = [{ key: "name", dataIndex: "name", title: "Name" }];
+  const columns = [
+    { key: "name", dataIndex: "customer.name", title: "Customer Name" },
+    { key: "email", dataIndex: "customer.email", title: "Email" },
+    { key: "form", dataIndex: "name", title: "Form Name" },
+    {
+      key: "actions",
+      title: "Actions",
+      render: (_: any, record: AnyObject) => (
+        <CSTableAction id={record.id} record={record} />
+      ),
+    },
+  ];
 
   const { data, isLoading } = usePaginatedApi<
     IPaginatedApiResponse<IJobsResponse[]>
   >({
-    key: [API_ROUTES.jobs.get, status],
+    key: [API_ROUTES.jobs.get, status, limit, page, search],
     url: API_ROUTES.jobs.get,
-    query: { status: status.toUpperCase() },
+    query: {
+      status: status.toUpperCase(),
+      ...(page && { page: page as string }),
+      ...(limit && { limit: limit as string }),
+      ...(search && { search: search as string }),
+    },
   });
 
   return (

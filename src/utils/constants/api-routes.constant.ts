@@ -12,7 +12,8 @@ export const API_ROUTES = {
     detail: (id: string) => `api/jobs/detail/${id}`,
     getForms: "api/jobs/forms",
     getSectionByForm: (id?: string) => `api/jobs/forms/${id}`,
-    getFieldsBySection: (id?: string) => `api/jobs/section/${id}`,
+    getFieldsBySection: (id?: string, jobId?: string) =>
+      `api/jobs/section/${id}/${jobId}`,
     getFieldsDetail: (id?: string) => `api/jobs/field/${id}`,
     getJobFields: (id?: string, jobId?: string) =>
       `api/jobs/detail/${id}/job/${jobId}`,

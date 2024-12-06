@@ -11,16 +11,22 @@ import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import useQueryString from "../../../hooks/use-query-string";
 import CSDynamicFieldsRenderer from "../../theme/organisms/cs-dynamic-fields-renderer";
-import { useRef, useState } from "react";
-import { FormInstance, List, Modal } from "antd";
-import { useForm } from "antd/es/form/Form";
+import { useRef } from "react";
+import { List, Modal } from "antd";
 import useJobStore from "../../../store/job.store";
 import { CheckCircleFilled } from "@ant-design/icons";
 
 export interface IJobFormResponse {
-  id: number;
+  id: number | string;
   name: string;
   prefix: string;
+}
+
+export interface IJobSectionList {
+  form: {
+    id: number;
+    FormSections: IJobFormResponse[];
+  };
 }
 
 export interface IFieldData {
@@ -53,33 +59,37 @@ const NewJob = () => {
   >({
     key: [API_ROUTES.jobs.getForms],
     url: API_ROUTES.jobs.getForms,
+    enabled: Boolean(param?.id === "new"),
   });
 
   const { data: sections, isLoading: sectionLoading } = useGetApi<
-    IApiResponse<IJobFormResponse[]>
+    IApiResponse<IJobSectionList>
   >({
-    key: [API_ROUTES.jobs.getForms, form],
-    url: API_ROUTES.jobs.getSectionByForm(form),
-    enabled: Boolean(form),
+    key: [API_ROUTES.jobs.getForms, param?.id],
+    url: API_ROUTES.jobs.getSectionByForm(param?.id),
+    enabled: Boolean(param?.id && param?.id !== "new"),
+    onSuccess: (data) => {
+      setQuery({
+        [QUERY_STRING.OTHER_PARAMS.PARENT_FORM]: data.data.form.id.toString(),
+      });
+    },
   });
 
   const { data: fields, isLoading: fieldsLoading } = useGetApi<
     IApiResponse<IJobFormResponse[]>
   >({
     key: [API_ROUTES.jobs.getForms, section],
-    url: API_ROUTES.jobs.getFieldsBySection(section),
-    enabled: Boolean(section),
+    url: API_ROUTES.jobs.getFieldsBySection(section, param?.id),
+    enabled: Boolean(section && param?.id),
   });
 
   const { mutate: mutateJob, isPending: jobLoading } = usePostApi<
     { name: string; formId: number },
-    { id: string; formId: number }
+    { id: string }
   >({
     url: API_ROUTES.jobs.post,
     onSuccess: (data) => {
-      navigate(
-        `/jobs/${data.data.id}?${QUERY_STRING.OTHER_PARAMS.PARENT_FORM}=${data.data?.formId}`
-      );
+      navigate(`/jobs/${data.data.id}`);
     },
   });
 
@@ -105,7 +115,7 @@ const NewJob = () => {
             <CSFormSlidingList
               loading={sectionLoading}
               type={QUERY_STRING.OTHER_PARAMS.PARENT_FORM}
-              list={sections?.data}
+              list={sections?.data?.form?.FormSections}
               onSelect={handleFormSelect}
               title="Forms"
             />
@@ -148,8 +158,9 @@ const NewJob = () => {
         {checkEditablePage(param?.id, "Submit Job", "Update Job")}
       </CSButton>
 
+      {/* Form List Modal */}
       <Modal
-        open={!form}
+        open={Boolean(param?.id === "new")}
         closable={false}
         footer={false}
         title="Select Form"
@@ -158,9 +169,9 @@ const NewJob = () => {
         <List bordered loading={formListLoading || jobLoading}>
           {formList?.data.map((_form, index: number) => (
             <List.Item
-              key={_form.id + index}
+              key={_form.id.toString() + index.toString()}
               style={{ cursor: "pointer" }}
-              onClick={() => mutateJob({ formId: _form.id, name: _form.name })}
+              onClick={() => mutateJob({ formId: +_form.id, name: _form.name })}
             >
               {/* <strong style={{ width: 40 }}>{_form.prefix}</strong> -{" "} */}
               <strong>{_form.name}</strong>

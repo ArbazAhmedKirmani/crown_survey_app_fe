@@ -17,6 +17,7 @@ import useJobStore from "../../../store/job.store";
 import usePostApi from "../../../hooks/use-post-api";
 import { AnyObject } from "antd/es/_util/type";
 import { useParams } from "react-router-dom";
+import { debounce } from "lodash";
 
 export interface IFormFieldResponse {
   id: string;
@@ -43,6 +44,7 @@ const CSDynamicFieldsRenderer = forwardRef(
     const { job } = useJobStore();
     const params = useParams();
 
+    const section = getQuery(QUERY_STRING.OTHER_PARAMS.CHILD_FORM) as string;
     const fieldId = getQuery(
       QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD
     ) as string;
@@ -71,7 +73,7 @@ const CSDynamicFieldsRenderer = forwardRef(
         params?.id,
       ],
       url: API_ROUTES.jobs.getJobFields(fieldId, params?.id!),
-      enabled: Boolean(fieldId) && params?.id !== "new",
+      enabled: Boolean(fieldId && params?.id !== "new"),
       options: {
         staleTime: 0,
       },
@@ -89,10 +91,12 @@ const CSDynamicFieldsRenderer = forwardRef(
       }
     >({
       url: API_ROUTES.jobs.detail(params.id!),
+      showSuccessMessage: true,
       onSuccess: (data) => {
         delete data?.data?.data?.id;
         form.setFieldsValue({ ...data?.data?.data, id: data.data.id });
       },
+      invalidate: [[API_ROUTES.jobs.getForms, section]],
     });
 
     const handleModal = () => {
@@ -106,6 +110,11 @@ const CSDynamicFieldsRenderer = forwardRef(
       }
     }, [isSuccess]);
 
+    const debounceMutate = debounce(
+      (values) => mutateJob({ fieldId: fieldId, data: values }),
+      2000
+    );
+
     return (
       <Spin spinning={isLoading || jobLoading || fieldLoading}>
         {data?.data?.mapperName && (
@@ -116,8 +125,10 @@ const CSDynamicFieldsRenderer = forwardRef(
               form={form}
               style={{ width: "100%" }}
               initialValues={job?.[data.data.mapperName]}
-              onFinish={(values) => {
-                mutateJob({ fieldId: fieldId, data: values });
+              onValuesChange={(values: FormData) => {
+                console.log();
+
+                debounceMutate(values);
               }}
             >
               <CSFormItem name={"id"} hidden>
@@ -183,9 +194,13 @@ const CSDynamicFieldsRenderer = forwardRef(
                   </div>
                 </div>
               )}
-              <CSButton htmlType="submit" type="primary">
-                Save
-              </CSButton>
+              {/* <CSButton
+                htmlType="submit"
+                type="primary"
+                style={{ marginTop: 10 }}
+              >
+                Save Field
+              </CSButton> */}
             </Form>
             <CSReferenceSidebar
               drawerProps={{

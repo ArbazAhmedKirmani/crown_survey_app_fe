@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import HTTP from "../service/http.service";
+import { useEffect } from "react";
 
 type UseGetApi<R> = {
   key: QueryKey;
@@ -25,6 +26,7 @@ type UseGetApi<R> = {
   enabled?: boolean;
   query?: Record<string, unknown>;
   queryClient?: QueryClient;
+  onSuccess?: (data: R) => void;
 };
 
 const _api = new HTTP();
@@ -35,8 +37,9 @@ export default function useGetApi<R>({
   query,
   options,
   queryClient,
+  onSuccess,
 }: UseGetApi<R>): UseQueryResult<R, AxiosError<{ message: string }>> {
-  return useQuery(
+  const queryResult = useQuery(
     {
       queryKey: key,
       queryFn: async () => {
@@ -61,6 +64,15 @@ export default function useGetApi<R>({
     },
     queryClient
   );
+  const { data, isSuccess } = queryResult;
+
+  useEffect(() => {
+    if (isSuccess && data && onSuccess) {
+      onSuccess?.(data);
+    }
+  }, [isSuccess]);
+
+  return queryResult;
 }
 
 // queryFn: customQueryFn

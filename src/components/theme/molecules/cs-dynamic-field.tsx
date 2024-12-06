@@ -5,6 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import CSInput from "../atoms/cs-input";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
+import moment from "moment";
 
 export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
@@ -48,10 +49,7 @@ CSDynamicField.CHECKBOX = (props: any) => {
       valuePropName={"checked"}
       rules={[{ required: props.required, message: "" }]}
     >
-      <Checkbox.Group
-        options={props?.values?.split(",")}
-        onChange={props.onChange}
-      />
+      <Checkbox.Group options={props?.values?.split(",")} />
     </CSFormItem>
   );
 };
@@ -94,11 +92,7 @@ CSDynamicField.DATE = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <DatePicker
-        {...props}
-        // onChange={(e, str) => props?.onChange?.(str, e)}
-        style={{ width: "100%" }}
-      />
+      <CSInput {...props} type="date" />
     </CSFormItem>
   );
 };

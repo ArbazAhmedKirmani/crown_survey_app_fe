@@ -13,24 +13,20 @@ import { useState } from "react";
 const Forms = () => {
   const [formId, setFormId] = useState<number | null>(null);
   const { getQuery } = useQueryString();
-  const page = getQuery(QUERY_STRING.PAGINATION.PAGE);
-  const limit = getQuery(QUERY_STRING.PAGINATION.LIMIT);
-  const search = getQuery(QUERY_STRING.PAGINATION.SEARCH);
+  const page = getQuery(QUERY_STRING.PAGINATION.PAGE) as string;
+  const limit = getQuery(QUERY_STRING.PAGINATION.LIMIT) as string;
+  const search = getQuery(QUERY_STRING.PAGINATION.SEARCH) as string;
 
   const { mutate: deleteMutate, isPending } = usePostApi({
     url: API_ROUTES.form.delete(formId?.toString()!),
-    query: {
-      ...(page && { page: page as string }),
-      ...(limit && { limit: limit as string }),
-      ...(search && { search: search as string }),
-    },
     method: AxiosMethodEnum.DELETE,
-    invalidate: [[API_ROUTES.form.get, limit as string, page as string]],
+    invalidate: [[API_ROUTES.form.get, limit, page]],
+    showSuccessMessage: true,
   });
 
   const handleDelete = (id: number | string) => {
     setFormId(+id);
-    deleteMutate({});
+    deleteMutate({ id: +id });
   };
 
   const columns = [
