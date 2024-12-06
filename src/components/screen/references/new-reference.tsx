@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import CSButton from "../../theme/atoms/cs-button";
-import { Form, Modal, Spin } from "antd";
+import { Form, List, Modal, Spin, Typography } from "antd";
 import CSInput from "../../theme/atoms/cs-input";
 import CSFormItem from "../../theme/atoms/cs-form-item";
 import { useForm } from "antd/es/form/Form";
@@ -14,6 +14,12 @@ import { AnyObject } from "antd/es/_util/type";
 import CSCheckbox from "../../theme/atoms/cs-checkbox";
 import { useParams } from "react-router-dom";
 import { checkEditablePage } from "../../../utils/helper/general.helper";
+import {
+  DeleteColumnOutlined,
+  DeleteFilled,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { DefaultOptionType, OptionProps } from "antd/es/select";
 
 const NewReference = () => {
   const [categoryForm] = useForm();
@@ -62,6 +68,14 @@ const NewReference = () => {
     onSuccess: () => {},
   });
 
+  /** PUT Reference API */
+  const { mutate: deleteCategory, isPending: deleteCategoryPending } =
+    usePostApi({
+      url: API_ROUTES.reference.post,
+      showSuccessMessage: true,
+      onSuccess: () => {},
+    });
+
   /** POST Reference Category API */
   const { mutate: mutateCategory, isPending: categoryPending } = usePostApi({
     url: API_ROUTES.reference.postCategory,
@@ -69,7 +83,7 @@ const NewReference = () => {
     onSuccess: () => {
       categoryForm.resetFields();
       refetch();
-      handleCatgory();
+      // handleCatgory();
     },
   });
 
@@ -105,12 +119,18 @@ const NewReference = () => {
               rules={[{ required: true, message: "Category is required" }]}
             >
               <CSSelect
+                showSearch
                 placeholder="Category"
                 loading={categoryLoading}
                 options={categoryData?.data?.map((x) => ({
                   label: x.name,
                   value: x.id,
                 }))}
+                filterOption={(input, option) =>
+                  option?.label && typeof option?.label === "string"
+                    ? option.label.toLowerCase().includes(input.toLowerCase())
+                    : false
+                }
               />
             </CSFormItem>
             <CSFormItem
@@ -138,6 +158,8 @@ const NewReference = () => {
           </Form>
         </Spin>
       </div>
+
+      {/* Category Form Modal */}
       <Modal
         rootClassName="new-reference"
         footer={null}
@@ -145,6 +167,7 @@ const NewReference = () => {
         onCancel={handleCatgory}
         title={"New Reference Category"}
         style={{ padding: 0 }}
+        centered
       >
         <Form
           form={categoryForm}
@@ -166,6 +189,24 @@ const NewReference = () => {
             >
               Save
             </CSButton>
+            <Typography.Title level={5}>Category List</Typography.Title>
+            <div className="category-list">
+              <List
+                loading={deleteCategoryPending || categoryLoading}
+                renderItem={(item: any, index: number) => (
+                  <div
+                    className="category-list-item"
+                    key={item.id + index.toString()}
+                  >
+                    <p>{item.name}</p>
+                    <span>
+                      <DeleteFilled onClick={() => console.log(item)} />
+                    </span>
+                  </div>
+                )}
+                dataSource={categoryData?.data}
+              ></List>
+            </div>
           </div>
         </Form>
       </Modal>

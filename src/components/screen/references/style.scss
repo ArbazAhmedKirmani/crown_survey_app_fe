@@ -1,3 +1,5 @@
+@use "../../../assets/styles/fluientui.scss" as *;
+
 .reference {
   display: flex;
   flex-direction: column;
@@ -14,4 +16,35 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  .ant-typography {
+    margin: 0.5rem 0;
+  }
+
+  .category-list {
+    margin: 0;
+    padding: 0 0.5rem;
+    border-radius: 2px;
+    border: 1px solid $colorPrimaryHover;
+    overflow-y: auto;
+    max-height: 50vh;
+
+    .category-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid $colorPrimaryHover;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      p {
+        margin: 5px;
+      }
+      span {
+        color: tomato;
+      }
+    }
+  }
 }

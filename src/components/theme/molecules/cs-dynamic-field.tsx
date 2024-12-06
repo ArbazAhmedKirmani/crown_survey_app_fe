@@ -59,7 +59,7 @@ CSDynamicField.SENTENCE = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <TextArea {...props} rows={5} />
+      <TextArea {...props} rows={9} />
     </CSFormItem>
   );
 };

@@ -38,12 +38,14 @@ export interface CSDynamicFieldsRenderer {
 
 const CSDynamicFieldsRenderer = forwardRef(
   (props: CSDynamicFieldsRenderer, ref) => {
-    const { getQuery } = useQueryString();
-    const [reference, setReference] = useState(false);
+    const { getQuery, setQuery, removeQuery } = useQueryString();
     const [form] = useForm();
     const { job } = useJobStore();
     const params = useParams();
 
+    const reference = getQuery(
+      QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME
+    ) as string;
     const section = getQuery(QUERY_STRING.OTHER_PARAMS.CHILD_FORM) as string;
     const fieldId = getQuery(
       QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD
@@ -99,8 +101,8 @@ const CSDynamicFieldsRenderer = forwardRef(
       invalidate: [[API_ROUTES.jobs.getForms, section]],
     });
 
-    const handleModal = () => {
-      setReference((prev) => !prev);
+    const handleModal = (str: string) => {
+      setQuery({ [QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]: str });
     };
 
     useEffect(() => {
@@ -126,8 +128,6 @@ const CSDynamicFieldsRenderer = forwardRef(
               style={{ width: "100%" }}
               initialValues={job?.[data.data.mapperName]}
               onValuesChange={(values: FormData) => {
-                console.log();
-
                 debounceMutate(values);
               }}
             >
@@ -142,7 +142,10 @@ const CSDynamicFieldsRenderer = forwardRef(
               {data?.data?.response && (
                 <div>
                   <div className="option-bar">
-                    <CSButton type="default" onClick={handleModal}>
+                    <CSButton
+                      type="default"
+                      onClick={() => handleModal(data.data.mapperName)}
+                    >
                       Add Reference
                     </CSButton>
                     <CSFormItem
@@ -168,10 +171,13 @@ const CSDynamicFieldsRenderer = forwardRef(
                     name={"siteNote"}
                     style={{ width: "100%" }}
                   >
-                    <CSTextarea placeholder="Side Notes" rows={3} />
+                    <CSTextarea placeholder="Side Notes" rows={7} />
                   </CSFormItem>
                   <div className="option-bar">
-                    <CSButton type="default" onClick={handleModal}>
+                    <CSButton
+                      type="default"
+                      onClick={() => handleModal("siteNote")}
+                    >
                       Add Reference
                     </CSButton>
                     <CSFormItem
@@ -206,11 +212,25 @@ const CSDynamicFieldsRenderer = forwardRef(
               drawerProps={{
                 title: "References",
                 placement: "right",
-                onClose: handleModal,
-                open: reference,
+                onClose: () =>
+                  removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
+                open: Boolean(reference),
                 getContainer: false,
                 width: "85%",
                 destroyOnClose: true,
+                maskClosable: false,
+              }}
+              setValue={(str: string) => {
+                debugger;
+                let val = form.getFieldsValue() ?? {};
+                const _ref = val?.[reference] ?? "";
+                val = {
+                  ...val,
+                  [reference]: _ref?.concat(_ref === "" ? "" : "\n \n", str),
+                };
+                form.setFieldsValue(val);
+                removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
+                debounceMutate(val);
               }}
             />
           </div>

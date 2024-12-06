@@ -11,6 +11,7 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import CSRenderSentence from "../molecules/cs-render-sentence";
 export interface ICSReferenceSidebar extends PropsWithChildren {
   drawerProps: DrawerProps;
+  setValue: (str: string) => void;
 }
 
 const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
@@ -18,8 +19,6 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
   const [reference, setReference] = useState<
     ({ id: string; name: string; value: string } | undefined)[]
   >([]);
-
-  const [finalReference, setFinalReference] = useState({});
 
   const controller = new AbortController();
   const selectedRefernce = getQuery(
@@ -82,14 +81,10 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
 
   useEffect(() => {
     return () => {
+      setReference([]);
       controller.abort();
     };
   }, []);
-
-  useEffect(() => {
-    if (selectedRefernce) {
-    }
-  }, [selectedRefernce]);
 
   const handleChangeReference = (
     e: CheckboxChangeEvent,
@@ -137,7 +132,7 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
                     key={i + ref.id}
                     value={ref?.value}
                     id={ref.id}
-                    setValue={setFinalReference}
+                    setValue={props.setValue}
                   />
                 )}
               </div>

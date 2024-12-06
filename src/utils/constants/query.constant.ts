@@ -13,6 +13,7 @@ export const QUERY_STRING = {
     SELECTED_FIELD: "_sl_f",
     SELECTED_CATEGORY: "_sl_ct",
     SELECTED_REFERENCE: "_sl_rf",
+    REFERENCE_NAME: "_rf_nm",
   },
   FILTERS: {
     DATE_FROM: "_dateFrom",
