@@ -1,11 +1,12 @@
 import { PropsWithChildren } from "react";
 import CSFormItem from "../atoms/cs-form-item";
-import { Checkbox, DatePicker, Radio, Upload, UploadProps } from "antd";
+import { Checkbox, Form, Radio, Upload, UploadProps } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import CSInput from "../atoms/cs-input";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
-import moment from "moment";
+import CSButton from "../atoms/cs-button";
+import { DeleteOutlined } from "@ant-design/icons";
 
 export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
@@ -34,6 +35,8 @@ const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
           return (
             <CSDynamicField.SENTENCE onChange={onChange} {...nestedProps} />
           );
+        case FormFieldType.TABLE:
+          return <CSDynamicField.TABLE onChange={onChange} {...nestedProps} />;
         default:
           break;
       }
@@ -46,10 +49,13 @@ CSDynamicField.CHECKBOX = (props: any) => {
   return (
     <CSFormItem
       name={props.mapperName}
-      valuePropName={"checked"}
       rules={[{ required: props.required, message: "" }]}
     >
-      <Checkbox.Group options={props?.values?.split(",")} />
+      <Checkbox.Group
+        key={props.mapperName}
+        name={props.mapperName}
+        options={props?.values?.split(",")}
+      />
     </CSFormItem>
   );
 };
@@ -94,6 +100,48 @@ CSDynamicField.DATE = (props: any) => {
     >
       <CSInput {...props} type="date" />
     </CSFormItem>
+  );
+};
+CSDynamicField.TABLE = (props: any) => {
+  return (
+    <Form.List name={props.mapperName}>
+      {(fields, { add, remove }) => {
+        return (
+          <div>
+            {fields.map((item, index) => (
+              <div
+                key={item.key}
+                style={{ display: "flex", gap: 10, margin: "0 0 10px" }}
+              >
+                <CSFormItem
+                  label="Element Name"
+                  name={[index, "name"]}
+                  rules={[{ required: props.required, message: "" }]}
+                >
+                  <CSInput />
+                </CSFormItem>
+                <CSFormItem label="Element Desc" name={[index, "desc"]}>
+                  <CSInput />
+                </CSFormItem>
+                <CSButton
+                  type="text"
+                  style={{ color: "tomato", marginTop: 21 }}
+                  icon={<DeleteOutlined />}
+                  onClick={() => remove(index)}
+                />
+              </div>
+            ))}
+            <CSButton
+              type="primary"
+              onClick={() => add()}
+              style={{ marginBottom: 10 }}
+            >
+              Add Element
+            </CSButton>
+          </div>
+        );
+      }}
+    </Form.List>
   );
 };
 

@@ -1,5 +1,11 @@
 import { Form, Image, Spin } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import {
+  FormEvent,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import CSFormItem from "../atoms/cs-form-item";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import CSDynamicField from "../molecules/cs-dynamic-field";
@@ -112,10 +118,9 @@ const CSDynamicFieldsRenderer = forwardRef(
       }
     }, [isSuccess]);
 
-    const debounceMutate = debounce(
-      (values) => mutateJob({ fieldId: fieldId, data: values }),
-      2000
-    );
+    const debounceMutate = debounce(() => {
+      mutateJob({ fieldId: fieldId, data: form.getFieldsValue() });
+    }, 2000);
 
     return (
       <Spin spinning={isLoading || jobLoading || fieldLoading}>
@@ -127,9 +132,7 @@ const CSDynamicFieldsRenderer = forwardRef(
               form={form}
               style={{ width: "100%" }}
               initialValues={job?.[data.data.mapperName]}
-              onValuesChange={(values: FormData) => {
-                debounceMutate(values);
-              }}
+              onValuesChange={debounceMutate}
             >
               <CSFormItem name={"id"} hidden>
                 <input hidden />
@@ -141,31 +144,33 @@ const CSDynamicFieldsRenderer = forwardRef(
               />
               {data?.data?.response && (
                 <div>
-                  <div className="option-bar">
-                    <CSButton
-                      type="default"
-                      onClick={() => handleModal(data.data.mapperName)}
-                    >
-                      Add Reference
-                    </CSButton>
-                    <CSFormItem
-                      name={"field_attachment"}
-                      style={{ width: "100%" }}
-                      valuePropName="fileList"
-                    >
-                      <Dragger
-                        style={{ width: "100%" }}
-                        itemRender={(_, file) => (
-                          <Image
-                            src="../../../../assets/images/room.png"
-                            draggable={false}
-                          />
-                        )}
+                  {data?.data?.type === FormFieldType.SENTENCE && (
+                    <div className="option-bar">
+                      <CSButton
+                        type="default"
+                        onClick={() => handleModal(data.data.mapperName)}
                       >
-                        <p>Add Photos</p>
-                      </Dragger>
-                    </CSFormItem>
-                  </div>
+                        Add Reference
+                      </CSButton>
+                      <CSFormItem
+                        name={"field_attachment"}
+                        style={{ width: "100%" }}
+                        valuePropName="fileList"
+                      >
+                        <Dragger
+                          style={{ width: "100%" }}
+                          itemRender={(_, file) => (
+                            <Image
+                              src="../../../../assets/images/room.png"
+                              draggable={false}
+                            />
+                          )}
+                        >
+                          <p>Add Photos</p>
+                        </Dragger>
+                      </CSFormItem>
+                    </div>
+                  )}
                   <CSFormItem
                     key={data.data.id}
                     name={"siteNote"}
@@ -221,7 +226,6 @@ const CSDynamicFieldsRenderer = forwardRef(
                 maskClosable: false,
               }}
               setValue={(str: string) => {
-                debugger;
                 let val = form.getFieldsValue() ?? {};
                 const _ref = val?.[reference] ?? "";
                 val = {
@@ -230,7 +234,7 @@ const CSDynamicFieldsRenderer = forwardRef(
                 };
                 form.setFieldsValue(val);
                 removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
-                debounceMutate(val);
+                debounceMutate();
               }}
             />
           </div>
