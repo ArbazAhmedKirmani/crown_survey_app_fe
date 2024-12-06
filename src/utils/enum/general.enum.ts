@@ -66,6 +66,7 @@ export enum FormFieldType {
   TABLE = "TABLE",
   SENTENCE = "SENTENCE",
   DATE = "DATE",
+  ACCOMODATION = "ACCOMODATION",
 }
 
 export enum JobStatusEnum {
