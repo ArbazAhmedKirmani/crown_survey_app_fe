@@ -5,11 +5,11 @@ import {
   forwardRef,
   useState,
 } from "react";
-import { Canvas, Circle, ITextEvents, Line, Rect, Textbox } from "fabric";
+import { Canvas, Circle, Line, Rect, Textbox } from "fabric";
 import CSButton from "../atoms/cs-button";
 import SquareIcon from "../../../assets/icons/square.svg";
 import CircleIcon from "../../../assets/icons/circle.svg";
-import { DeleteOutlined, FundViewOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 
 interface ICSFloorPlan {
@@ -17,10 +17,7 @@ interface ICSFloorPlan {
   width: number;
 }
 
-const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
-  // const canvasRef = useRef<Canvas | null>(null);
-  // const [imagePreview, setImagePreview] = useState<string | null>(null); // To store the image preview URL
-
+const CSFloorPlan = forwardRef((_: ICSFloorPlan, ref) => {
   useImperativeHandle(ref, () => ({
     values: canvas?.getObjects().map((obj) => {
       if (obj instanceof Circle) {
@@ -147,7 +144,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
     if (!canvasRef.current) return;
 
     // Initialize Fabric.js canvas
-    const fabricCanvas = new Canvas(canvasRef.current, {
+    const fabricCanvas: any = new Canvas(canvasRef.current, {
       width: window.innerWidth,
       height: window.innerHeight,
       backgroundColor: "#f3f3f3",
@@ -175,7 +172,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
     }
 
     // Enable panning and zooming
-    fabricCanvas.on("mouse:down", (opt) => {
+    fabricCanvas.on("mouse:down", (opt: any) => {
       const evt = opt.e as MouseEvent;
       if (evt.altKey) {
         fabricCanvas.isDragging = true;
@@ -191,7 +188,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
       }
     });
 
-    fabricCanvas.on("mouse:move", (opt) => {
+    fabricCanvas.on("mouse:move", (opt: any) => {
       if (fabricCanvas?.isDragging) {
         const evt = opt.e as MouseEvent;
         const vpt = fabricCanvas.viewportTransform!;
@@ -234,7 +231,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
 
   // Rectangle drawing logic
   let rect: Rect | null = null;
-  const startRectangleDraw = (opt: ITextEvents) => {
+  const startRectangleDraw = (opt: any) => {
     const pointer = canvas!.getPointer(opt.e);
     rect = new Rect({
       left: pointer.x,
@@ -248,7 +245,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
     canvas!.add(rect);
   };
 
-  const continueRectangleDraw = (opt: ITextEvents) => {
+  const continueRectangleDraw = (opt: any) => {
     if (!rect) return;
     const pointer = canvas!.getPointer(opt.e);
     rect.set({
@@ -264,7 +261,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
 
   // Line drawing logic
   let line: Line | null = null;
-  const startLineDraw = (opt: ITextEvents) => {
+  const startLineDraw = (opt: any) => {
     const pointer = canvas!.getPointer(opt.e);
     line = new Line([pointer.x, pointer.y, pointer.x, pointer.y], {
       stroke: "black",
@@ -273,7 +270,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
     canvas!.add(line);
   };
 
-  const continueLineDraw = (opt: ITextEvents) => {
+  const continueLineDraw = (opt: any) => {
     if (!line) return;
     const pointer = canvas!.getPointer(opt.e);
     line.set({ x2: pointer.x, y2: pointer.y });
@@ -285,7 +282,7 @@ const CSFloorPlan = forwardRef((props: ICSFloorPlan, ref) => {
   };
 
   // Add label logic
-  const addLabel = (opt: ITextEvents) => {
+  const addLabel = (opt: any) => {
     const pointer = canvas!.getPointer(opt.e);
     const text = new Textbox("Label", {
       left: pointer.x,

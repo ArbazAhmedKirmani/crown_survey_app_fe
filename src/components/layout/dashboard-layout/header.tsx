@@ -7,6 +7,7 @@ import {
   BarChartOutlined,
   FileTextFilled,
   HomeOutlined,
+  LogoutOutlined,
   SelectOutlined,
   SettingFilled,
   SignatureFilled,
@@ -25,6 +26,7 @@ const LayoutHeader = () => {
       getItem("References", "/reference", <SelectOutlined />),
       getItem("Forms", "/forms", <FileTextFilled />),
       getItem("Floor Plans", "/floor-plans", <SelectOutlined />),
+      getItem("Logout", "/logout", <LogoutOutlined />),
     ]),
   ];
   return (

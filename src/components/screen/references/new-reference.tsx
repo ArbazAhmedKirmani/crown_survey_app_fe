@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import CSButton from "../../theme/atoms/cs-button";
-import { Form, List, Modal, Spin, Typography } from "antd";
+import { Form, List, Modal, Popconfirm, Spin, Typography } from "antd";
 import CSInput from "../../theme/atoms/cs-input";
 import CSFormItem from "../../theme/atoms/cs-form-item";
 import { useForm } from "antd/es/form/Form";
@@ -20,6 +20,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { DefaultOptionType, OptionProps } from "antd/es/select";
+import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 
 const NewReference = () => {
   const [categoryForm] = useForm();
@@ -63,17 +64,19 @@ const NewReference = () => {
 
   /** PUT Reference API */
   const { mutate: updateMutate, isPending: updatePending } = usePostApi({
-    url: API_ROUTES.reference.post,
+    url: API_ROUTES.reference.put(params.id!),
     showSuccessMessage: true,
     onSuccess: () => {},
+    method: AxiosMethodEnum.PUT,
   });
 
   /** PUT Reference API */
   const { mutate: deleteCategory, isPending: deleteCategoryPending } =
     usePostApi({
-      url: API_ROUTES.reference.post,
+      url: API_ROUTES.reference.put(params.id!),
       showSuccessMessage: true,
       onSuccess: () => {},
+      method: AxiosMethodEnum.DELETE,
     });
 
   /** POST Reference Category API */
@@ -106,6 +109,9 @@ const NewReference = () => {
       <div className="ref-form">
         <Spin spinning={isLoading}>
           <Form form={form} layout="vertical" onFinish={submitReference}>
+            <CSFormItem name={"id"} hidden={true}>
+              <input type="hidden" />
+            </CSFormItem>
             <CSFormItem
               label="Name"
               name={"name"}
@@ -200,7 +206,13 @@ const NewReference = () => {
                   >
                     <p>{item.name}</p>
                     <span>
-                      <DeleteFilled onClick={() => console.log(item)} />
+                      <Popconfirm
+                        title="Delete"
+                        onConfirm={() => deleteCategory(item)}
+                        description="Do you really want to delete?"
+                      >
+                        <DeleteFilled />
+                      </Popconfirm>
                     </span>
                   </div>
                 )}

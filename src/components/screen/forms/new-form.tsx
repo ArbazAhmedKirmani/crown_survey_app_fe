@@ -131,6 +131,7 @@ const NewForm = () => {
           onFinish={onFinish}
           autoComplete="off"
           form={form}
+          scrollToFirstError
           // initialValues={form.getFieldsValue()}
         >
           <CSFormDetail document_ref={document_ref} />

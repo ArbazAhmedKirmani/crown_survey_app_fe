@@ -1,11 +1,5 @@
-import { Form, Image, Spin } from "antd";
-import {
-  FormEvent,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { Form, Spin } from "antd";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import CSFormItem from "../atoms/cs-form-item";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import CSDynamicField from "../molecules/cs-dynamic-field";
@@ -16,7 +10,6 @@ import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useQueryString from "../../../hooks/use-query-string";
 import CSButton from "../atoms/cs-button";
 import CSTextarea from "../atoms/cs-textarea";
-import Dragger from "antd/es/upload/Dragger";
 import CSReferenceSidebar from "./cs-reference-sidebar";
 import { useForm } from "antd/es/form/Form";
 import useJobStore from "../../../store/job.store";
@@ -24,6 +17,7 @@ import usePostApi from "../../../hooks/use-post-api";
 import { AnyObject } from "antd/es/_util/type";
 import { useParams } from "react-router-dom";
 import { debounce } from "lodash";
+import CSDragger, { ICSDraggerReturn } from "../atoms/cs-dragger";
 
 export interface IFormFieldResponse {
   id: string;
@@ -44,6 +38,8 @@ export interface CSDynamicFieldsRenderer {
 
 const CSDynamicFieldsRenderer = forwardRef(
   (props: CSDynamicFieldsRenderer, ref) => {
+    const mainRef = useRef<ICSDraggerReturn>();
+    const noteRef = useRef<ICSDraggerReturn>();
     const { getQuery, setQuery, removeQuery } = useQueryString();
     const [form] = useForm();
     const { job } = useJobStore();
@@ -99,7 +95,7 @@ const CSDynamicFieldsRenderer = forwardRef(
       }
     >({
       url: API_ROUTES.jobs.detail(params.id!),
-      showSuccessMessage: true,
+      showSuccessMessage: false,
       onSuccess: (data) => {
         delete data?.data?.data?.id;
         form.setFieldsValue({ ...data?.data?.data, id: data.data.id });
@@ -116,10 +112,27 @@ const CSDynamicFieldsRenderer = forwardRef(
         const _obj = { ...fieldData.data.data, id: fieldData.data.id };
         form.setFieldsValue(_obj);
       }
-    }, [isSuccess]);
+      if (fieldData?.data?.data?.["field_attachments"]) {
+        mainRef.current?.setValue(fieldData?.data?.data?.["field_attachments"]);
+      }
+      if (fieldData?.data?.data?.["siteNote_attachments"]) {
+        noteRef.current?.setValue(
+          fieldData?.data?.data?.["siteNote_attachments"]
+        );
+      }
+    }, [isSuccess, fieldId]);
 
     const debounceMutate = debounce(() => {
-      mutateJob({ fieldId: fieldId, data: form.getFieldsValue() });
+      const main_val = mainRef.current?.getValue();
+      const note_val = noteRef.current?.getValue();
+      const data = form.getFieldsValue();
+      if (main_val?.length) {
+        data["field_attachments"] = main_val;
+      }
+      if (note_val?.length) {
+        data["siteNote_attachments"] = note_val;
+      }
+      mutateJob({ fieldId: fieldId, data });
     }, 2000);
 
     return (
@@ -144,31 +157,22 @@ const CSDynamicFieldsRenderer = forwardRef(
               />
               {data?.data?.response && (
                 <div>
-                  {data?.data?.type === FormFieldType.SENTENCE && (
+                  {[FormFieldType.SENTENCE, FormFieldType.INPUT].includes(
+                    data?.data?.type
+                  ) && (
                     <div className="option-bar">
                       <CSButton
                         type="default"
                         onClick={() => handleModal(data.data.mapperName)}
                       >
-                        Add Reference
+                        Add Response
                       </CSButton>
-                      <CSFormItem
-                        name={"field_attachment"}
-                        style={{ width: "100%" }}
-                        valuePropName="fileList"
-                      >
-                        <Dragger
-                          style={{ width: "100%" }}
-                          itemRender={(_, file) => (
-                            <Image
-                              src="../../../../assets/images/room.png"
-                              draggable={false}
-                            />
-                          )}
-                        >
-                          <p>Add Photos</p>
-                        </Dragger>
-                      </CSFormItem>
+
+                      <CSDragger
+                        ref={mainRef}
+                        multiple
+                        name="field_attachments"
+                      />
                     </div>
                   )}
                   <CSFormItem
@@ -183,35 +187,17 @@ const CSDynamicFieldsRenderer = forwardRef(
                       type="default"
                       onClick={() => handleModal("siteNote")}
                     >
-                      Add Reference
+                      Site Note Response
                     </CSButton>
-                    <CSFormItem
-                      name={"field_attachment"}
-                      style={{ width: "100%" }}
-                      valuePropName="fileList"
-                    >
-                      <Dragger
-                        style={{ width: "100%" }}
-                        itemRender={(_, file) => (
-                          <Image
-                            src="../../../../assets/images/room.png"
-                            draggable={false}
-                          />
-                        )}
-                      >
-                        <p>Add Photos</p>
-                      </Dragger>
-                    </CSFormItem>
+
+                    <CSDragger
+                      ref={noteRef}
+                      multiple
+                      name="siteNote_attachments"
+                    />
                   </div>
                 </div>
               )}
-              {/* <CSButton
-                htmlType="submit"
-                type="primary"
-                style={{ marginTop: 10 }}
-              >
-                Save Field
-              </CSButton> */}
             </Form>
             <CSReferenceSidebar
               drawerProps={{
@@ -227,10 +213,9 @@ const CSDynamicFieldsRenderer = forwardRef(
               }}
               setValue={(str: string) => {
                 let val = form.getFieldsValue() ?? {};
-                const _ref = val?.[reference] ?? "";
                 val = {
                   ...val,
-                  [reference]: _ref?.concat(_ref === "" ? "" : "\n \n", str),
+                  [reference]: str,
                 };
                 form.setFieldsValue(val);
                 removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);

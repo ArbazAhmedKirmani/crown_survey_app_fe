@@ -1,18 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import CSButton from "../../theme/atoms/cs-button";
 import CSFormSlidingList, {
   TCSFormSlidingListProp,
 } from "../../theme/organisms/cs-form-sliding-list";
-import { checkEditablePage } from "../../../utils/helper/general.helper";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import useQueryString from "../../../hooks/use-query-string";
 import CSDynamicFieldsRenderer from "../../theme/organisms/cs-dynamic-fields-renderer";
 import { useRef } from "react";
-import { List, Modal } from "antd";
 import useJobStore from "../../../store/job.store";
 import { CheckCircleFilled } from "@ant-design/icons";
 
@@ -40,10 +38,9 @@ export interface IFieldData {
 
 const NewJob = () => {
   const param = useParams();
-  const navigate = useNavigate();
   const fieldRef = useRef<{ formValue: any }>();
   const { getQuery, setQuery } = useQueryString();
-  const { job, setJob } = useJobStore();
+  const { job } = useJobStore();
 
   const { isPending } = usePostApi({
     url: API_ROUTES.form.post,
@@ -51,16 +48,7 @@ const NewJob = () => {
     onSuccess: () => {},
   });
 
-  const form = getQuery(QUERY_STRING.OTHER_PARAMS.PARENT_FORM) as string;
   const section = getQuery(QUERY_STRING.OTHER_PARAMS.CHILD_FORM) as string;
-
-  const { data: formList, isLoading: formListLoading } = useGetApi<
-    IApiResponse<IJobFormResponse[]>
-  >({
-    key: [API_ROUTES.jobs.getForms],
-    url: API_ROUTES.jobs.getForms,
-    enabled: Boolean(param?.id === "new"),
-  });
 
   const { data: sections, isLoading: sectionLoading } = useGetApi<
     IApiResponse<IJobSectionList>
@@ -81,16 +69,6 @@ const NewJob = () => {
     key: [API_ROUTES.jobs.getForms, section],
     url: API_ROUTES.jobs.getFieldsBySection(section, param?.id),
     enabled: Boolean(section && param?.id),
-  });
-
-  const { mutate: mutateJob, isPending: jobLoading } = usePostApi<
-    { name: string; formId: number },
-    { id: string }
-  >({
-    url: API_ROUTES.jobs.post,
-    onSuccess: (data) => {
-      navigate(`/jobs/${data.data.id}`);
-    },
   });
 
   const handleFormSelect = (item: TCSFormSlidingListProp) => {
@@ -148,6 +126,7 @@ const NewJob = () => {
         )}
         <div className="content-section">
           <CSDynamicFieldsRenderer
+            // key={job}
             ref={fieldRef}
             title="Sections Fields"
             values={job}
@@ -155,30 +134,8 @@ const NewJob = () => {
         </div>
       </div>
       <CSButton loading={isPending} type="primary">
-        {checkEditablePage(param?.id, "Submit Job", "Update Job")}
+        Publish
       </CSButton>
-
-      {/* Form List Modal */}
-      <Modal
-        open={Boolean(param?.id === "new")}
-        closable={false}
-        footer={false}
-        title="Select Form"
-        centered
-      >
-        <List bordered loading={formListLoading || jobLoading}>
-          {formList?.data.map((_form, index: number) => (
-            <List.Item
-              key={_form.id.toString() + index.toString()}
-              style={{ cursor: "pointer" }}
-              onClick={() => mutateJob({ formId: +_form.id, name: _form.name })}
-            >
-              {/* <strong style={{ width: 40 }}>{_form.prefix}</strong> -{" "} */}
-              <strong>{_form.name}</strong>
-            </List.Item>
-          ))}
-        </List>
-      </Modal>
     </div>
   );
 };

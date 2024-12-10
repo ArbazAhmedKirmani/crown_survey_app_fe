@@ -6,10 +6,9 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { toggleStringInArray } from "../../../utils/helper/general.helper";
-import { Button, Checkbox, Radio } from "antd";
 import { SaveFilled } from "@ant-design/icons";
 import CSButton from "./cs-button";
+import { Checkbox, Radio } from "antd";
 
 interface IFormItemSelect {
   part: string;
@@ -40,7 +39,6 @@ const CSRenderFieldValidator = forwardRef(
     }));
 
     const handleChange = (e: any, name: string, type: "checkbox" | "radio") => {
-      // debugger;
       if (type === "checkbox") {
         props.setSelected((prev: AnyObject) => {
           return {
@@ -151,18 +149,6 @@ FormItemSelect.Radio = (props: IFormItemSelect) => {
       onChange={(e) => props.onChange(e, props.part, "radio")}
     />
   );
-  // return props.dataItem.array.map((item: string, ind: number) => (
-  //   <label key={ind} style={{ fontWeight: "bold" }}>
-  //     <input
-  //       key={props.part + ind}
-  //       type="radio"
-  //       name={props.part}
-  //       value={item}
-  //       onChange={(e) => props.onChange(e, props.part, "radio")}
-  //     />
-  //     {item}
-  //   </label>
-  // ));
 };
 
 export default CSRenderFieldValidator;

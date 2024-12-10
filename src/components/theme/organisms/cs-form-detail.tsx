@@ -32,7 +32,7 @@ const CSFormDetail = (props: CSFormDetails) => {
         <Col lg={4} md={6} sm={10} xs={24}>
           <CSFormItem
             name={"form_prefix"}
-            label="Form Prefix"
+            label="Prefix"
             rules={[
               { required: true, message: "Prefix is required" },
               { max: 3, message: "Max 3 Characters" },

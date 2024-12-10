@@ -8,13 +8,14 @@ import CSButton from "../atoms/cs-button";
 
 const CSRenderSentence = ({
   value,
-  id,
   setValue,
+  index,
 }: {
   value?: string;
   id: string;
-  setValue: (selected: any) => void;
+  setValue: (selected: any, ind: number) => void;
   onChange?: any;
+  index: number;
 }) => {
   const sentenceRef = useRef<{ getValue: any }>();
   const [selected, setSelected] = useState<any>({});
@@ -32,11 +33,12 @@ const CSRenderSentence = ({
         setSelected={setSelected}
         selected={selected}
       />
+
       <CSButton
         htmlType="submit"
         onClick={() => {
           let result = Object.values(sentenceRef.current?.getValue)?.join(" ");
-          setValue(result);
+          setValue(result, index);
         }}
       >
         Confirm

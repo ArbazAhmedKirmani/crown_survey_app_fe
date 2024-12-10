@@ -32,11 +32,13 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
   } = props;
   const { getQuery, setQuery } = useQueryString();
   const [collapse, setCollapse] = useState<boolean>(false);
-
-  const selectedItem = getQuery(type);
+  const [selectedItem, setSelectedItem] = useState<string>(
+    () => getQuery(type) as string
+  );
 
   const handleFormSelect = (item: TCSFormSlidingListProp) => {
     setQuery({ [type]: item.id.toString() });
+    setSelectedItem(item.id.toString());
     if (props?.onSelect) props?.onSelect(item);
   };
 
@@ -51,16 +53,13 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
       {list?.length && (
         <div
           id="cs-form-sliding-list"
-          className={`cs-form-sliding-list ${collapse ? "collapsed" : ""}`}
+          className={`cs-form-sliding-list${collapse ? " collapsed" : ""}`}
         >
           <div className="menu-header">
             <MenuOutlined
               style={{ color: "black" }}
               onClick={() => setCollapse((prev) => !prev)}
             />
-            {/* {title && (
-              <h4 style={{ display: collapse ? "none" : "block" }}>{title}</h4>
-            )} */}
           </div>
 
           <ul
@@ -74,15 +73,19 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
               <li
                 key={item.id + index.toString()}
                 className={`${
-                  selectedItem === item.id.toString() && "active-item"
+                  selectedItem === item.id.toString()
+                    ? "active-item"
+                    : undefined
                 } menu-item`}
                 onClick={() => handleFormSelect(item)}
               >
-                {!props?.hidePrefix && (
+                {!props?.hidePrefix && item?.prefix && (
                   <span className="menu-prefix">{item?.prefix}</span>
                 )}
                 {props?.showCustomRender && (
-                  <span>{props.showCustomRender(item)}</span>
+                  <span className="menu-prefix">
+                    {props.showCustomRender(item)}
+                  </span>
                 )}
                 {!collapse && <span className="menu-text">{item.name}</span>}
               </li>

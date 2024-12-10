@@ -1,4 +1,4 @@
-import { Drawer, DrawerProps } from "antd";
+import { Drawer, DrawerProps, Spin } from "antd";
 import { PropsWithChildren, useEffect, useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
@@ -9,6 +9,8 @@ import CSFormSlidingList from "./cs-form-sliding-list";
 import CSCheckbox from "../atoms/cs-checkbox";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import CSRenderSentence from "../molecules/cs-render-sentence";
+import CSButton from "../atoms/cs-button";
+import CSTextarea from "../atoms/cs-textarea";
 export interface ICSReferenceSidebar extends PropsWithChildren {
   drawerProps: DrawerProps;
   setValue: (str: string) => void;
@@ -19,11 +21,10 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
   const [reference, setReference] = useState<
     ({ id: string; name: string; value: string } | undefined)[]
   >([]);
+  const [finalSentence, setFinalSentence] = useState<string>("");
 
   const controller = new AbortController();
-  const selectedRefernce = getQuery(
-    QUERY_STRING.OTHER_PARAMS.SELECTED_REFERENCE
-  );
+
   const refernceId = getQuery(QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD);
   const categoryId = getQuery(QUERY_STRING.OTHER_PARAMS.SELECTED_CATEGORY);
 
@@ -82,6 +83,7 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
   useEffect(() => {
     return () => {
       setReference([]);
+      setFinalSentence("");
       controller.abort();
     };
   }, []);
@@ -99,6 +101,18 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
       });
   };
 
+  const setSentence = (val: string, ind: number) => {
+    setFinalSentence((prev) => {
+      let result = prev.concat(prev === "" ? val : "\n \n", val);
+      return result;
+    });
+    setReference((prev: any[]) => {
+      let arr = [...prev];
+      arr.splice(ind, 1);
+      return arr;
+    });
+  };
+
   return (
     <Drawer {...props.drawerProps}>
       <div className="cs-reference-sidebar">
@@ -111,17 +125,19 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
           />
         </div>
 
-        <div className="reference-list">
-          {data?.data?.map((reference, index) => (
-            <CSCheckbox
-              key={reference.id}
-              name={reference.value}
-              onChange={(e) => handleChangeReference(e, reference, index)}
-            >
-              {reference.name}
-            </CSCheckbox>
-          ))}
-        </div>
+        <Spin spinning={isLoading}>
+          <div className="reference-list">
+            {data?.data?.map((reference, index) => (
+              <CSCheckbox
+                key={reference.id}
+                name={reference.value}
+                onChange={(e) => handleChangeReference(e, reference, index)}
+              >
+                {reference.name}
+              </CSCheckbox>
+            ))}
+          </div>
+        </Spin>
 
         <div className="preview">
           {reference?.map((ref, i) => (
@@ -132,12 +148,27 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
                     key={i + ref.id}
                     value={ref?.value}
                     id={ref.id}
-                    setValue={props.setValue}
+                    setValue={setSentence}
+                    index={i}
                   />
                 )}
               </div>
             </div>
           ))}
+          {finalSentence && (
+            <div>
+              <CSTextarea rows={6} value={finalSentence} />
+              <CSButton
+                htmlType="submit"
+                onClick={() => {
+                  props.setValue(finalSentence);
+                  setFinalSentence("");
+                }}
+              >
+                Add Response
+              </CSButton>
+            </div>
+          )}
         </div>
       </div>
     </Drawer>

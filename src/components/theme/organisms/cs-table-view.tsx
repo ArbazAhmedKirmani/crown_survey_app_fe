@@ -26,6 +26,7 @@ export interface ICSTableView {
   footer?: boolean;
   centerSection?: ReactNode;
   loading: boolean;
+  customButton?: ReactNode;
 }
 
 /**
@@ -43,6 +44,7 @@ const CSTableForm = (props: ICSTableView) => {
     centerSection,
     footer,
     data,
+    customButton,
   } = props;
   const { setQuery } = useQueryString();
   const navigate = useNavigate();
@@ -73,13 +75,17 @@ const CSTableForm = (props: ICSTableView) => {
         </Col>
         {searchBarElements && searchBarElements}
         <Col xl={3} lg={4} md={5} sm={8} xs={24} style={{ textAlign: "right" }}>
-          <CSButton
-            htmlType="button"
-            type="primary"
-            onClick={createNewTemplate}
-          >
-            {newBtnTitle}
-          </CSButton>
+          {customButton ? (
+            customButton
+          ) : (
+            <CSButton
+              htmlType="button"
+              type="primary"
+              onClick={createNewTemplate}
+            >
+              {newBtnTitle}
+            </CSButton>
+          )}
         </Col>
       </Row>
 

@@ -35,8 +35,13 @@ const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
           return (
             <CSDynamicField.SENTENCE onChange={onChange} {...nestedProps} />
           );
-        case FormFieldType.TABLE:
-          return <CSDynamicField.TABLE onChange={onChange} {...nestedProps} />;
+        case FormFieldType.TABLE_ELEMENT:
+          return (
+            <CSDynamicField.TABLE_ELEMENT
+              onChange={onChange}
+              {...nestedProps}
+            />
+          );
         default:
           break;
       }
@@ -65,7 +70,7 @@ CSDynamicField.SENTENCE = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <TextArea {...props} rows={9} />
+      <TextArea rows={9} placeholder={props.placeholder} />
     </CSFormItem>
   );
 };
@@ -75,7 +80,7 @@ CSDynamicField.RADIO = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <Radio.Group options={props?.values?.split(",")} {...props} />
+      <Radio.Group options={props?.values?.split(",")} />
     </CSFormItem>
   );
 };
@@ -85,7 +90,7 @@ CSDynamicField.INPUT = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <CSInput {...props} name={props?.mapperName} />
+      <CSInput placeholder={props.placeholder} />
     </CSFormItem>
   );
 };
@@ -98,11 +103,11 @@ CSDynamicField.DATE = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <CSInput {...props} type="date" />
+      <CSInput type="date" />
     </CSFormItem>
   );
 };
-CSDynamicField.TABLE = (props: any) => {
+CSDynamicField.TABLE_ELEMENT = (props: any) => {
   return (
     <Form.List name={props.mapperName}>
       {(fields, { add, remove }) => {

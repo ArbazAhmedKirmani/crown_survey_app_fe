@@ -63,7 +63,7 @@ export enum FormFieldType {
   TEXTAREA = "TEXTAREA",
   INPUT = "INPUT",
   FILE = "FILE",
-  TABLE = "TABLE",
+  TABLE_ELEMENT = "TABLE_ELEMENT",
   SENTENCE = "SENTENCE",
   DATE = "DATE",
   ACCOMODATION = "ACCOMODATION",
@@ -73,5 +73,5 @@ export enum JobStatusEnum {
   PENDING = "Pending",
   COMPLETED = "Completed",
   REJECTED = "Rejected",
-  CANCELED = "Cancelled",
+  CANCELED = "Canceled",
 }

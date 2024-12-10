@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
 import { Modal } from "antd";
 import CSInput from "../atoms/cs-input";
@@ -42,8 +42,8 @@ const CSCanvas = (props: { height: number; width: number }) => {
   useEffect(() => {
     // Initialize canvas
     debugger;
-    const height = pixelToMeterConverter(+props.height) + 250;
-    const width = pixelToMeterConverter(+props.width) + 250;
+    const height = pixelToMeterConverter(+props.height) + 100;
+    const width = pixelToMeterConverter(+props.width) + 100;
     const canvas = new fabric.Canvas("drawCanvas", {
       width: width,
       height: height,

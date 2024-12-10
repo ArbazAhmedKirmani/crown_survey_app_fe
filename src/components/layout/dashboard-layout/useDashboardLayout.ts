@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MENU_ROUTES from "../../../utils/constants/menu.constant";
+import { APP_CONSTANTS } from "../../../utils/constants/app.constant";
 
 interface IUseDashboardLayout {
   handleMenuChange: (data: { key: string }) => void;
@@ -12,7 +13,11 @@ const useDashboardLayout = (): IUseDashboardLayout => {
   const location = useLocation();
 
   const handleMenuChange = (data: { key: string }) => {
-    navigate(data.key);
+    if (data.key === "/logout") {
+      localStorage.removeItem(APP_CONSTANTS.LOCAL_STORAGE.IS_AUTHENTICATED);
+      localStorage.removeItem(APP_CONSTANTS.AUTH.AUTH_TOKEN);
+      navigate("/auth");
+    } else navigate(data.key);
   };
 
   const findSelectedMenu = useCallback(() => {

@@ -16,6 +16,16 @@ export const APP_CONSTANTS = {
   },
   ARRAY_IDENTIFY_PATTERN: /\[(.*?)\]/g,
   OBJECT_IDENTIFY_PATTERN: /\{(.*?)\}/g,
+  ALLOWED_IMG_EXTENSIONS: [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".webp",
+    ".svg",
+  ],
 };
 
 Object.seal(APP_CONSTANTS);

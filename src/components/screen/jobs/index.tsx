@@ -10,6 +10,9 @@ import usePaginatedApi from "../../../hooks/use-paginated-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import CSTableAction from "../../theme/molecules/cs-table-action";
 import { AnyObject } from "antd/es/_util/type";
+import CSNewJobModal from "../../theme/organisms/cs-new-job-modal";
+import CSButton from "../../theme/atoms/cs-button";
+import { useState } from "react";
 
 interface IJobsResponse {
   id: number;
@@ -18,6 +21,7 @@ interface IJobsResponse {
 
 const Jobs = () => {
   const { setQuery, getQuery } = useQueryString();
+  const [newJob, setNewJob] = useState<boolean>(false);
 
   const page = getQuery(QUERY_STRING.PAGINATION.PAGE) as string;
   const limit = getQuery(QUERY_STRING.PAGINATION.LIMIT) as string;
@@ -73,7 +77,13 @@ const Jobs = () => {
             style={{ marginBottom: 5 }}
           />
         }
+        customButton={
+          <CSButton type="primary" onClick={() => setNewJob(true)}>
+            New Job
+          </CSButton>
+        }
       />
+      <CSNewJobModal open={newJob} onCancel={() => setNewJob(false)} />
     </div>
   );
 };

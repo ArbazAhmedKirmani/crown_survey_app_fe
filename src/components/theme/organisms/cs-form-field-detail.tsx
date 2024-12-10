@@ -1,4 +1,4 @@
-import { Divider, Form } from "antd";
+import { Divider, Form, Popconfirm, Select } from "antd";
 import CSButton from "../atoms/cs-button";
 import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
 import CSInput from "../atoms/cs-input";
@@ -13,7 +13,7 @@ const CSFormFieldDetail = (props: { id: number }) => {
         {(fields, { add: addField, remove: removeField }) => {
           return (
             <div>
-              {fields.length >= 1 ? <Divider>Fields</Divider> : null}
+              {fields.length >= 1 ? <Divider>Section Fields</Divider> : null}
               {fields.map((field, index) => (
                 <div key={field.key} className="field-list-item">
                   <Form.Item name={[index, "id"]} hidden={true}>
@@ -53,7 +53,10 @@ const CSFormFieldDetail = (props: { id: number }) => {
                         },
                         { label: "Date", value: FormFieldType.DATE },
                         { label: "File", value: FormFieldType.FILE },
-                        { label: "Table", value: FormFieldType.TABLE },
+                        {
+                          label: "Table Element",
+                          value: FormFieldType.TABLE_ELEMENT,
+                        },
                       ]}
                       style={{ minWidth: 100 }}
                     />
@@ -102,16 +105,26 @@ const CSFormFieldDetail = (props: { id: number }) => {
                     <CSCheckbox>Reference</CSCheckbox>
                   </Form.Item>
                   <Form.Item name={[index, "values"]}>
-                    <CSInput
+                    <Select
+                      mode="tags"
+                      style={{ width: "max-content", minWidth: 100 }}
+                      placeholder="Tags Mode"
+                      onChange={(e) => console.log(e)}
+                      // options={}
+                    />
+                    {/* <CSInput
                       size="small"
                       placeholder="Values (checkbox/radio)"
-                    />
+                    /> */}
                   </Form.Item>
                   <span style={{ marginTop: 5 }}>
-                    <DeleteFilled
-                      style={{ color: "tomato" }}
-                      onClick={() => removeField(index)}
-                    />
+                    <Popconfirm
+                      title="Delete"
+                      description="Do you really want to delete?"
+                      onConfirm={() => removeField(index)}
+                    >
+                      <DeleteFilled style={{ color: "tomato" }} />
+                    </Popconfirm>
                   </span>
                 </div>
               ))}
