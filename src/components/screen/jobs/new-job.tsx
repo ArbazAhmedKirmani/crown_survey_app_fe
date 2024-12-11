@@ -1,3 +1,4 @@
+import { lazy, Suspense, useRef } from "react";
 import { useParams } from "react-router-dom";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
@@ -9,10 +10,13 @@ import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import useQueryString from "../../../hooks/use-query-string";
-import CSDynamicFieldsRenderer from "../../theme/organisms/cs-dynamic-fields-renderer";
-import { useRef } from "react";
 import useJobStore from "../../../store/job.store";
 import { CheckCircleFilled } from "@ant-design/icons";
+import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
+
+const CSDynamicFieldsRenderer = lazy(
+  () => import("../../theme/organisms/cs-dynamic-fields-renderer")
+);
 
 export interface IJobFormResponse {
   id: number | string;
@@ -49,6 +53,9 @@ const NewJob = () => {
   });
 
   const section = getQuery(QUERY_STRING.OTHER_PARAMS.CHILD_FORM) as string;
+  const selectedField = getQuery(
+    QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD
+  ) as string;
 
   const { data: sections, isLoading: sectionLoading } = useGetApi<
     IApiResponse<IJobSectionList>
@@ -76,13 +83,9 @@ const NewJob = () => {
   };
 
   const handleSectionSelect = (item: TCSFormSlidingListProp) => {
-    // if (item?.mapperName) {
-    //   setJob(fieldRef.current?.formValue());
-    // }
     setQuery({
       [QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD]: item.id.toString(),
     });
-    // console.log("job: ", job);
   };
 
   return (
@@ -125,12 +128,15 @@ const NewJob = () => {
           </div>
         )}
         <div className="content-section">
-          <CSDynamicFieldsRenderer
-            // key={job}
-            ref={fieldRef}
-            title="Sections Fields"
-            values={job}
-          />
+          {selectedField && (
+            <Suspense fallback={<CSLayoutLoader type="dashboard" />}>
+              <CSDynamicFieldsRenderer
+                ref={fieldRef}
+                title="Sections Fields"
+                values={job}
+              />
+            </Suspense>
+          )}
         </div>
       </div>
       <CSButton loading={isPending} type="primary">

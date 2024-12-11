@@ -1,4 +1,4 @@
-import { Image, notification, UploadProps } from "antd";
+import { Image, notification, Spin, UploadProps } from "antd";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { UploadFile } from "antd/lib";
@@ -33,6 +33,7 @@ type IFiles = { id: string; url: string; originalName?: string; name?: string };
 const CSDragger = forwardRef((props: ICSDragger, ref) => {
   const _api = new HTTP();
   const [files, setFiles] = useState<IFiles[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useImperativeHandle<unknown, ICSDraggerReturn>(ref, () => ({
     getValue: () => files,
@@ -43,6 +44,7 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
   }));
 
   const customPostRequest = (options: AnyObject) => {
+    setLoading(true);
     _api
       .call<AnyObject, IApiResponse<IFiles>>({
         method: AxiosMethodEnum.POST,
@@ -63,9 +65,11 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
             name: response.data.data?.originalName,
           },
         ]);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -150,17 +154,36 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
   //   };
 
   return (
-    <Dragger
-      style={{ width: "100%" }}
-      multiple={props.multiple}
-      accept={APP_CONSTANTS.ALLOWED_IMG_EXTENSIONS.join(",")}
-      fileList={files as unknown as ICSUploadFile[]}
-      showUploadList={false}
-      {...props}
-      {...uploadProps}
-    >
-      {files.length ? (
-        <div style={{ display: "flex", gap: 10 }}>
+    <Spin spinning={loading} style={{ width: "max-content" }}>
+      <Dragger
+        style={{ width: "100%" }}
+        multiple={props.multiple}
+        accept={APP_CONSTANTS.ALLOWED_IMG_EXTENSIONS.join(",")}
+        fileList={files as unknown as ICSUploadFile[]}
+        showUploadList={true}
+        {...props}
+        {...uploadProps}
+        itemRender={(_, file) => (
+          <div
+            key={file.uid}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 70,
+              width: 70,
+              objectPosition: "center",
+              objectFit: "cover",
+              overflow: "hidden",
+              background: "gray",
+            }}
+          >
+            <Image src={file.url} draggable={false} loading="eager" />
+          </div>
+        )}
+      >
+        {/* {files.length ? (
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           {files.map((file: IFiles) => (
             <div
               key={file.id}
@@ -180,10 +203,11 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
             </div>
           ))}
         </div>
-      ) : (
+      ) : ( */}
         <p>Add Photos</p>
-      )}
-    </Dragger>
+        {/* )} */}
+      </Dragger>
+    </Spin>
   );
 });
 

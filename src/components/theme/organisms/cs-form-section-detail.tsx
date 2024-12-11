@@ -1,8 +1,11 @@
+import { lazy, Suspense } from "react";
 import { Collapse, Form, Popconfirm, Typography } from "antd";
 import CSButton from "../atoms/cs-button";
 import CSInput from "../atoms/cs-input";
-import CSFormFieldDetail from "./cs-form-field-detail";
 import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
+import CSLayoutLoader from "../molecules/cs-layout-loader";
+
+const CSFormFieldDetail = lazy(() => import("./cs-form-field-detail"));
 
 const CSFormSectionDetail = () => {
   return (
@@ -13,7 +16,7 @@ const CSFormSectionDetail = () => {
             <Typography.Title level={4}>Form Sections</Typography.Title>
             <Collapse
               size="small"
-              // accordion
+              accordion
               items={fields.map((field, index) => ({
                 key: field.key,
                 label: <strong>Section {field.key + 1}</strong>,
@@ -58,7 +61,9 @@ const CSFormSectionDetail = () => {
                         </CSButton>
                       </Popconfirm>
                     </div>
-                    <CSFormFieldDetail id={index} />
+                    <Suspense fallback={<CSLayoutLoader type="auth" />}>
+                      <CSFormFieldDetail id={index} />
+                    </Suspense>
                   </div>
                 ),
               }))}

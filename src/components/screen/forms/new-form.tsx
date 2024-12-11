@@ -1,11 +1,13 @@
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Divider, Form, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { UploadFile } from "antd/lib";
 import { useNavigate, useParams } from "react-router-dom";
 import CSButton from "../../theme/atoms/cs-button";
-import CSFormDetail from "../../theme/organisms/cs-form-detail";
-import CSFormSectionDetail from "../../theme/organisms/cs-form-section-detail";
-import { useEffect, useRef, useState } from "react";
+const CSFormDetail = lazy(() => import("../../theme/organisms/cs-form-detail"));
+const CSFormSectionDetail = lazy(
+  () => import("../../theme/organisms/cs-form-section-detail")
+);
 import { AnyObject } from "antd/lib/_util/type";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
@@ -16,6 +18,7 @@ import { IApiResponse } from "../../../utils/interface/response.interface";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 import { checkEditablePage } from "../../../utils/helper/general.helper";
 import { QueryClient } from "react-query";
+import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
 
 export type TFormField =
   | "CHECKBOX"
@@ -132,14 +135,16 @@ const NewForm = () => {
           autoComplete="off"
           form={form}
           scrollToFirstError
-          // initialValues={form.getFieldsValue()}
         >
-          <CSFormDetail document_ref={document_ref} />
+          <Suspense fallback={<CSLayoutLoader type="auth" />}>
+            <CSFormDetail document_ref={document_ref} />
+          </Suspense>
 
           <Divider />
 
-          <CSFormSectionDetail />
-
+          <Suspense fallback={<CSLayoutLoader type="auth" />}>
+            <CSFormSectionDetail />
+          </Suspense>
           <Divider />
 
           <div className="submit-btn">

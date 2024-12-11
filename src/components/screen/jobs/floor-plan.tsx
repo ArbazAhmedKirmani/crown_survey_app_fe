@@ -9,13 +9,14 @@
 // import fabric from "fabric";
 import { Form, Modal, Space } from "antd";
 import useQueryString from "../../../hooks/use-query-string";
-import CSCanvas from "../../theme/molecules/cs-canvas";
+const CSCanvas = lazy(() => import("../../theme/molecules/cs-canvas"));
 import CSInput from "../../theme/atoms/cs-input";
 import CSButton from "../../theme/atoms/cs-button";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import { useForm } from "antd/es/form/Form";
 import CSFormItem from "../../theme/atoms/cs-form-item";
-import { isNull, isUndefined } from "lodash";
+import { lazy, Suspense } from "react";
+import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
 
 const FloorPlan = () => {
   const [form] = useForm();
@@ -62,10 +63,15 @@ const FloorPlan = () => {
 
   return (
     <div>
-      <CSCanvas
-        height={+query?.[QUERY_STRING.OTHER_PARAMS.HEIGHT]}
-        width={+query?.[QUERY_STRING.OTHER_PARAMS.WIDTH]}
-      />
+      {query?.[QUERY_STRING.OTHER_PARAMS.HEIGHT] &&
+        query?.[QUERY_STRING.OTHER_PARAMS.WIDTH] && (
+          <Suspense fallback={<CSLayoutLoader type="dashboard" />}>
+            <CSCanvas
+              height={+query?.[QUERY_STRING.OTHER_PARAMS.HEIGHT]}
+              width={+query?.[QUERY_STRING.OTHER_PARAMS.WIDTH]}
+            />
+          </Suspense>
+        )}
       <Modal
         open={!query?.[QUERY_STRING.OTHER_PARAMS.HEIGHT]}
         closable={false}

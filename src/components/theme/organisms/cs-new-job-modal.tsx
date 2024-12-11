@@ -1,10 +1,12 @@
-import { Empty, List, Modal } from "antd";
+import { Empty, Form, List, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import useGetApi from "../../../hooks/use-get-api";
 import { IJobFormResponse } from "../../screen/jobs/new-job";
 import { IApiResponse } from "../../../utils/interface/response.interface";
+import CSFormItem from "../atoms/cs-form-item";
+import CSSelect from "../atoms/cs-select";
 
 export interface ICSNewJobModal {
   open: boolean;
@@ -42,6 +44,11 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
       onCancel={props.onCancel}
       destroyOnClose
     >
+      <Form>
+        <CSFormItem name={"customerId"}>
+          <CSSelect showSearch allowClear />
+        </CSFormItem>
+      </Form>
       <List bordered loading={formListLoading || jobLoading}>
         {formList?.data?.length ? (
           formList?.data.map((_form, index: number) => (

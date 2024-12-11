@@ -105,9 +105,10 @@ const CSFormFieldDetail = (props: { id: number }) => {
                     <CSCheckbox>Reference</CSCheckbox>
                   </Form.Item>
                   <Form.Item name={[index, "values"]}>
-                    <Select
+                    <CSSelect
+                      size="small"
                       mode="tags"
-                      style={{ width: "max-content", minWidth: 100 }}
+                      style={{ width: "max-content", minWidth: 120 }}
                       placeholder="Tags Mode"
                       onChange={(e) => console.log(e)}
                       // options={}

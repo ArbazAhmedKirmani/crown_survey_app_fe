@@ -1,5 +1,12 @@
-import { Form, Spin } from "antd";
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { FloatButton, Form, Spin } from "antd";
+import {
+  forwardRef,
+  lazy,
+  Suspense,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import CSFormItem from "../atoms/cs-form-item";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import CSDynamicField from "../molecules/cs-dynamic-field";
@@ -10,7 +17,7 @@ import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useQueryString from "../../../hooks/use-query-string";
 import CSButton from "../atoms/cs-button";
 import CSTextarea from "../atoms/cs-textarea";
-import CSReferenceSidebar from "./cs-reference-sidebar";
+const CSReferenceSidebar = lazy(() => import("./cs-reference-sidebar"));
 import { useForm } from "antd/es/form/Form";
 import useJobStore from "../../../store/job.store";
 import usePostApi from "../../../hooks/use-post-api";
@@ -18,6 +25,8 @@ import { AnyObject } from "antd/es/_util/type";
 import { useParams } from "react-router-dom";
 import { debounce } from "lodash";
 import CSDragger, { ICSDraggerReturn } from "../atoms/cs-dragger";
+import { LoadingOutlined } from "@ant-design/icons";
+import CSLayoutLoader from "../molecules/cs-layout-loader";
 
 export interface IFormFieldResponse {
   id: string;
@@ -135,8 +144,10 @@ const CSDynamicFieldsRenderer = forwardRef(
       mutateJob({ fieldId: fieldId, data });
     }, 2000);
 
-    return (
-      <Spin spinning={isLoading || jobLoading || fieldLoading}>
+    return isLoading ? (
+      <CSLayoutLoader type="dashboard" />
+    ) : (
+      <Spin spinning={fieldLoading}>
         {data?.data?.mapperName && (
           <div className="cs-dynamic-fields-renderer">
             {props?.title && <h3>{data.data.name}</h3>}
@@ -199,30 +210,49 @@ const CSDynamicFieldsRenderer = forwardRef(
                 </div>
               )}
             </Form>
-            <CSReferenceSidebar
-              drawerProps={{
-                title: "References",
-                placement: "right",
-                onClose: () =>
-                  removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
-                open: Boolean(reference),
-                getContainer: false,
-                width: "85%",
-                destroyOnClose: true,
-                maskClosable: false,
-              }}
-              setValue={(str: string) => {
-                let val = form.getFieldsValue() ?? {};
-                val = {
-                  ...val,
-                  [reference]: str,
-                };
-                form.setFieldsValue(val);
-                removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
-                debounceMutate();
-              }}
-            />
+            {Boolean(reference) && (
+              <Suspense
+                fallback={
+                  <FloatButton
+                    shape="circle"
+                    type="primary"
+                    icon={<LoadingOutlined />}
+                  />
+                }
+              >
+                <CSReferenceSidebar
+                  drawerProps={{
+                    title: "References",
+                    placement: "right",
+                    onClose: () =>
+                      removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
+                    open: Boolean(reference),
+                    getContainer: false,
+                    width: "85%",
+                    destroyOnClose: true,
+                    maskClosable: false,
+                  }}
+                  setValue={(str: string) => {
+                    let val = form.getFieldsValue() ?? {};
+                    val = {
+                      ...val,
+                      [reference]: str,
+                    };
+                    form.setFieldsValue(val);
+                    removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
+                    debounceMutate();
+                  }}
+                />
+              </Suspense>
+            )}
           </div>
+        )}
+        {jobLoading && (
+          <FloatButton
+            shape="circle"
+            type="primary"
+            icon={<LoadingOutlined />}
+          />
         )}
       </Spin>
     );

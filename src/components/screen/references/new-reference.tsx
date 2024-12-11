@@ -14,12 +14,7 @@ import { AnyObject } from "antd/es/_util/type";
 import CSCheckbox from "../../theme/atoms/cs-checkbox";
 import { useParams } from "react-router-dom";
 import { checkEditablePage } from "../../../utils/helper/general.helper";
-import {
-  DeleteColumnOutlined,
-  DeleteFilled,
-  DeleteOutlined,
-} from "@ant-design/icons";
-import { DefaultOptionType, OptionProps } from "antd/es/select";
+import { DeleteFilled } from "@ant-design/icons";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 
 const NewReference = () => {
