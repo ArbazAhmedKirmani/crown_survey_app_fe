@@ -59,7 +59,7 @@ CSDynamicField.CHECKBOX = (props: any) => {
       <Checkbox.Group
         key={props.mapperName}
         name={props.mapperName}
-        options={props?.values?.split(",")}
+        options={props?.values}
       />
     </CSFormItem>
   );
@@ -80,7 +80,7 @@ CSDynamicField.RADIO = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
-      <Radio.Group options={props?.values?.split(",")} />
+      <Radio.Group options={props?.values} />
     </CSFormItem>
   );
 };

@@ -6,6 +6,9 @@ export const API_ROUTES = {
   templates: {
     get: "api/schema",
   },
+  customer: {
+    get: (name: string) => `api/customer?search=${name}`,
+  },
   jobs: {
     get: "api/jobs",
     post: "api/jobs",

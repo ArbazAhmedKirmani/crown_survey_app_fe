@@ -27,6 +27,7 @@ import { debounce } from "lodash";
 import CSDragger, { ICSDraggerReturn } from "../atoms/cs-dragger";
 import { LoadingOutlined } from "@ant-design/icons";
 import CSLayoutLoader from "../molecules/cs-layout-loader";
+import CSRating from "../atoms/cs-rating";
 
 export interface IFormFieldResponse {
   id: string;
@@ -38,6 +39,7 @@ export interface IFormFieldResponse {
   response: boolean;
   placeholder: String;
   values: string;
+  rating: boolean;
 }
 
 export interface CSDynamicFieldsRenderer {
@@ -158,6 +160,51 @@ const CSDynamicFieldsRenderer = forwardRef(
               initialValues={job?.[data.data.mapperName]}
               onValuesChange={debounceMutate}
             >
+              {data.data.rating && (
+                <CSFormItem
+                  name={"rating"}
+                  valuePropName="value"
+                  style={{ width: "100%", textAlign: "right" }}
+                >
+                  <CSRating
+                    key={data.data.id}
+                    list={[
+                      <div
+                        className="cs-rating-list"
+                        style={{
+                          backgroundColor: "gray",
+                        }}
+                      >
+                        NA
+                      </div>,
+                      <div
+                        className="cs-rating-list"
+                        style={{
+                          backgroundColor: "green",
+                        }}
+                      >
+                        1
+                      </div>,
+                      <div
+                        className="cs-rating-list"
+                        style={{
+                          backgroundColor: "#fe9926",
+                        }}
+                      >
+                        2
+                      </div>,
+                      <div
+                        className="cs-rating-list"
+                        style={{
+                          backgroundColor: "red",
+                        }}
+                      >
+                        3
+                      </div>,
+                    ]}
+                  />
+                </CSFormItem>
+              )}
               <CSFormItem name={"id"} hidden>
                 <input hidden />
               </CSFormItem>
@@ -210,41 +257,40 @@ const CSDynamicFieldsRenderer = forwardRef(
                 </div>
               )}
             </Form>
-            {Boolean(reference) && (
-              <Suspense
-                fallback={
-                  <FloatButton
-                    shape="circle"
-                    type="primary"
-                    icon={<LoadingOutlined />}
-                  />
-                }
-              >
-                <CSReferenceSidebar
-                  drawerProps={{
-                    title: "References",
-                    placement: "right",
-                    onClose: () =>
-                      removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
-                    open: Boolean(reference),
-                    getContainer: false,
-                    width: "85%",
-                    destroyOnClose: true,
-                    maskClosable: false,
-                  }}
-                  setValue={(str: string) => {
-                    let val = form.getFieldsValue() ?? {};
-                    val = {
-                      ...val,
-                      [reference]: str,
-                    };
-                    form.setFieldsValue(val);
-                    removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
-                    debounceMutate();
-                  }}
+
+            <Suspense
+              fallback={
+                <FloatButton
+                  shape="circle"
+                  type="primary"
+                  icon={<LoadingOutlined />}
                 />
-              </Suspense>
-            )}
+              }
+            >
+              <CSReferenceSidebar
+                drawerProps={{
+                  title: "References",
+                  placement: "right",
+                  onClose: () =>
+                    removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
+                  open: Boolean(reference),
+                  getContainer: false,
+                  width: "85%",
+                  destroyOnClose: true,
+                  maskClosable: false,
+                }}
+                setValue={(str: string) => {
+                  let val = form.getFieldsValue() ?? {};
+                  val = {
+                    ...val,
+                    [reference]: str,
+                  };
+                  form.setFieldsValue(val);
+                  removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
+                  debounceMutate();
+                }}
+              />
+            </Suspense>
           </div>
         )}
         {jobLoading && (

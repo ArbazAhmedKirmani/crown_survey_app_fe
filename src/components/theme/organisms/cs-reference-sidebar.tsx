@@ -157,7 +157,11 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
           ))}
           {finalSentence && (
             <div>
-              <CSTextarea rows={6} value={finalSentence} />
+              <CSTextarea
+                rows={6}
+                value={finalSentence}
+                onChange={(e) => setFinalSentence(e.target.value)}
+              />
               <CSButton
                 htmlType="submit"
                 onClick={() => {
