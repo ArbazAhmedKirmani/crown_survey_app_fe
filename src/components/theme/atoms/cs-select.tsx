@@ -1,13 +1,10 @@
 import { Select } from "antd";
 import { SelectProps } from "antd/lib";
+import { PropsWithChildren } from "react";
 
-export interface ICSSelect extends SelectProps {}
+export interface ICSSelect extends SelectProps, PropsWithChildren {}
 
 const CSSelect = (props: ICSSelect) => {
-  // const [defaultValue] = useState<number | string | null | undefined>(() =>
-  //   props?.firstitem && !props?.value ? props.options?.[0].value : null
-  // );
-
   return (
     <div className="cs-select">
       <Select {...props} />

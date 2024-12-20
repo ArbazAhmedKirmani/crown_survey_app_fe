@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
@@ -11,8 +11,21 @@ import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import useQueryString from "../../../hooks/use-query-string";
 import useJobStore from "../../../store/job.store";
-import { CheckCircleFilled } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  FilePdfOutlined,
+  FileWordFilled,
+  FileWordOutlined,
+} from "@ant-design/icons";
 import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
+import CSSelect from "../../theme/atoms/cs-select";
+import { keys, keysIn } from "lodash";
+import {
+  AxiosMethodEnum,
+  JobStatusEnum,
+} from "../../../utils/enum/general.enum";
+import CSJobStatus from "../../theme/molecules/cs-job-status";
+import { APP_CONSTANTS } from "../../../utils/constants/app.constant";
 
 const CSDynamicFieldsRenderer = lazy(
   () => import("../../theme/organisms/cs-dynamic-fields-renderer")
@@ -45,12 +58,7 @@ const NewJob = () => {
   const fieldRef = useRef<{ formValue: any }>();
   const { getQuery, setQuery } = useQueryString();
   const { job } = useJobStore();
-
-  const { isPending } = usePostApi({
-    url: API_ROUTES.form.post,
-    showSuccessMessage: true,
-    onSuccess: () => {},
-  });
+  const [pdfDownload, setPdfDownload] = useState<boolean>(false);
 
   const section = getQuery(QUERY_STRING.OTHER_PARAMS.CHILD_FORM) as string;
   const selectedField = getQuery(
@@ -86,6 +94,45 @@ const NewJob = () => {
     setQuery({
       [QUERY_STRING.OTHER_PARAMS.SELECTED_FIELD]: item.id.toString(),
     });
+  };
+
+  const downloadPdf = async () => {
+    try {
+      setPdfDownload(true);
+      const token = localStorage.getItem(APP_CONSTANTS.AUTH.AUTH_TOKEN);
+      const response = await fetch(
+        APP_CONSTANTS.API.BASE_URL + API_ROUTES.jobs.generatePdf(param.id),
+        {
+          method: AxiosMethodEnum.GET,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Accept: "application/pdf",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch PDF");
+      }
+
+      const blob = await response.blob();
+      console.log("blob: ", blob.size);
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a link element and trigger a download
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "survey_document.pdf"); // Optional: Specify the download filename
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up the DOM after triggering the download
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      setPdfDownload(false);
+    } catch (error) {
+      console.error("Error downloading the PDF:", error);
+    }
   };
 
   return (
@@ -139,9 +186,19 @@ const NewJob = () => {
           )}
         </div>
       </div>
-      <CSButton loading={isPending} type="primary">
-        Publish
-      </CSButton>
+      <div className="job-footer">
+        <span>Job Status</span>
+        <CSJobStatus />
+        <CSButton
+          size="large"
+          icon={<FilePdfOutlined />}
+          type="primary"
+          onClick={downloadPdf}
+          loading={pdfDownload}
+        >
+          Publish Doc.
+        </CSButton>
+      </div>
     </div>
   );
 };

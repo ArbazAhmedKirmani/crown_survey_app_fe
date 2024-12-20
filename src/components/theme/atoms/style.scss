@@ -100,3 +100,11 @@
     scale: 1.01;
   }
 }
+
+.cs-dragger {
+  width: 100%;
+
+  .ant-spin-nested-loading {
+    width: -webkit-fill-available !important;
+  }
+}

@@ -7,10 +7,12 @@ export const API_ROUTES = {
     get: "api/schema",
   },
   customer: {
-    get: (name: string) => `api/customer?search=${name}`,
+    get: `api/customer`,
   },
   jobs: {
     get: "api/jobs",
+    getById: (id: string) => `api/jobs/${id}`,
+    status: (id?: string) => `api/jobs/${id}/status`,
     post: "api/jobs",
     detail: (id: string) => `api/jobs/detail/${id}`,
     getForms: "api/jobs/forms",
@@ -20,7 +22,7 @@ export const API_ROUTES = {
     getFieldsDetail: (id?: string) => `api/jobs/field/${id}`,
     getJobFields: (id?: string, jobId?: string) =>
       `api/jobs/detail/${id}/job/${jobId}`,
-    // post: "api/form",
+    generatePdf: (id?: string) => `api/jobs/${id}/generate-pdf`,
     // put: (id: string) => `api/form/${id}`,
   },
   reference: {

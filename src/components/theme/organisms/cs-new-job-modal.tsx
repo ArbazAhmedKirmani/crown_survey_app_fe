@@ -1,5 +1,15 @@
-import { Col, Form, Modal, Row } from "antd";
-import { useNavigate } from "react-router-dom";
+import {
+  Col,
+  DatePicker,
+  Form,
+  List,
+  Modal,
+  Popconfirm,
+  Row,
+  Select,
+  Typography,
+} from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import useGetApi from "../../../hooks/use-get-api";
@@ -13,40 +23,60 @@ import CSInput from "../atoms/cs-input";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useQueryString from "../../../hooks/use-query-string";
 import { debounce } from "lodash";
+import { AnyObject } from "antd/es/_util/type";
+import dayjs from "dayjs";
+import { useState } from "react";
 
 interface ICSJobCreate {
   name: string;
   formId: number;
 }
 export interface ICSNewJobModal {
-  open: boolean;
-  onCancel: () => void;
+  onCancel?: () => void;
   initialValue?: any;
 }
 
 const CSNewJobModal = (props: ICSNewJobModal) => {
   const navigate = useNavigate();
   const [form] = useForm();
+  const [customerForm] = useForm();
   const { getQuery, setQuery, removeQuery } = useQueryString();
+  const [visibleNewCustomer, setVisibleNewCustomer] = useState<boolean>(false);
 
   const cs_name = getQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME) as string;
+  const jobId = getQuery(QUERY_STRING.OTHER_PARAMS.JOB_ID) as string;
 
   const { data: formList, isLoading: formListLoading } = useGetApi<
     IApiResponse<IJobFormResponse[]>
   >({
     key: [API_ROUTES.jobs.getForms],
     url: API_ROUTES.jobs.getForms,
-    enabled: props.open,
+    enabled: Boolean(jobId === "new"),
   });
 
-  const {
-    data: customerList,
-    isLoading: customerLoading,
-    refetch: refetchCustomer,
-  } = useGetApi<IApiResponse<any[]>>({
-    key: [API_ROUTES.customer.get],
-    url: API_ROUTES.customer.get(cs_name),
-    enabled: Boolean(cs_name),
+  const { data: customerList, isLoading: customerLoading } = useGetApi<
+    IApiResponse<any[]>
+  >({
+    key: [API_ROUTES.customer.get, cs_name],
+    url: API_ROUTES.customer.get,
+    query: { search: cs_name },
+    onSuccess: () => {
+      console.log(customerList?.data);
+    },
+  });
+
+  const { isLoading: jobListLoading } = useGetApi<IApiResponse<any>>({
+    key: [API_ROUTES.jobs.getById, jobId],
+    url: API_ROUTES.jobs.getById(jobId),
+    enabled: Boolean(jobId && jobId !== "new"),
+    onSuccess: (data: AnyObject) => {
+      form.setFieldsValue({
+        customerId: data.data.id,
+        address: data.data.address,
+        formId: data.data.form.id,
+        fulfil_date: dayjs(data.data.fulfilDate),
+      });
+    },
   });
 
   const { mutate: mutateJob, isPending: jobLoading } = usePostApi<
@@ -59,21 +89,32 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
     },
   });
 
-  const refetchCustomerSync = debounce(() => {
-    refetchCustomer();
-  }, 1000);
+  const searchCustomerSync = debounce((value) => {
+    if (Boolean(value)) {
+      setQuery({
+        [QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME]: value,
+      });
+    } else {
+      removeQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME);
+    }
+  }, 0);
 
   return (
     <Modal
-      open={props.open}
+      open={Boolean(jobId)}
       closable={true}
       footer={false}
       title="Create New Job"
       maskClosable={false}
       centered
-      onCancel={props.onCancel}
-      destroyOnClose
+      onCancel={() => {
+        removeQuery(QUERY_STRING.OTHER_PARAMS.JOB_ID);
+        form.resetFields();
+        props?.onCancel?.();
+      }}
+      destroyOnClose={true}
       width={"60vw"}
+      loading={jobListLoading}
     >
       <Form
         layout="vertical"
@@ -81,33 +122,99 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
         initialValues={props?.initialValue}
         onFinish={(value: ICSJobCreate) => mutateJob(value)}
       >
-        <Row gutter={[10, 10]}>
+        <Row gutter={10}>
           <Col xs={24} sm={12} md={12} lg={12}>
-            <CSFormItem label="Customer" name={"customerId"}>
+            <CSFormItem
+              label="Customer"
+              name={"customerId"}
+              style={{ marginBottom: 0 }}
+              rules={[{ required: true, message: "Customer is required" }]}
+              extra={
+                <Popconfirm
+                  icon={false}
+                  destroyTooltipOnHide={true}
+                  title={"Instant Customer"}
+                  okButtonProps={{
+                    htmlType: "submit",
+                  }}
+                  okText="Create Customer"
+                  onCancel={() => setVisibleNewCustomer(false)}
+                  onConfirm={async () => {
+                    try {
+                      await customerForm.validateFields();
+                      setVisibleNewCustomer(false);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }}
+                  description={
+                    <Form form={customerForm} layout="vertical">
+                      <Row>
+                        <Col span={24}>
+                          <CSFormItem
+                            name={"name"}
+                            rules={[{ required: true, message: "" }]}
+                          >
+                            <CSInput placeholder="Name" />
+                          </CSFormItem>
+                        </Col>
+                        <Col span={24}>
+                          <CSFormItem
+                            name={"email"}
+                            rules={[{ required: true, message: "" }]}
+                          >
+                            <CSInput placeholder="Email" />
+                          </CSFormItem>
+                        </Col>
+                        <Col span={24}>
+                          <CSFormItem
+                            // label="Customer Phone"
+                            name={"phone"}
+                            rules={[{ required: true, message: "" }]}
+                          >
+                            <CSInput placeholder="Phone" />
+                          </CSFormItem>
+                        </Col>
+                      </Row>
+                    </Form>
+                  }
+                  open={visibleNewCustomer}
+                  arrowContent
+                  placement="right"
+                >
+                  <a
+                    type="text"
+                    onClick={() => {
+                      setVisibleNewCustomer((prev) => !prev);
+                    }}
+                  >
+                    Create Instant Customer?
+                  </a>
+                </Popconfirm>
+              }
+            >
               <CSSelect
                 showSearch
-                allowClear
+                // allowClear
+                placeholder="Select Customer"
                 loading={customerLoading}
-                options={customerList?.data?.map((x) => ({
-                  label: x.name,
-                  value: x.id,
-                }))}
-                onSearch={(value: string) => {
-                  Boolean(value)
-                    ? setQuery({
-                        [QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME]: value,
-                      })
-                    : removeQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME);
-                  refetchCustomerSync();
-                }}
+                fieldNames={{ label: "name", value: "id" }}
+                options={customerList?.data}
               />
             </CSFormItem>
           </Col>
           <Col xs={24} sm={12} md={12} lg={12}>
-            <CSFormItem label="Form" name={"customerId"}>
+            <CSFormItem
+              label="Form"
+              name={"formId"}
+              style={{ marginBottom: 5 }}
+              rules={[{ required: true, message: "Form is required" }]}
+              extra={<Link to={"/forms/new"}>Create New Form</Link>}
+            >
               <CSSelect
                 showSearch
                 allowClear
+                placeholder="Select Form"
                 loading={formListLoading}
                 options={formList?.data?.map((x) => ({
                   label: x.name,
@@ -121,6 +228,7 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
               <CSSelect
                 showSearch
                 allowClear
+                placeholder="Select Author"
                 loading={formListLoading}
                 options={formList?.data?.map((x) => ({
                   label: x.name,
@@ -130,11 +238,29 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
             </CSFormItem>
           </Col>
           <Col xs={24} sm={12} md={12} lg={12}>
-            <CSFormItem label="Fulfilment Date" name={"fulfil_date"}>
-              <CSInput type="date" placeholder="Fulfilment Date" />
+            <CSFormItem
+              label="Fulfilment Date"
+              name={"fulfil_date"}
+              rules={[
+                { required: true, message: "Filfilment Date is required" },
+              ]}
+            >
+              <DatePicker
+                placeholder="Fulfilment Date"
+                style={{ width: "100%" }}
+              />
             </CSFormItem>
           </Col>
           <Col span={24}>
+            <CSFormItem
+              label="Address"
+              name={"address"}
+              rules={[{ required: true, message: "Address is required" }]}
+            >
+              <CSInput placeholder="Complete Address" />
+            </CSFormItem>
+          </Col>
+          <Col span={24} style={{ textAlign: "right" }}>
             <CSButton htmlType="submit" type="primary" loading={jobLoading}>
               Create Form
             </CSButton>

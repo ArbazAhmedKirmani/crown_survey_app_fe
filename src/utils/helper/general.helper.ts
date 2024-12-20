@@ -22,10 +22,10 @@ export function createDynamicUrl(
   dynamicUrl: string,
   object: Record<string, unknown>
 ) {
-  let url = dynamicUrl;
+  let url = dynamicUrl.concat("?");
   if (url) {
     for (const key in object) {
-      if (object[key]) url = url?.replace(`{${key}}`, `${object[key]}`);
+      if (object[key]) url = url?.concat(`${key}=`, `${object[key]}&`);
     }
   }
 

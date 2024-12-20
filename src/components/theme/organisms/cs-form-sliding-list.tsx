@@ -79,7 +79,7 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
                 } menu-item`}
                 onClick={() => handleFormSelect(item)}
               >
-                {!props?.hidePrefix && item?.prefix && (
+                {!props?.hidePrefix && Boolean(item?.prefix) && (
                   <span className="menu-prefix">{item?.prefix}</span>
                 )}
                 {props?.showCustomRender && (

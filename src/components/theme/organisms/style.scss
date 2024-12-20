@@ -2,11 +2,25 @@
 
 .cs-form-sliding-list {
   background-color: #fff;
-  width: 150px;
+  width: 170px;
   max-width: 300px;
   transition: width 0.15s ease-in-out;
   border-radius: $borderRadius;
   // padding-inline: 1rem;
+
+  ::-webkit-scrollbar {
+    width: 6px; /* Width of the scrollbar */
+  }
+  ::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Background of the scrollbar track */
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #b6b6b6b9; /* Scrollbar thumb color */
+    border-radius: 5px; /* Rounded corners */
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: $colorPrimaryActive; /* Darker thumb color on hover */
+  }
 
   &.collapsed {
     width: 50px;
@@ -21,8 +35,7 @@
   .menu-header {
     display: flex;
     justify-content: flex-start;
-    margin-top: 1rem;
-    margin-bottom: 10px;
+    margin: 10px;
 
     h4 {
       color: black;
@@ -34,10 +47,8 @@
       color: white;
       border: none;
       border-radius: $borderRadius;
-      // padding: 8px 12px;
       cursor: pointer;
       font-size: 14px;
-      // box-shadow: $boxShadow;
       transition: background-color 0.1s;
 
       &:hover {
@@ -59,6 +70,7 @@
 
     .menu-item {
       display: flex;
+      position: relative;
       align-items: start;
       font-size: 16px;
       color: $colorText;
@@ -79,6 +91,7 @@
         font-size: 14px;
         width: 30px;
         padding-inline: 5px;
+        position: absolute;
       }
 
       .menu-text {

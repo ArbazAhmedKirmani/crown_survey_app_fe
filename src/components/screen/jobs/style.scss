@@ -25,8 +25,16 @@
     .first-list,
     .second-list {
       border-right: 1px solid lightgray;
-      // padding: 0 5px 0 10px;
+      padding: 2px;
     }
+  }
+
+  .job-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 }
 

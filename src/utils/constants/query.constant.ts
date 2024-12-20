@@ -5,6 +5,7 @@ export const QUERY_STRING = {
     SEARCH: "_search",
   },
   OTHER_PARAMS: {
+    JOB_ID: "jb_ids",
     CUSTOMER_NAME: "_cs_n",
     HEIGHT: "_fp_h",
     WIDTH: "_fp_w",

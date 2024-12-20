@@ -89,7 +89,9 @@ const CSTableForm = (props: ICSTableView) => {
         </Col>
       </Row>
 
+      {/* Custom Middle Optional Render Section */}
       {centerSection}
+
       <CSTable
         loading={loading}
         dataSource={data?.data || []}

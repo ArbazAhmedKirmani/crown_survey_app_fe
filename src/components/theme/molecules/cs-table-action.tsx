@@ -10,6 +10,7 @@ interface ICSTableAction {
   handleEdit?: (id: number | string, record: AnyObject) => void;
   handleDelete?: (id: number | string, record: AnyObject) => void;
   customUpdate?: ReactNode;
+  customRender?: ReactNode;
 }
 
 const CSTableAction = (props: ICSTableAction) => {
@@ -17,6 +18,7 @@ const CSTableAction = (props: ICSTableAction) => {
 
   return (
     <div>
+      {props?.customRender}
       <Tooltip rootClassName="cs-tooltip" placement="top" title="Edit">
         {props?.customUpdate ? (
           props.customUpdate

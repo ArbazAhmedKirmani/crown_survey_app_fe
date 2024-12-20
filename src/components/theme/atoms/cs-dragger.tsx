@@ -154,39 +154,19 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
   //   };
 
   return (
-    <Spin spinning={loading} style={{ width: "max-content" }}>
-      <Dragger
-        style={{ width: "100%" }}
-        multiple={props.multiple}
-        accept={APP_CONSTANTS.ALLOWED_IMG_EXTENSIONS.join(",")}
-        fileList={files as unknown as ICSUploadFile[]}
-        showUploadList={true}
-        {...props}
-        {...uploadProps}
-        itemRender={(_, file) => (
-          <div
-            key={file.uid}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 70,
-              width: 70,
-              objectPosition: "center",
-              objectFit: "cover",
-              overflow: "hidden",
-              background: "gray",
-            }}
-          >
-            <Image src={file.url} draggable={false} loading="eager" />
-          </div>
-        )}
-      >
-        {/* {files.length ? (
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          {files.map((file: IFiles) => (
+    <div className="cs-dragger">
+      <Spin spinning={loading} rootClassName="dragger-spin">
+        <Dragger
+          style={{ width: "100%" }}
+          multiple={props.multiple}
+          accept={APP_CONSTANTS.ALLOWED_IMG_EXTENSIONS.join(",")}
+          fileList={files as unknown as ICSUploadFile[]}
+          showUploadList={true}
+          {...props}
+          {...uploadProps}
+          itemRender={(_, file) => (
             <div
-              key={file.id}
+              key={file.uid}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -201,13 +181,34 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
             >
               <Image src={file.url} draggable={false} loading="eager" />
             </div>
-          ))}
-        </div>
-      ) : ( */}
-        <p>Add Photos</p>
-        {/* )} */}
-      </Dragger>
-    </Spin>
+          )}
+        >
+          {/* {files.length ? (
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        {files.map((file: IFiles) => (
+          <div
+          key={file.id}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+                height: 70,
+                width: 70,
+                objectPosition: "center",
+                objectFit: "cover",
+                overflow: "hidden",
+                background: "gray",
+                }}
+                >
+                <Image src={file.url} draggable={false} loading="eager" />
+                </div>
+                ))}
+                </div>
+                ) : ( */}
+          <p>Add Photos</p>
+        </Dragger>
+      </Spin>
+    </div>
   );
 });
 
