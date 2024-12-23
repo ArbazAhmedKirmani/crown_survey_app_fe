@@ -1,4 +1,4 @@
-import { Divider, Form, Popconfirm, Select } from "antd";
+import { Divider, Form, Popconfirm, Popover } from "antd";
 import CSButton from "../atoms/cs-button";
 import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
 import CSInput from "../atoms/cs-input";
@@ -57,20 +57,30 @@ const CSFormFieldDetail = (props: { id: number }) => {
                           label: "Table Element",
                           value: FormFieldType.TABLE_ELEMENT,
                         },
+                        {
+                          label: "Accomodation",
+                          value: FormFieldType.ACCOMODATION,
+                        },
                       ]}
                       style={{ minWidth: 100 }}
                     />
                   </Form.Item>
-                  <Form.Item
-                    name={[index, "mapperName"]}
-                    rules={[{ required: true, message: "" }]}
+                  <Popover
+                    destroyTooltipOnHide
+                    rootClassName="field-inner"
+                    content="Used for Document Keyword Matching."
                   >
-                    <CSInput
-                      placeholder="Mapper Name"
-                      size="small"
-                      style={{ minWidth: 100 }}
-                    />
-                  </Form.Item>
+                    <Form.Item
+                      name={[index, "mapperName"]}
+                      rules={[{ required: true, message: "" }]}
+                    >
+                      <CSInput
+                        placeholder="Mapper Name"
+                        size="small"
+                        style={{ minWidth: 100 }}
+                      />
+                    </Form.Item>
+                  </Popover>
                   <Form.Item
                     name={[index, "orderNo"]}
                     rules={[{ required: true, message: "" }]}
@@ -109,7 +119,7 @@ const CSFormFieldDetail = (props: { id: number }) => {
                       size="small"
                       mode="tags"
                       style={{ width: "max-content", minWidth: 120 }}
-                      placeholder="Tags Mode"
+                      placeholder="Values"
                       onChange={(e) => console.log(e)}
                       // options={}
                     />

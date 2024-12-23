@@ -144,7 +144,7 @@ const CSDynamicFieldsRenderer = forwardRef(
         data["siteNote_attachments"] = note_val;
       }
       mutateJob({ fieldId: fieldId, data });
-    }, 2000);
+    }, 1200);
 
     return isLoading ? (
       <CSLayoutLoader type="dashboard" />
@@ -283,7 +283,9 @@ const CSDynamicFieldsRenderer = forwardRef(
                   let val = form.getFieldsValue() ?? {};
                   val = {
                     ...val,
-                    [reference]: str,
+                    ...(val[reference]
+                      ? { [reference]: val[reference] + "\n \n" + str }
+                      : { [reference]: str }),
                   };
                   form.setFieldsValue(val);
                   removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);

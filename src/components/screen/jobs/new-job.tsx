@@ -1,6 +1,5 @@
 import { lazy, Suspense, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import CSButton from "../../theme/atoms/cs-button";
 import CSFormSlidingList, {
@@ -14,16 +13,10 @@ import useJobStore from "../../../store/job.store";
 import {
   CheckCircleFilled,
   FilePdfOutlined,
-  FileWordFilled,
-  FileWordOutlined,
+  LinkOutlined,
 } from "@ant-design/icons";
 import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
-import CSSelect from "../../theme/atoms/cs-select";
-import { keys, keysIn } from "lodash";
-import {
-  AxiosMethodEnum,
-  JobStatusEnum,
-} from "../../../utils/enum/general.enum";
+import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 import CSJobStatus from "../../theme/molecules/cs-job-status";
 import { APP_CONSTANTS } from "../../../utils/constants/app.constant";
 
@@ -106,7 +99,6 @@ const NewJob = () => {
           method: AxiosMethodEnum.GET,
           headers: {
             Authorization: `Bearer ${token}`,
-            // Accept: "application/pdf",
           },
         }
       );
@@ -116,13 +108,12 @@ const NewJob = () => {
       }
 
       const blob = await response.blob();
-      console.log("blob: ", blob.size);
       const url = window.URL.createObjectURL(blob);
 
       // Create a link element and trigger a download
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "survey_document.pdf"); // Optional: Specify the download filename
+      link.setAttribute("download", "survey_document.docx"); // Optional: Specify the download filename
       document.body.appendChild(link);
       link.click();
 
@@ -132,6 +123,7 @@ const NewJob = () => {
       setPdfDownload(false);
     } catch (error) {
       console.error("Error downloading the PDF:", error);
+      setPdfDownload(false);
     }
   };
 
@@ -187,17 +179,34 @@ const NewJob = () => {
         </div>
       </div>
       <div className="job-footer">
-        <span>Job Status</span>
-        <CSJobStatus />
-        <CSButton
-          size="large"
-          icon={<FilePdfOutlined />}
-          type="primary"
-          onClick={downloadPdf}
-          loading={pdfDownload}
-        >
-          Publish Doc.
-        </CSButton>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <a
+            href="https://find-energy-certificate.service.gov.uk/find-a-certificate/search-by-postcode"
+            target="_blank"
+            style={{ color: "#c1b481" }}
+          >
+            <LinkOutlined /> Energy Certificate
+          </a>
+          <a
+            href="https://www.ukradon.org/information/ukmaps"
+            target="_blank"
+            style={{ color: "#c1b481" }}
+          >
+            <LinkOutlined /> UK Radon
+          </a>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <CSJobStatus />
+          <CSButton
+            size="large"
+            icon={<FilePdfOutlined />}
+            type="primary"
+            onClick={downloadPdf}
+            loading={pdfDownload}
+          >
+            Publish Doc.
+          </CSButton>
+        </div>
       </div>
     </div>
   );

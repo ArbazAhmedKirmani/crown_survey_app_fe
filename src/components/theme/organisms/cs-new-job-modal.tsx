@@ -1,14 +1,4 @@
-import {
-  Col,
-  DatePicker,
-  Form,
-  List,
-  Modal,
-  Popconfirm,
-  Row,
-  Select,
-  Typography,
-} from "antd";
+import { Col, DatePicker, Form, Modal, Popconfirm, Row } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import usePostApi from "../../../hooks/use-post-api";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
@@ -22,7 +12,7 @@ import CSButton from "../atoms/cs-button";
 import CSInput from "../atoms/cs-input";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useQueryString from "../../../hooks/use-query-string";
-import { debounce } from "lodash";
+// import { debounce } from "lodash";
 import { AnyObject } from "antd/es/_util/type";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -40,7 +30,7 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
   const navigate = useNavigate();
   const [form] = useForm();
   const [customerForm] = useForm();
-  const { getQuery, setQuery, removeQuery } = useQueryString();
+  const { getQuery, removeQuery } = useQueryString();
   const [visibleNewCustomer, setVisibleNewCustomer] = useState<boolean>(false);
 
   const cs_name = getQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME) as string;
@@ -89,15 +79,15 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
     },
   });
 
-  const searchCustomerSync = debounce((value) => {
-    if (Boolean(value)) {
-      setQuery({
-        [QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME]: value,
-      });
-    } else {
-      removeQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME);
-    }
-  }, 0);
+  // const searchCustomerSync = debounce((value) => {
+  //   if (Boolean(value)) {
+  //     setQuery({
+  //       [QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME]: value,
+  //     });
+  //   } else {
+  //     removeQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME);
+  //   }
+  // }, 0);
 
   return (
     <Modal

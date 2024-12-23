@@ -26,6 +26,211 @@ export const APP_CONSTANTS = {
     ".webp",
     ".svg",
   ],
+  ACCOMODATION: {
+    COL: [
+      "Living Rooms",
+      "Bedrooms",
+      "Bath / Shower",
+      "Seperate Toilet",
+      "Kitchen",
+      "Utility Room",
+      "Conservatory",
+      "Other",
+    ],
+    ROW: [
+      "Lower Ground",
+      "Ground",
+      "First",
+      "Second",
+      "Third",
+      "Other",
+      "Roof Space",
+    ],
+    DATA_SET: [
+      [
+        {
+          "Lower Ground_Living Rooms": 0,
+        },
+        {
+          "Lower Ground_Bedrooms": 0,
+        },
+        {
+          "Lower Ground_Bath / Shower": 0,
+        },
+        {
+          "Lower Ground_Seperate Toilet": 0,
+        },
+        {
+          "Lower Ground_Kitchen": 0,
+        },
+        {
+          "Lower Ground_Utility Room": 0,
+        },
+        {
+          "Lower Ground_Conservatory": 0,
+        },
+        {
+          "Lower Ground_Other": 0,
+        },
+      ],
+      [
+        {
+          "Ground_Living Rooms": 0,
+        },
+        {
+          Ground_Bedrooms: 0,
+        },
+        {
+          "Ground_Bath / Shower": 0,
+        },
+        {
+          "Ground_Seperate Toilet": 0,
+        },
+        {
+          Ground_Kitchen: 0,
+        },
+        {
+          "Ground_Utility Room": 0,
+        },
+        {
+          Ground_Conservatory: 0,
+        },
+        {
+          Ground_Other: 0,
+        },
+      ],
+      [
+        {
+          "First_Living Rooms": 0,
+        },
+        {
+          First_Bedrooms: 0,
+        },
+        {
+          "First_Bath / Shower": 0,
+        },
+        {
+          "First_Seperate Toilet": 0,
+        },
+        {
+          First_Kitchen: 0,
+        },
+        {
+          "First_Utility Room": 0,
+        },
+        {
+          First_Conservatory: 0,
+        },
+        {
+          First_Other: 0,
+        },
+      ],
+      [
+        {
+          "Second_Living Rooms": 0,
+        },
+        {
+          Second_Bedrooms: 0,
+        },
+        {
+          "Second_Bath / Shower": 0,
+        },
+        {
+          "Second_Seperate Toilet": 0,
+        },
+        {
+          Second_Kitchen: 0,
+        },
+        {
+          "Second_Utility Room": 0,
+        },
+        {
+          Second_Conservatory: 0,
+        },
+        {
+          Second_Other: 0,
+        },
+      ],
+      [
+        {
+          "Third_Living Rooms": 0,
+        },
+        {
+          Third_Bedrooms: 0,
+        },
+        {
+          "Third_Bath / Shower": 0,
+        },
+        {
+          "Third_Seperate Toilet": 0,
+        },
+        {
+          Third_Kitchen: 0,
+        },
+        {
+          "Third_Utility Room": 0,
+        },
+        {
+          Third_Conservatory: 0,
+        },
+        {
+          Third_Other: 0,
+        },
+      ],
+      [
+        {
+          "Other_Living Rooms": 0,
+        },
+        {
+          Other_Bedrooms: 0,
+        },
+        {
+          "Other_Bath / Shower": 0,
+        },
+        {
+          "Other_Seperate Toilet": 0,
+        },
+        {
+          Other_Kitchen: 0,
+        },
+        {
+          "Other_Utility Room": 0,
+        },
+        {
+          Other_Conservatory: 0,
+        },
+        {
+          Other_Other: 0,
+        },
+      ],
+      [
+        {
+          "Roof Space_Living Rooms": 0,
+        },
+        {
+          "Roof Space_Bedrooms": 0,
+        },
+        {
+          "Roof Space_Bath / Shower": 0,
+        },
+        {
+          "Roof Space_Seperate Toilet": 0,
+        },
+        {
+          "Roof Space_Kitchen": 0,
+        },
+        {
+          "Roof Space_Utility Room": 0,
+        },
+        {
+          "Roof Space_Conservatory": 0,
+        },
+        {
+          "Roof Space_Other": 0,
+        },
+      ],
+    ],
+  },
 };
 
 Object.seal(APP_CONSTANTS);
