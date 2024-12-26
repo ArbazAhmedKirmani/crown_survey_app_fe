@@ -54,7 +54,7 @@ export function getSqftDimensions(area: number, aspectRatio: number = 1) {
 }
 
 export const pixelToMeterConverter = (meter: number): number => {
-  return meter * 25;
+  return meter * 50;
 };
 
 export const sentenceIdentifier = (

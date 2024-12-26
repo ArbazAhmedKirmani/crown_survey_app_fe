@@ -40,8 +40,6 @@ const CSCanvas = (props: { height: number; width: number }) => {
   };
 
   useEffect(() => {
-    // Initialize canvas
-    debugger;
     const height = pixelToMeterConverter(+props.height) + 100;
     const width = pixelToMeterConverter(+props.width) + 100;
     const canvas = new fabric.Canvas("drawCanvas", {

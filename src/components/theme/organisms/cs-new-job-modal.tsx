@@ -16,6 +16,8 @@ import useQueryString from "../../../hooks/use-query-string";
 import { AnyObject } from "antd/es/_util/type";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { debounce } from "lodash";
+import CSTextarea from "../atoms/cs-textarea";
 
 interface ICSJobCreate {
   name: string;
@@ -25,12 +27,17 @@ export interface ICSNewJobModal {
   onCancel?: () => void;
   initialValue?: any;
 }
+export interface IUserListResponse {
+  id: number;
+  name: String;
+  email: string;
+}
 
 const CSNewJobModal = (props: ICSNewJobModal) => {
   const navigate = useNavigate();
   const [form] = useForm();
   const [customerForm] = useForm();
-  const { getQuery, removeQuery } = useQueryString();
+  const { getQuery, setQuery, removeQuery } = useQueryString();
   const [visibleNewCustomer, setVisibleNewCustomer] = useState<boolean>(false);
 
   const cs_name = getQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME) as string;
@@ -41,7 +48,12 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
   >({
     key: [API_ROUTES.jobs.getForms],
     url: API_ROUTES.jobs.getForms,
-    enabled: Boolean(jobId === "new"),
+  });
+  const { data: user, isLoading: usersLoading } = useGetApi<
+    IApiResponse<IUserListResponse[]>
+  >({
+    key: [API_ROUTES.users.get],
+    url: API_ROUTES.users.get,
   });
 
   const { data: customerList, isLoading: customerLoading } = useGetApi<
@@ -50,6 +62,7 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
     key: [API_ROUTES.customer.get, cs_name],
     url: API_ROUTES.customer.get,
     query: { search: cs_name },
+    options: { staleTime: 4000 },
     onSuccess: () => {
       console.log(customerList?.data);
     },
@@ -61,7 +74,8 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
     enabled: Boolean(jobId && jobId !== "new"),
     onSuccess: (data: AnyObject) => {
       form.setFieldsValue({
-        customerId: data.data.id,
+        id: data.data.id,
+        customerId: data.data.customer.id,
         address: data.data.address,
         formId: data.data.form.id,
         fulfil_date: dayjs(data.data.fulfilDate),
@@ -79,15 +93,15 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
     },
   });
 
-  // const searchCustomerSync = debounce((value) => {
-  //   if (Boolean(value)) {
-  //     setQuery({
-  //       [QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME]: value,
-  //     });
-  //   } else {
-  //     removeQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME);
-  //   }
-  // }, 0);
+  const searchCustomerSync = debounce((value) => {
+    if (Boolean(value)) {
+      setQuery({
+        [QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME]: value,
+      });
+    } else {
+      removeQuery(QUERY_STRING.OTHER_PARAMS.CUSTOMER_NAME);
+    }
+  }, 800);
 
   return (
     <Modal
@@ -110,7 +124,12 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
         layout="vertical"
         form={form}
         initialValues={props?.initialValue}
-        onFinish={(value: ICSJobCreate) => mutateJob(value)}
+        onFinish={(value: ICSJobCreate) => {
+          if (jobId === "new") {
+            mutateJob(value);
+          } else {
+          }
+        }}
       >
         <Row gutter={10}>
           <Col xs={24} sm={12} md={12} lg={12}>
@@ -190,6 +209,8 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
                 loading={customerLoading}
                 fieldNames={{ label: "name", value: "id" }}
                 options={customerList?.data}
+                disabled={Boolean(jobId !== "new")}
+                onSearch={(val) => searchCustomerSync(val)}
               />
             </CSFormItem>
           </Col>
@@ -210,6 +231,7 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
                   label: x.name,
                   value: x.id,
                 }))}
+                disabled={Boolean(jobId !== "new")}
               />
             </CSFormItem>
           </Col>
@@ -219,8 +241,8 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
                 showSearch
                 allowClear
                 placeholder="Select Author"
-                loading={formListLoading}
-                options={formList?.data?.map((x) => ({
+                loading={usersLoading}
+                options={user?.data?.map((x) => ({
                   label: x.name,
                   value: x.id,
                 }))}
@@ -247,12 +269,12 @@ const CSNewJobModal = (props: ICSNewJobModal) => {
               name={"address"}
               rules={[{ required: true, message: "Address is required" }]}
             >
-              <CSInput placeholder="Complete Address" />
+              <CSTextarea placeholder="Complete Property Address" rows={2} />
             </CSFormItem>
           </Col>
           <Col span={24} style={{ textAlign: "right" }}>
             <CSButton htmlType="submit" type="primary" loading={jobLoading}>
-              Create Form
+              {jobId !== "new" ? "Update Form" : "Create Form"}
             </CSButton>
           </Col>
         </Row>

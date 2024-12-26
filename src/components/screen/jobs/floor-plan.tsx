@@ -1,13 +1,5 @@
-// import { useRef, useState } from "react";
-// import CSFloorPlan from "../../theme/organisms/cs-floor-plan";
-// import CSButton from "../../theme/atoms/cs-button";
-// import { AnyObject } from "antd/es/_util/type";
-// import { Form, Modal, Typography } from "antd";
-// import { useForm } from "antd/es/form/Form";
-// import CSInput from "../../theme/atoms/cs-input";
-// import { getSqftDimensions } from "../../../utils/helper/general.helper";
-// import fabric from "fabric";
 import { Form, Modal, Space } from "antd";
+import { lazy, Suspense } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 const CSCanvas = lazy(() => import("../../theme/molecules/cs-canvas"));
 import CSInput from "../../theme/atoms/cs-input";
@@ -15,7 +7,6 @@ import CSButton from "../../theme/atoms/cs-button";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import { useForm } from "antd/es/form/Form";
 import CSFormItem from "../../theme/atoms/cs-form-item";
-import { lazy, Suspense } from "react";
 import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
 
 const FloorPlan = () => {

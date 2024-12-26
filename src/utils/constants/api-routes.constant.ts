@@ -48,6 +48,9 @@ export const API_ROUTES = {
     put: (id: string) => `api/upload/${id}`,
     delete: (id: string) => `api/upload/${id}`,
   },
+  users: {
+    get: "api/user",
+  },
 };
 
 Object.seal(API_ROUTES);
