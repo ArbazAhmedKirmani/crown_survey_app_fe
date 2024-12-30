@@ -62,7 +62,7 @@ const CSFormFieldDetail = (props: { id: number }) => {
                           value: FormFieldType.ACCOMODATION,
                         },
                       ]}
-                      style={{ minWidth: 100 }}
+                      style={{ minWidth: 125 }}
                     />
                   </Form.Item>
                   <Popover
@@ -89,7 +89,7 @@ const CSFormFieldDetail = (props: { id: number }) => {
                       type="number"
                       placeholder="Order No."
                       size="small"
-                      style={{ minWidth: 100 }}
+                      style={{ maxWidth: 80 }}
                     />
                   </Form.Item>
                   <Form.Item
@@ -120,13 +120,17 @@ const CSFormFieldDetail = (props: { id: number }) => {
                       mode="tags"
                       style={{ width: "max-content", minWidth: 120 }}
                       placeholder="Values"
-                      onChange={(e) => console.log(e)}
                       // options={}
                     />
-                    {/* <CSInput
+                  </Form.Item>
+                  <Form.Item name={[index, "links"]}>
+                    <CSSelect
                       size="small"
-                      placeholder="Values (checkbox/radio)"
-                    /> */}
+                      mode="tags"
+                      style={{ width: "max-content", minWidth: 130 }}
+                      placeholder="Links (Optional)"
+                      // options={}
+                    />
                   </Form.Item>
                   <span style={{ marginTop: 5 }}>
                     <Popconfirm

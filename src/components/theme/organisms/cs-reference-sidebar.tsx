@@ -6,11 +6,11 @@ import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import CSFormSlidingList from "./cs-form-sliding-list";
-import CSCheckbox from "../atoms/cs-checkbox";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
 import CSRenderSentence from "../molecules/cs-render-sentence";
 import CSButton from "../atoms/cs-button";
 import CSTextarea from "../atoms/cs-textarea";
+import { DeleteOutlined } from "@ant-design/icons";
+
 export interface ICSReferenceSidebar extends PropsWithChildren {
   drawerProps: DrawerProps;
   setValue: (str: string) => void;
@@ -39,11 +39,11 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
       }
     );
 
-    if (!response.ok) {
+    if (!response?.ok) {
       throw new Error("Network response was not ok");
     }
 
-    return await response.json();
+    return await response?.json();
   };
 
   const { data: categoryData, isLoading: categoryLoading } = useGetApi<
@@ -78,33 +78,26 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
     ],
     url: API_ROUTES.reference.getReferenceByCategory(categoryId?.toString()),
     enabled: Boolean(categoryId),
+    options: { staleTime: 0 },
   });
 
   useEffect(() => {
     return () => {
       setReference([]);
       setFinalSentence("");
+      // removeQuery(QUERY_STRING.OTHER_PARAMS.SELECTED_CATEGORY);
       controller.abort();
     };
   }, []);
 
-  const handleChangeReference = (
-    e: CheckboxChangeEvent,
-    _reference: any,
-    index: number
-  ) => {
-    if (e.target.checked) setReference((prev) => [...prev, _reference]);
-    else
-      setReference((prev) => {
-        prev.splice(index, 1);
-        return [...prev];
-      });
+  const handleChangeReference = (_reference: any) => {
+    setReference((prev) => [...prev, _reference]);
   };
 
   const setSentence = (val: string, ind: number) => {
     setFinalSentence((prev) => {
-      let result = prev.concat(prev === "" ? val : "\n \n", val);
-      return result;
+      if (prev === "") return prev.concat(val);
+      else return prev.concat("\n \n", val);
     });
     setReference((prev: any[]) => {
       let arr = [...prev];
@@ -114,7 +107,7 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
   };
 
   return (
-    <Drawer {...props.drawerProps}>
+    <Drawer {...props.drawerProps} destroyOnClose>
       <div className="cs-reference-sidebar">
         <div className="category-list">
           <CSFormSlidingList
@@ -126,8 +119,15 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
         </div>
 
         <Spin spinning={isLoading}>
-          <div className="reference-list">
-            {data?.data?.map((reference, index) => (
+          <div className="category-list" style={{ marginLeft: 5 }}>
+            <CSFormSlidingList
+              loading={categoryLoading}
+              list={data?.data}
+              type={"slri_d"}
+              height={"Calc(-25rem + 100vh)"}
+              onSelect={(e: any) => handleChangeReference(e)}
+            />
+            {/* {data?.data?.map((reference, index) => (
               <CSCheckbox
                 key={reference.id}
                 name={reference.value}
@@ -135,7 +135,7 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
               >
                 {reference.name}
               </CSCheckbox>
-            ))}
+            ))} */}
           </div>
         </Spin>
 
@@ -153,6 +153,19 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
                   />
                 )}
               </div>
+              <div>
+                <CSButton
+                  icon={<DeleteOutlined style={{ color: "red" }} />}
+                  type="default"
+                  onClick={() =>
+                    setReference((prev) => {
+                      let ref = [...prev];
+                      ref.splice(i, 1);
+                      return ref;
+                    })
+                  }
+                />
+              </div>
             </div>
           ))}
           {finalSentence && (
@@ -165,7 +178,7 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
               <CSButton
                 htmlType="submit"
                 onClick={() => {
-                  props.setValue(finalSentence);
+                  props.setValue(finalSentence.replace(/ {2,}/g, " "));
                   setFinalSentence("");
                 }}
               >

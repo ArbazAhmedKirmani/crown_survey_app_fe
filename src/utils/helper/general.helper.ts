@@ -102,7 +102,7 @@ const stringExtraction = (
     let currentMatch = match[0];
     updatedSentence = updatedSentence.replace(currentMatch, identifier);
     let array = match[1]
-      .split(",")
+      .split("/")
       .map((item: String) => item.trim().replace(/^['"]|['"]$/g, ""));
     return { identifier, array };
   });

@@ -64,7 +64,7 @@ const CSRenderFieldValidator = forwardRef(
         const inputType = part.includes("**") ? "checkbox" : "radio";
 
         return (
-          <span key={part + index}>
+          <span key={part + index} className="cs-render-field-validator">
             {inputType === "checkbox" ? (
               <div style={{ display: "flex", margin: "0 5px" }}>
                 <FormItemSelect.Checkbox
@@ -139,13 +139,12 @@ FormItemSelect.Radio = (props: IFormItemSelect) => {
     <Radio.Group
       block={true}
       size="small"
-      optionType="button"
-      buttonStyle="solid"
+      // optionType="button"
+      // buttonStyle="solid"
       options={props.dataItem.array.map((x: string) => ({
         label: x,
         value: x,
       }))}
-      defaultValue="Apple"
       onChange={(e) => props.onChange(e, props.part, "radio")}
     />
   );

@@ -40,6 +40,7 @@ export interface IFormFieldResponse {
   placeholder: String;
   values: string;
   rating: boolean;
+  links: string[];
 }
 
 export interface CSDynamicFieldsRenderer {
@@ -75,6 +76,9 @@ const CSDynamicFieldsRenderer = forwardRef(
       key: [API_ROUTES.jobs.getFieldsDetail(fieldId), fieldId],
       url: API_ROUTES.jobs.getFieldsDetail(fieldId),
       enabled: Boolean(fieldId),
+      onSuccess: (_data) => {
+        if (_data?.data?.response) handleModal(_data.data.mapperName);
+      },
     });
 
     const {
@@ -144,7 +148,7 @@ const CSDynamicFieldsRenderer = forwardRef(
         data["siteNote_attachments"] = note_val;
       }
       mutateJob({ fieldId: fieldId, data });
-    }, 1200);
+    }, 600);
 
     return isLoading ? (
       <CSLayoutLoader type="dashboard" />
@@ -254,45 +258,60 @@ const CSDynamicFieldsRenderer = forwardRef(
                       name="siteNote_attachments"
                     />
                   </div>
+
+                  <Suspense
+                    fallback={
+                      <FloatButton
+                        shape="circle"
+                        type="primary"
+                        icon={<LoadingOutlined />}
+                      />
+                    }
+                  >
+                    <CSReferenceSidebar
+                      drawerProps={{
+                        title: "References",
+                        placement: "top",
+                        onClose: () =>
+                          removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
+                        open: Boolean(reference),
+                        getContainer: false,
+                        height: "100%",
+                        destroyOnClose: true,
+                        maskClosable: false,
+                      }}
+                      setValue={(str: string) => {
+                        let val = form.getFieldsValue() ?? {};
+                        val = {
+                          ...val,
+                          ...(val[reference]
+                            ? { [reference]: val[reference] + "\n \n" + str }
+                            : { [reference]: str }),
+                        };
+                        form.setFieldsValue(val);
+                        removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
+                        debounceMutate();
+                      }}
+                    />
+                  </Suspense>
+                </div>
+              )}
+              {data?.data?.links?.length && (
+                <div style={{ marginTop: 10 }}>
+                  <label>Links</label>
+                  <div style={{ display: "flex" }}>
+                    {data.data.links.map((link: string, index: number) => {
+                      const [url, title] = link.split("|");
+                      return (
+                        <a href={url} className="links" target="_blank">
+                          {title}
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </Form>
-
-            <Suspense
-              fallback={
-                <FloatButton
-                  shape="circle"
-                  type="primary"
-                  icon={<LoadingOutlined />}
-                />
-              }
-            >
-              <CSReferenceSidebar
-                drawerProps={{
-                  title: "References",
-                  placement: "right",
-                  onClose: () =>
-                    removeQuery(QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME),
-                  open: Boolean(reference),
-                  getContainer: false,
-                  width: "85%",
-                  destroyOnClose: true,
-                  maskClosable: false,
-                }}
-                setValue={(str: string) => {
-                  let val = form.getFieldsValue() ?? {};
-                  val = {
-                    ...val,
-                    ...(val[reference]
-                      ? { [reference]: val[reference] + "\n \n" + str }
-                      : { [reference]: str }),
-                  };
-                  form.setFieldsValue(val);
-                  removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
-                  debounceMutate();
-                }}
-              />
-            </Suspense>
           </div>
         )}
         {jobLoading && (

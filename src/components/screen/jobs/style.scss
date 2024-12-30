@@ -7,8 +7,9 @@
   .flex-cont {
     display: flex;
     justify-content: flex-start;
+    // border-bottom: 1px solid $colorPrimary;
     margin-bottom: 2px;
-    max-height: Calc(100vh - 12.5rem);
+    max-height: Calc(100vh - 13rem);
 
     .first-list,
     .second-list,

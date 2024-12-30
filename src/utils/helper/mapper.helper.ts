@@ -26,6 +26,7 @@ export const formMapper = (data: IFormGetById) => {
         rating: field.rating,
         reference: field.response,
         values: field.values,
+        links: field.links,
       })),
     })),
   };

@@ -23,7 +23,7 @@ export const API_ROUTES = {
     getJobFields: (id?: string, jobId?: string) =>
       `api/jobs/detail/${id}/job/${jobId}`,
     generatePdf: (id?: string) => `api/jobs/${id}/generate-pdf`,
-    // put: (id: string) => `api/form/${id}`,
+    getAllFields: `api/jobs/fields/lookup`,
   },
   reference: {
     get: "api/reference",
@@ -34,6 +34,7 @@ export const API_ROUTES = {
     post: `api/reference`,
     put: (id: string) => `api/reference/${id}`,
     postCategory: `api/reference/category`,
+    deleteCategory: (id: string) => `api/reference/category/${id}`,
     // getFieldsBySection: (id?: string) => `api/reference/section/${id}`,
   },
   form: {

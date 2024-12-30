@@ -1,4 +1,10 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  // useState
+} from "react";
 import { Divider, Form, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { UploadFile } from "antd/lib";
@@ -54,7 +60,7 @@ const NewForm = () => {
   const params = useParams();
   const navigate = useNavigate();
   const document_ref = useRef<AnyObject>();
-  const [getForm, setGetForm] = useState(false);
+  // const [getForm, setGetForm] = useState(false);
   const queryClient = new QueryClient();
 
   const { mutate: saveForm, isPending: savePending } = usePostApi({
@@ -80,7 +86,7 @@ const NewForm = () => {
   >({
     key: [API_ROUTES.form.getById(params.id!)],
     url: API_ROUTES.form.getById(params.id!),
-    enabled: getForm,
+    enabled: Boolean(params?.id !== "new"),
     options: {
       gcTime: 0,
       staleTime: 0,
@@ -100,12 +106,12 @@ const NewForm = () => {
       });
   };
 
-  useEffect(() => {
-    if (params?.id !== "new" && !isSuccess) {
-      refetch();
-      setGetForm(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (params?.id !== "new" && !isSuccess) {
+  //     refetch();
+  //     setGetForm(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (isSuccess) {

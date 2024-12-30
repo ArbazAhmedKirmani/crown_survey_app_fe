@@ -12,16 +12,19 @@ import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import { AnyObject } from "antd/es/_util/type";
 import CSCheckbox from "../../theme/atoms/cs-checkbox";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { checkEditablePage } from "../../../utils/helper/general.helper";
 import { DeleteFilled } from "@ant-design/icons";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
+import CSSearchSelect from "../../theme/atoms/cs-search-select";
 
 const NewReference = () => {
   const [categoryForm] = useForm();
   const [form] = useForm();
   const params = useParams();
+  const navigate = useNavigate();
   const [category, setCategory] = useState<boolean>(false);
+  const [deleteCategoryId, setdeleteCategoryId] = useState<string>();
 
   const handleCatgory = () => {
     setCategory((prev) => !prev);
@@ -61,16 +64,21 @@ const NewReference = () => {
   const { mutate: updateMutate, isPending: updatePending } = usePostApi({
     url: API_ROUTES.reference.put(params.id!),
     showSuccessMessage: true,
-    onSuccess: () => {},
+    onSuccess: () => {
+      navigate(-1);
+    },
     method: AxiosMethodEnum.PUT,
   });
 
   /** PUT Reference API */
   const { mutate: deleteCategory, isPending: deleteCategoryPending } =
     usePostApi({
-      url: API_ROUTES.reference.put(params.id!),
+      url: API_ROUTES.reference.deleteCategory(deleteCategoryId!),
       showSuccessMessage: true,
-      onSuccess: () => {},
+      onSuccess: () => {
+        setdeleteCategoryId(undefined);
+        refetch();
+      },
       method: AxiosMethodEnum.DELETE,
     });
 
@@ -139,7 +147,10 @@ const NewReference = () => {
               name={"value"}
               rules={[{ required: true, message: "Description is required" }]}
             >
-              <CSTextarea rows={4} placeholder="Referece Description" />
+              <CSTextarea
+                rows={4}
+                placeholder="Reference Description -  use { } for single option selection, and [ ] for multiple option selection ::: use ( , ) as value seperator"
+              />
             </CSFormItem>
             <CSFormItem name={"isSiteNote"} valuePropName="checked">
               <CSCheckbox>Include in Site Note.</CSCheckbox>
@@ -181,8 +192,23 @@ const NewReference = () => {
               name={"name"}
               rules={[{ required: true, message: "Category name is required" }]}
             >
-              <CSInput placeholder="Category Name" />
+              <CSInput placeholder="Enter Category Name" />
             </CSFormItem>
+            <CSSearchSelect
+              url={API_ROUTES.jobs.getAllFields}
+              formFieldProps={{
+                label: "Field",
+                name: "fieldId",
+                rules: [{ required: true, message: "Field is required" }],
+              }}
+              selectProps={{
+                fieldNames: {
+                  label: "name",
+                  value: "id",
+                },
+                placeholder: "Select Field",
+              }}
+            />
             <CSButton
               htmlType="submit"
               type="primary"
@@ -203,7 +229,10 @@ const NewReference = () => {
                     <span>
                       <Popconfirm
                         title="Delete"
-                        onConfirm={() => deleteCategory(item)}
+                        onConfirm={() => {
+                          setdeleteCategoryId(item.id);
+                          deleteCategory(item);
+                        }}
                         description="Do you really want to delete?"
                       >
                         <DeleteFilled />

@@ -108,3 +108,14 @@
     width: -webkit-fill-available !important;
   }
 }
+
+.cs-render-field-validator {
+  .ant-radio-wrapper-block {
+    .ant-radio-inner {
+      width: 16px;
+    }
+    span {
+      width: max-content;
+    }
+  }
+}

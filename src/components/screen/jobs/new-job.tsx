@@ -10,11 +10,7 @@ import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
 import useQueryString from "../../../hooks/use-query-string";
 import useJobStore from "../../../store/job.store";
-import {
-  CheckCircleFilled,
-  FilePdfOutlined,
-  LinkOutlined,
-} from "@ant-design/icons";
+import { CheckCircleFilled, FilePdfOutlined } from "@ant-design/icons";
 import CSLayoutLoader from "../../theme/molecules/cs-layout-loader";
 import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 import CSJobStatus from "../../theme/molecules/cs-job-status";
@@ -103,11 +99,11 @@ const NewJob = () => {
         }
       );
 
-      if (!response.ok) {
+      if (!response?.ok) {
         throw new Error("Failed to fetch PDF");
       }
 
-      const blob = await response.blob();
+      const blob = await response?.blob();
       const url = window.URL.createObjectURL(blob);
 
       // Create a link element and trigger a download
@@ -179,23 +175,15 @@ const NewJob = () => {
         </div>
       </div>
       <div className="job-footer">
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <a
-            href="https://find-energy-certificate.service.gov.uk/find-a-certificate/search-by-postcode"
-            target="_blank"
-            style={{ color: "#c1b481" }}
-          >
-            <LinkOutlined /> Energy Certificate
-          </a>
-          <a
-            href="https://www.ukradon.org/information/ukmaps"
-            target="_blank"
-            style={{ color: "#c1b481" }}
-          >
-            <LinkOutlined /> UK Radon
-          </a>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            justifyContent: "flex-end",
+            width: "100%",
+          }}
+        >
           <CSJobStatus />
           <CSButton
             size="large"

@@ -238,6 +238,13 @@
     font-size: 18px;
     font-weight: 600;
   }
+
+  .links {
+    box-shadow: 0 0 6px rgb(224, 224, 224);
+    border-radius: 2px;
+    padding: 3px 20px;
+    color: $colorPrimary;
+  }
 }
 
 .cs-floor-plan {
@@ -283,6 +290,8 @@
     width: 100%;
 
     .item {
+      display: flex;
+      align-items: center;
       padding: 0.5rem 0;
 
       .delete {

@@ -40,6 +40,7 @@ const CSRenderSentence = ({
           let result = Object.values(sentenceRef.current?.getValue)?.join(" ");
           setValue(result, index);
         }}
+        style={{ marginInline: 6 }}
       >
         Confirm
       </CSButton>

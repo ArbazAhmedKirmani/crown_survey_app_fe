@@ -50,7 +50,7 @@ const CSFormSlidingList = (props: ICSFormSlidingList) => {
 
   return (
     <Spin spinning={props?.loading}>
-      {list?.length && (
+      {!!list?.length && (
         <div
           id="cs-form-sliding-list"
           className={`cs-form-sliding-list${collapse ? " collapsed" : ""}`}
