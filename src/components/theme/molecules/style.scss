@@ -25,8 +25,23 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding: 20px;
-  .validator-p {
-    margin: 0;
+
+  .sentence {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid rgb(212, 212, 212);
+    border-radius: 2px;
+    padding: 5px;
+    width: 100%;
+    .validator-p {
+      margin: 0;
+    }
+  }
+
+  .sentence-submit {
+    margin: 6px 0;
+    width: 100%;
+    background-color: rgba(167, 102, 17, 0.623);
+    color: white;
   }
 }

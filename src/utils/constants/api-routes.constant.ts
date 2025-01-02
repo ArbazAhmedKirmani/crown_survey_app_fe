@@ -52,6 +52,10 @@ export const API_ROUTES = {
   users: {
     get: "api/user",
   },
+  report: {
+    pendingJobs: "api/report/all/job/pending",
+    monthlyCompletedJobs: "api/report/monthly/job/completed",
+  },
 };
 
 Object.seal(API_ROUTES);

@@ -46,10 +46,15 @@ const CSSearchSelect = (props: ICSSearchSelect) => {
         showSearch
         options={searchOptions}
         loading={isLoading}
-        onSearch={(val) => {
-          setSearch(val);
-          handleSearch();
-        }}
+        // onSearch={(val) => {
+        //   setSearch(val);
+        //   handleSearch();
+        // }}
+        filterOption={(input, option) =>
+          option?.label && typeof option?.label === "string"
+            ? option.label.toLowerCase().includes(input.toLowerCase())
+            : false
+        }
         {...props.selectProps}
       />
     </CSFormItem>

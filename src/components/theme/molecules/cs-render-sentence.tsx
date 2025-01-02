@@ -9,13 +9,12 @@ import CSButton from "../atoms/cs-button";
 const CSRenderSentence = ({
   value,
   setValue,
-  index,
+  id,
 }: {
   value?: string;
   id: string;
-  setValue: (selected: any, ind: number) => void;
+  setValue: (selected: any, ind: string) => void;
   onChange?: any;
-  index: number;
 }) => {
   const sentenceRef = useRef<{ getValue: any }>();
   const [selected, setSelected] = useState<any>({});
@@ -26,21 +25,23 @@ const CSRenderSentence = ({
 
   return (
     <div className="cs-render-sentence">
-      <CSRenderFieldValidator
-        ref={sentenceRef}
-        data={data}
-        sentence={sentence}
-        setSelected={setSelected}
-        selected={selected}
-      />
+      <div className="sentence">
+        <CSRenderFieldValidator
+          ref={sentenceRef}
+          data={data}
+          sentence={sentence}
+          setSelected={setSelected}
+          selected={selected}
+        />
+      </div>
 
       <CSButton
+        className="sentence-submit"
         htmlType="submit"
         onClick={() => {
           let result = Object.values(sentenceRef.current?.getValue)?.join(" ");
-          setValue(result, index);
+          setValue(result, id);
         }}
-        style={{ marginInline: 6 }}
       >
         Confirm
       </CSButton>

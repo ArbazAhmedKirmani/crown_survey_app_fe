@@ -106,14 +106,12 @@ const NewJob = () => {
       const blob = await response?.blob();
       const url = window.URL.createObjectURL(blob);
 
-      // Create a link element and trigger a download
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "survey_document.docx"); // Optional: Specify the download filename
+      // link.setAttribute("download");
       document.body.appendChild(link);
       link.click();
 
-      // Clean up the DOM after triggering the download
       link.remove();
       window.URL.revokeObjectURL(url);
       setPdfDownload(false);

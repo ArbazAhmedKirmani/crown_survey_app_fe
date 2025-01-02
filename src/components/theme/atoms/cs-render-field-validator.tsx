@@ -6,7 +6,6 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { SaveFilled } from "@ant-design/icons";
 import CSButton from "./cs-button";
 import { Checkbox, Radio } from "antd";
 
@@ -14,6 +13,7 @@ interface IFormItemSelect {
   part: string;
   dataItem: AnyObject;
   onChange: (e: any, name: string, type: "checkbox" | "radio") => void;
+  selected?: any[];
 }
 interface ICSRenderFieldValidator {
   sentence: string;
@@ -54,7 +54,6 @@ const CSRenderFieldValidator = forwardRef(
           };
         });
       }
-      console.log(_sentence);
     };
 
     return Object.values(_sentence).map((part: string, index: number) => {
@@ -71,9 +70,10 @@ const CSRenderFieldValidator = forwardRef(
                   dataItem={dataItem}
                   part={part}
                   onChange={handleChange}
+                  selected={props.selected[part]}
                 />
                 <CSButton
-                  icon={<SaveFilled />}
+                  icon={"✓"}
                   size="small"
                   type="primary"
                   onClick={() => {
@@ -82,6 +82,21 @@ const CSRenderFieldValidator = forwardRef(
                       obj[index] = props.selected?.[part].join(", ");
                       return obj;
                     });
+                    console.log("props.selected: ", props.selected);
+                  }}
+                />
+                <CSButton
+                  icon={"×"}
+                  size="small"
+                  onClick={() => {
+                    props.setSelected((prev: AnyObject) => {
+                      const result = {
+                        ...prev,
+                      };
+                      delete result[part];
+                      return result;
+                    });
+                    console.log("props.selected: ", props.selected);
                   }}
                 />
               </div>
@@ -91,9 +106,10 @@ const CSRenderFieldValidator = forwardRef(
                   dataItem={dataItem}
                   part={part}
                   onChange={handleChange}
+                  selected={props.selected[part]}
                 />
                 <CSButton
-                  icon={<SaveFilled />}
+                  icon={"✓"}
                   size="small"
                   type="primary"
                   onClick={() => {
@@ -102,6 +118,20 @@ const CSRenderFieldValidator = forwardRef(
                       obj[index] = props.selected?.[part];
                       return obj;
                     });
+                  }}
+                />
+                <CSButton
+                  icon={"×"}
+                  size="small"
+                  onClick={() => {
+                    props.setSelected((prev: AnyObject) => {
+                      const result = {
+                        ...prev,
+                      };
+                      delete result[part];
+                      return result;
+                    });
+                    console.log("props.selected: ", props.selected);
                   }}
                 />
               </div>
@@ -126,6 +156,7 @@ const FormItemSelect = (props: PropsWithChildren<HTMLInputElement>) => {
 FormItemSelect.Checkbox = (props: IFormItemSelect) => {
   return (
     <Checkbox.Group
+      value={props.selected}
       options={props.dataItem.array.map((x: any) => ({ label: x, value: x }))}
       onChange={(e) => {
         props.onChange(e, props.part, "checkbox");
@@ -137,15 +168,18 @@ FormItemSelect.Checkbox = (props: IFormItemSelect) => {
 FormItemSelect.Radio = (props: IFormItemSelect) => {
   return (
     <Radio.Group
+      value={props.selected}
       block={true}
       size="small"
-      // optionType="button"
-      // buttonStyle="solid"
+      buttonStyle="solid"
+      optionType="button"
       options={props.dataItem.array.map((x: string) => ({
         label: x,
         value: x,
       }))}
-      onChange={(e) => props.onChange(e, props.part, "radio")}
+      onChange={(e) => {
+        props.onChange(e, props.part, "radio");
+      }}
     />
   );
 };

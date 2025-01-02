@@ -11,16 +11,20 @@ import CSButton from "../atoms/cs-button";
 import CSTextarea from "../atoms/cs-textarea";
 import { DeleteOutlined } from "@ant-design/icons";
 
+export type TReference = {
+  [key: string]: { id: string; name: string; value: string };
+};
 export interface ICSReferenceSidebar extends PropsWithChildren {
   drawerProps: DrawerProps;
   setValue: (str: string) => void;
 }
 
 const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
-  const { getQuery } = useQueryString();
-  const [reference, setReference] = useState<
-    ({ id: string; name: string; value: string } | undefined)[]
-  >([]);
+  const {
+    getQuery,
+    // removeQuery
+  } = useQueryString();
+  const [reference, setReference] = useState<TReference | null>(null);
   const [finalSentence, setFinalSentence] = useState<string>("");
 
   const controller = new AbortController();
@@ -78,31 +82,35 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
     ],
     url: API_ROUTES.reference.getReferenceByCategory(categoryId?.toString()),
     enabled: Boolean(categoryId),
-    options: { staleTime: 0 },
+    options: { staleTime: 0, gcTime: 0 },
   });
 
   useEffect(() => {
     return () => {
-      setReference([]);
+      setReference({});
       setFinalSentence("");
-      // removeQuery(QUERY_STRING.OTHER_PARAMS.SELECTED_CATEGORY);
+      // removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
       controller.abort();
     };
   }, []);
 
   const handleChangeReference = (_reference: any) => {
-    setReference((prev) => [...prev, _reference]);
+    if (!reference?.[_reference.id])
+      setReference((prev) => ({
+        ...prev,
+        [_reference.id]: _reference,
+      }));
   };
 
-  const setSentence = (val: string, ind: number) => {
+  const setSentence = (val: string, id: string) => {
     setFinalSentence((prev) => {
       if (prev === "") return prev.concat(val);
       else return prev.concat("\n \n", val);
     });
-    setReference((prev: any[]) => {
-      let arr = [...prev];
-      arr.splice(ind, 1);
-      return arr;
+    setReference((prev: TReference | null) => {
+      let obj = { ...prev };
+      delete obj[id];
+      return obj;
     });
   };
 
@@ -127,51 +135,42 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
               height={"Calc(-25rem + 100vh)"}
               onSelect={(e: any) => handleChangeReference(e)}
             />
-            {/* {data?.data?.map((reference, index) => (
-              <CSCheckbox
-                key={reference.id}
-                name={reference.value}
-                onChange={(e) => handleChangeReference(e, reference, index)}
-              >
-                {reference.name}
-              </CSCheckbox>
-            ))} */}
           </div>
         </Spin>
 
         <div className="preview">
-          {reference?.map((ref, i) => (
-            <div key={ref?.id} className="item">
-              <div>
-                {ref?.value && (
-                  <CSRenderSentence
-                    key={i + ref.id}
-                    value={ref?.value}
-                    id={ref.id}
-                    setValue={setSentence}
-                    index={i}
+          {!!reference &&
+            Object.values(reference)?.map((ref, i) => (
+              <div key={ref?.id} className="item">
+                <div className="item-sentence">
+                  {ref?.value && (
+                    <CSRenderSentence
+                      key={i + ref.id}
+                      value={ref?.value}
+                      id={ref.id}
+                      setValue={setSentence}
+                    />
+                  )}
+                </div>
+                <div className="delete">
+                  <CSButton
+                    icon={<DeleteOutlined />}
+                    type="default"
+                    onClick={() =>
+                      setReference((prev: TReference | null) => {
+                        let obj = { ...prev };
+                        delete obj[ref.id];
+                        return obj;
+                      })
+                    }
                   />
-                )}
+                </div>
               </div>
-              <div>
-                <CSButton
-                  icon={<DeleteOutlined style={{ color: "red" }} />}
-                  type="default"
-                  onClick={() =>
-                    setReference((prev) => {
-                      let ref = [...prev];
-                      ref.splice(i, 1);
-                      return ref;
-                    })
-                  }
-                />
-              </div>
-            </div>
-          ))}
+            ))}
           {finalSentence && (
-            <div>
+            <div className="final-sentence">
               <CSTextarea
-                rows={6}
+                rows={7}
                 value={finalSentence}
                 onChange={(e) => setFinalSentence(e.target.value)}
               />
