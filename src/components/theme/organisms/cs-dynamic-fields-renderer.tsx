@@ -17,7 +17,6 @@ import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import useQueryString from "../../../hooks/use-query-string";
 import CSButton from "../atoms/cs-button";
 import CSTextarea from "../atoms/cs-textarea";
-const CSReferenceSidebar = lazy(() => import("./cs-reference-sidebar"));
 import { useForm } from "antd/es/form/Form";
 import useJobStore from "../../../store/job.store";
 import usePostApi from "../../../hooks/use-post-api";
@@ -28,6 +27,8 @@ import CSDragger, { ICSDraggerReturn } from "../atoms/cs-dragger";
 import { LoadingOutlined } from "@ant-design/icons";
 import CSLayoutLoader from "../molecules/cs-layout-loader";
 import CSRating from "../atoms/cs-rating";
+
+const CSReferenceSidebar = lazy(() => import("./cs-reference-sidebar"));
 
 export interface IFormFieldResponse {
   id: string;
@@ -72,13 +73,14 @@ const CSDynamicFieldsRenderer = forwardRef(
         },
     }));
 
-    const { data, isLoading } = useGetApi<IApiResponse<IFormFieldResponse>>({
+    const {
+      data,
+      isLoading,
+      isSuccess: isSuccessResponse,
+    } = useGetApi<IApiResponse<IFormFieldResponse>>({
       key: [API_ROUTES.jobs.getFieldsDetail(fieldId), fieldId],
       url: API_ROUTES.jobs.getFieldsDetail(fieldId),
       enabled: Boolean(fieldId),
-      onSuccess: (_data) => {
-        if (_data?.data?.response) handleModal(_data.data.mapperName);
-      },
     });
 
     const {
@@ -137,10 +139,16 @@ const CSDynamicFieldsRenderer = forwardRef(
       }
     }, [isSuccess, fieldId]);
 
-    const debounceMutate = debounce(() => {
+    useEffect(() => {
+      if (isSuccessResponse && data?.data?.response)
+        handleModal(data.data.mapperName);
+    }, [isSuccessResponse]);
+
+    const debounceMutate = debounce((val?) => {
       const main_val = mainRef.current?.getValue();
       const note_val = noteRef.current?.getValue();
-      const data = form.getFieldsValue();
+
+      const data = val ? val : form.getFieldsValue();
       if (main_val?.length) {
         data["field_attachments"] = main_val;
       }
@@ -217,6 +225,7 @@ const CSDynamicFieldsRenderer = forwardRef(
                 type={data?.data?.type}
                 nestedProps={data?.data}
               />
+
               {data?.data?.response && (
                 <div>
                   {[FormFieldType.SENTENCE, FormFieldType.INPUT].includes(
@@ -281,12 +290,13 @@ const CSDynamicFieldsRenderer = forwardRef(
                         maskClosable: false,
                       }}
                       setValue={(str: string) => {
+                        debugger;
                         let val = form.getFieldsValue() ?? {};
                         val = {
                           ...val,
-                          ...(val[reference]
-                            ? { [reference]: val[reference] + "\n \n" + str }
-                            : { [reference]: str }),
+                          [reference]: val[reference]
+                            ? val[reference] + "\n \n" + str
+                            : str,
                         };
                         form.setFieldsValue(val);
                         removeQuery([QUERY_STRING.OTHER_PARAMS.REFERENCE_NAME]);
@@ -303,7 +313,12 @@ const CSDynamicFieldsRenderer = forwardRef(
                     {data.data.links.map((link: string, index: number) => {
                       const [url, title] = link.split("|");
                       return (
-                        <a href={url} className="links" target="_blank">
+                        <a
+                          key={index + title}
+                          href={url}
+                          className="links"
+                          target="_blank"
+                        >
                           {title}
                         </a>
                       );

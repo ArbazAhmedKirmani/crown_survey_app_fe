@@ -81,9 +81,12 @@ const NewForm = () => {
     },
   });
 
-  const { data, isLoading, isSuccess, refetch } = useGetApi<
-    IApiResponse<IFormGetById>
-  >({
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    //  refetch
+  } = useGetApi<IApiResponse<IFormGetById>>({
     key: [API_ROUTES.form.getById(params.id!)],
     url: API_ROUTES.form.getById(params.id!),
     enabled: Boolean(params?.id !== "new"),

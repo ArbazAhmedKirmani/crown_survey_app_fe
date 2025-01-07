@@ -60,7 +60,7 @@ const CSRenderFieldValidator = forwardRef(
       const dataItem = props.data.find((d: any) => d.identifier === part);
 
       if (dataItem) {
-        const inputType = part.includes("**") ? "checkbox" : "radio";
+        const inputType = part?.includes("**") ? "checkbox" : "radio";
 
         return (
           <span key={part + index} className="cs-render-field-validator">
@@ -79,10 +79,10 @@ const CSRenderFieldValidator = forwardRef(
                   onClick={() => {
                     _setSentence((prev: any) => {
                       let obj = { ...prev };
-                      obj[index] = props.selected?.[part].join(", ");
+                      obj[index] = props.selected?.[part]?.join(", ");
                       return obj;
                     });
-                    console.log("props.selected: ", props.selected);
+                    console.log("props.selected: ", props?.selected);
                   }}
                 />
                 <CSButton
@@ -119,6 +119,7 @@ const CSRenderFieldValidator = forwardRef(
                       return obj;
                     });
                   }}
+                  style={{ height: 20, width: 20 }}
                 />
                 <CSButton
                   icon={"×"}
@@ -131,8 +132,8 @@ const CSRenderFieldValidator = forwardRef(
                       delete result[part];
                       return result;
                     });
-                    console.log("props.selected: ", props.selected);
                   }}
+                  style={{ height: 20, width: 20 }}
                 />
               </div>
             )}
@@ -156,6 +157,7 @@ const FormItemSelect = (props: PropsWithChildren<HTMLInputElement>) => {
 FormItemSelect.Checkbox = (props: IFormItemSelect) => {
   return (
     <Checkbox.Group
+      rootClassName="styled-checkbox-button"
       value={props.selected}
       options={props.dataItem.array.map((x: any) => ({ label: x, value: x }))}
       onChange={(e) => {
@@ -168,11 +170,10 @@ FormItemSelect.Checkbox = (props: IFormItemSelect) => {
 FormItemSelect.Radio = (props: IFormItemSelect) => {
   return (
     <Radio.Group
+      rootClassName="styled-radio-group"
       value={props.selected}
       block={true}
       size="small"
-      buttonStyle="solid"
-      optionType="button"
       options={props.dataItem.array.map((x: string) => ({
         label: x,
         value: x,

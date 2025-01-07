@@ -5,7 +5,7 @@ import { IApiResponse } from "../../../utils/interface/response.interface";
 import { AnyObject } from "antd/es/_util/type";
 import useGetApi from "../../../hooks/use-get-api";
 import { useEffect, useState } from "react";
-import { debounce } from "lodash";
+// import { debounce } from "lodash";
 
 export interface ICSSearchSelect {
   formFieldProps: FormItemProps;
@@ -14,16 +14,19 @@ export interface ICSSearchSelect {
 }
 
 const CSSearchSelect = (props: ICSSearchSelect) => {
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [searchOptions, setSearchOptions] = useState<AnyObject[]>([]);
 
   /** GET Fields API */
   const { isLoading, refetch } = useGetApi<IApiResponse<AnyObject[]>>({
-    key: [props.url, search],
+    key: [
+      props.url,
+      // search
+    ],
     url: props.url,
-    query: {
-      search: search,
-    },
+    // query: {
+    //   search: search,
+    // },
     enabled: false,
     onSuccess: (_data) => {
       //   debugger;
@@ -31,9 +34,9 @@ const CSSearchSelect = (props: ICSSearchSelect) => {
     },
   });
 
-  const handleSearch = debounce(() => {
-    refetch();
-  }, 500);
+  // const handleSearch = debounce(() => {
+  //   refetch();
+  // }, 500);
 
   useEffect(() => {
     refetch();

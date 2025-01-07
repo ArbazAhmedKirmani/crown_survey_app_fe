@@ -1,4 +1,4 @@
-import { Drawer, DrawerProps, Spin } from "antd";
+import { Drawer, DrawerProps, Skeleton, Spin } from "antd";
 import { PropsWithChildren, useEffect, useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
@@ -104,8 +104,8 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
 
   const setSentence = (val: string, id: string) => {
     setFinalSentence((prev) => {
-      if (prev === "") return prev.concat(val);
-      else return prev.concat("\n \n", val);
+      if (prev === "") return prev?.concat(val);
+      else return prev?.concat("\n \n", val);
     });
     setReference((prev: TReference | null) => {
       let obj = { ...prev };
@@ -122,21 +122,35 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
             loading={categoryLoading}
             list={categoryData?.data}
             type={QUERY_STRING.OTHER_PARAMS.SELECTED_CATEGORY}
-            height={"Calc(-25rem + 100vh)"}
+            height={"Calc(100vh - 25rem)"}
           />
         </div>
 
-        <Spin spinning={isLoading}>
-          <div className="category-list" style={{ marginLeft: 5 }}>
+        <div className="category-list" style={{ marginLeft: 5 }}>
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+                height: "Calc(-25rem + 100vh)",
+                paddingTop: 100,
+                width: 200,
+              }}
+            >
+              <Skeleton.Input size="small" active />
+              <Skeleton.Input size="small" active />
+              <Skeleton.Input size="small" active />
+            </div>
+          ) : (
             <CSFormSlidingList
               loading={categoryLoading}
               list={data?.data}
               type={"slri_d"}
-              height={"Calc(-25rem + 100vh)"}
               onSelect={(e: any) => handleChangeReference(e)}
             />
-          </div>
-        </Spin>
+          )}
+        </div>
 
         <div className="preview">
           {!!reference &&
@@ -177,7 +191,7 @@ const CSReferenceSidebar = (props: ICSReferenceSidebar) => {
               <CSButton
                 htmlType="submit"
                 onClick={() => {
-                  props.setValue(finalSentence.replace(/ {2,}/g, " "));
+                  props.setValue(finalSentence?.replace(/ {2,}/g, " "));
                   setFinalSentence("");
                 }}
               >

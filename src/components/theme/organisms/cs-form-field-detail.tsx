@@ -5,6 +5,7 @@ import CSInput from "../atoms/cs-input";
 import CSSelect from "../atoms/cs-select";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import CSCheckbox from "../atoms/cs-checkbox";
+import { Fragment } from "react";
 
 const CSFormFieldDetail = (props: { id: number }) => {
   return (
@@ -15,132 +16,137 @@ const CSFormFieldDetail = (props: { id: number }) => {
             <div>
               {fields.length >= 1 ? <Divider>Section Fields</Divider> : null}
               {fields.map((field, index) => (
-                <div key={field.key} className="field-list-item">
-                  <Form.Item name={[index, "id"]} hidden={true}>
-                    <input type="hidden" />
-                  </Form.Item>
-                  <Form.Item
-                    name={[index, "name"]}
-                    rules={[{ required: true, message: "" }]}
-                  >
-                    <CSInput
-                      placeholder="Name"
-                      size="small"
-                      style={{ minWidth: 100 }}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name={[index, "type"]}
-                    rules={[{ required: true, message: "" }]}
-                  >
-                    <CSSelect
-                      size="small"
-                      placeholder="Field Type"
-                      options={[
-                        { label: "Input", value: FormFieldType.INPUT },
-                        {
-                          label: "Checkbox",
-                          value: FormFieldType.CHECKBOX,
-                        },
-                        { label: "Radio", value: FormFieldType.RADIO },
-                        {
-                          label: "Textarea",
-                          value: FormFieldType.TEXTAREA,
-                        },
-                        {
-                          label: "Sentence",
-                          value: FormFieldType.SENTENCE,
-                        },
-                        { label: "Date", value: FormFieldType.DATE },
-                        { label: "File", value: FormFieldType.FILE },
-                        {
-                          label: "Table Element",
-                          value: FormFieldType.TABLE_ELEMENT,
-                        },
-                        {
-                          label: "Accomodation",
-                          value: FormFieldType.ACCOMODATION,
-                        },
-                      ]}
-                      style={{ minWidth: 125 }}
-                    />
-                  </Form.Item>
-                  <Popover
-                    destroyTooltipOnHide
-                    rootClassName="field-inner"
-                    content="Used for Document Keyword Matching."
-                  >
+                <div key={field.key} className="list-item-cont">
+                  <div className="field-list-item">
+                    <Form.Item name={[index, "id"]} hidden={true}>
+                      <input type="hidden" />
+                    </Form.Item>
                     <Form.Item
-                      name={[index, "mapperName"]}
+                      name={[index, "name"]}
                       rules={[{ required: true, message: "" }]}
                     >
                       <CSInput
-                        placeholder="Mapper Name"
+                        placeholder="Name"
                         size="small"
                         style={{ minWidth: 100 }}
                       />
                     </Form.Item>
-                  </Popover>
-                  <Form.Item
-                    name={[index, "orderNo"]}
-                    rules={[{ required: true, message: "" }]}
-                  >
-                    <CSInput
-                      type="number"
-                      placeholder="Order No."
-                      size="small"
-                      style={{ maxWidth: 80 }}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name={[index, "placeholder"]}
-                    rules={[{ required: true, message: "" }]}
-                  >
-                    <CSInput
-                      placeholder="Placeholder"
-                      size="small"
-                      style={{ minWidth: 100 }}
-                    />
-                  </Form.Item>
-                  <Form.Item valuePropName="checked" name={[index, "required"]}>
-                    <CSCheckbox>Required</CSCheckbox>
-                  </Form.Item>
-                  <Form.Item valuePropName="checked" name={[index, "rating"]}>
-                    <CSCheckbox>Rating</CSCheckbox>
-                  </Form.Item>
-                  <Form.Item
-                    valuePropName="checked"
-                    name={[index, "reference"]}
-                  >
-                    <CSCheckbox>Reference</CSCheckbox>
-                  </Form.Item>
-                  <Form.Item name={[index, "values"]}>
-                    <CSSelect
-                      size="small"
-                      mode="tags"
-                      style={{ width: "max-content", minWidth: 120 }}
-                      placeholder="Values"
-                      // options={}
-                    />
-                  </Form.Item>
-                  <Form.Item name={[index, "links"]}>
-                    <CSSelect
-                      size="small"
-                      mode="tags"
-                      style={{ width: "max-content", minWidth: 130 }}
-                      placeholder="Links (Optional)"
-                      // options={}
-                    />
-                  </Form.Item>
-                  <span style={{ marginTop: 5 }}>
+                    <Form.Item
+                      name={[index, "type"]}
+                      rules={[{ required: true, message: "" }]}
+                    >
+                      <CSSelect
+                        size="small"
+                        placeholder="Field Type"
+                        options={[
+                          { label: "Input", value: FormFieldType.INPUT },
+                          {
+                            label: "Checkbox",
+                            value: FormFieldType.CHECKBOX,
+                          },
+                          { label: "Radio", value: FormFieldType.RADIO },
+                          {
+                            label: "Textarea",
+                            value: FormFieldType.TEXTAREA,
+                          },
+                          {
+                            label: "Sentence",
+                            value: FormFieldType.SENTENCE,
+                          },
+                          { label: "Date", value: FormFieldType.DATE },
+                          { label: "File", value: FormFieldType.FILE },
+                          {
+                            label: "Table Element",
+                            value: FormFieldType.TABLE_ELEMENT,
+                          },
+                          {
+                            label: "Accomodation",
+                            value: FormFieldType.ACCOMODATION,
+                          },
+                        ]}
+                        style={{ minWidth: 125 }}
+                      />
+                    </Form.Item>
+                    <Popover
+                      destroyTooltipOnHide
+                      rootClassName="field-inner"
+                      content="Used for Document Keyword Matching."
+                    >
+                      <Form.Item
+                        name={[index, "mapperName"]}
+                        rules={[{ required: true, message: "" }]}
+                      >
+                        <CSInput
+                          placeholder="Mapper Name"
+                          size="small"
+                          style={{ minWidth: 100 }}
+                        />
+                      </Form.Item>
+                    </Popover>
+                    <Form.Item
+                      name={[index, "orderNo"]}
+                      rules={[{ required: true, message: "" }]}
+                    >
+                      <CSInput
+                        type="number"
+                        placeholder="Order No."
+                        size="small"
+                        style={{ maxWidth: 80 }}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name={[index, "placeholder"]}
+                      rules={[{ required: true, message: "" }]}
+                    >
+                      <CSInput
+                        placeholder="Placeholder"
+                        size="small"
+                        style={{ minWidth: 100 }}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      valuePropName="checked"
+                      name={[index, "required"]}
+                    >
+                      <CSCheckbox>Required</CSCheckbox>
+                    </Form.Item>
+                    <Form.Item valuePropName="checked" name={[index, "rating"]}>
+                      <CSCheckbox>Rating</CSCheckbox>
+                    </Form.Item>
+                    <Form.Item
+                      valuePropName="checked"
+                      name={[index, "reference"]}
+                    >
+                      <CSCheckbox>Reference</CSCheckbox>
+                    </Form.Item>
+                    <Form.Item name={[index, "values"]}>
+                      <CSSelect
+                        size="small"
+                        mode="tags"
+                        style={{ width: "max-content", minWidth: 120 }}
+                        placeholder="Values"
+                        // options={}
+                      />
+                    </Form.Item>
+                    <Form.Item name={[index, "links"]}>
+                      <CSSelect
+                        size="small"
+                        mode="tags"
+                        style={{ width: "max-content", minWidth: 130 }}
+                        placeholder="Links (Optional)"
+                        // options={}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="delete-btn">
                     <Popconfirm
                       title="Delete"
                       description="Do you really want to delete?"
                       onConfirm={() => removeField(index)}
                     >
-                      <DeleteFilled style={{ color: "tomato" }} />
+                      <DeleteFilled />
                     </Popconfirm>
-                  </span>
+                  </div>
                 </div>
               ))}
               <Divider />

@@ -65,7 +65,7 @@
     list-style-type: none;
     padding: 0;
     overflow-y: auto;
-    height: Calc(100vh - 16rem);
+    max-height: Calc(100vh - 16rem);
     margin: 0px 0 16px 0;
 
     .menu-item {
@@ -158,13 +158,45 @@
 }
 
 .cs-form-field-detail {
-  .field-list-item {
+  .list-item-cont {
     display: flex;
-    gap: 16px;
-    overflow-x: auto;
+    justify-content: space-between;
+    background-color: white;
+    margin: 3px 0;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border: 1px solid rgb(221, 221, 221);
 
-    .ant-form-item {
-      margin-bottom: 5px;
+    .field-list-item {
+      display: flex;
+      align-items: center;
+      padding: 3px 5px;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+
+      .ant-select-show-search {
+        .ant-select-selector {
+          display: flex;
+          flex-wrap: wrap;
+          max-width: 10rem;
+        }
+      }
+    }
+
+    .delete-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: tomato;
+      color: white;
+      padding-inline: 5px;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
     }
   }
 
@@ -272,6 +304,7 @@
   justify-content: flex-start;
 
   .category-list {
+    height: fit-content;
   }
 
   .reference-list {

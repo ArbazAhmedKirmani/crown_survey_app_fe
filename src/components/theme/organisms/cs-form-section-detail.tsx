@@ -4,10 +4,13 @@ import CSButton from "../atoms/cs-button";
 import CSInput from "../atoms/cs-input";
 import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
 import CSLayoutLoader from "../molecules/cs-layout-loader";
+import useFormInstance from "antd/lib/form/hooks/useFormInstance";
 
 const CSFormFieldDetail = lazy(() => import("./cs-form-field-detail"));
 
 const CSFormSectionDetail = () => {
+  const fromInstance = useFormInstance();
+  console.log(fromInstance?.getFieldsValue());
   return (
     <Form.List name="section">
       {(fields, { add: addSection, remove: removeSection }) => {
