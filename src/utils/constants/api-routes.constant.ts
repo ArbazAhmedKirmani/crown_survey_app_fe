@@ -11,6 +11,7 @@ export const API_ROUTES = {
   },
   jobs: {
     get: "api/jobs",
+    getPreview: (id: String) => `api/jobs/preview/${id}`,
     getById: (id: string) => `api/jobs/${id}`,
     status: (id?: string) => `api/jobs/${id}/status`,
     post: "api/jobs",
@@ -24,6 +25,8 @@ export const API_ROUTES = {
       `api/jobs/detail/${id}/job/${jobId}`,
     generatePdf: (id?: string) => `api/jobs/${id}/generate-pdf`,
     getAllFields: `api/jobs/fields/lookup`,
+    getFieldByForm: (id: string) => `api/jobs/fields/form/${id}`,
+    sectionFields: (id: string) => `api/jobs/section-fields/${id}`,
   },
   reference: {
     get: "api/reference",
@@ -35,6 +38,8 @@ export const API_ROUTES = {
     put: (id: string) => `api/reference/${id}`,
     postCategory: `api/reference/category`,
     deleteCategory: (id: string) => `api/reference/category/${id}`,
+    categoryWithReference: (id: string) =>
+      `api/reference/category-reference/${id}`,
     // getFieldsBySection: (id?: string) => `api/reference/section/${id}`,
   },
   form: {
@@ -55,6 +60,10 @@ export const API_ROUTES = {
   report: {
     pendingJobs: "api/report/all/job/pending",
     monthlyCompletedJobs: "api/report/monthly/job/completed",
+  },
+  formFieldReference: {
+    get: (id: string) => `api/form-field/${id}`,
+    post: "api/form-field",
   },
 };
 

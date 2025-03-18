@@ -1,4 +1,4 @@
-import { notification, Upload, UploadProps } from "antd";
+import { notification, Spin, Upload, UploadProps } from "antd";
 import { API_ROUTES } from "../../../utils/constants/api-routes.constant";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { UploadFile } from "antd/lib";
@@ -30,6 +30,7 @@ type IFiles = { id: string; url: string; originalName?: string; name?: string };
 const CSUpload = forwardRef((props: ICSUpload, ref) => {
   const _api = new HTTP();
   const [files, setFiles] = useState<IFiles[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useImperativeHandle<unknown, ICSUploadReturn>(ref, () => ({
     getValue: () => files,
@@ -40,6 +41,7 @@ const CSUpload = forwardRef((props: ICSUpload, ref) => {
   }));
 
   const customPostRequest = (options: AnyObject) => {
+    setLoading(true);
     _api
       .call<AnyObject, IApiResponse<IFiles>>({
         method: AxiosMethodEnum.POST,
@@ -60,13 +62,16 @@ const CSUpload = forwardRef((props: ICSUpload, ref) => {
             name: response.data.data?.originalName,
           },
         ]);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const customUpdateRequest = (options: AnyObject, id: string) => {
+    setLoading(true);
     _api
       .call<AnyObject, IApiResponse<IFiles>>({
         method: AxiosMethodEnum.PUT,
@@ -92,15 +97,18 @@ const CSUpload = forwardRef((props: ICSUpload, ref) => {
             }),
           ];
 
+          setLoading(false);
           return result;
         });
       })
       .catch((err: AxiosError) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const customDeleteRequest = (options: AnyObject) => {
+    setLoading(true);
     _api
       .call<AnyObject, IApiResponse<{ id: string; url: string }>>({
         method: AxiosMethodEnum.DELETE,
@@ -118,10 +126,12 @@ const CSUpload = forwardRef((props: ICSUpload, ref) => {
           state = state.filter((file) => file.id !== options.id);
           return state;
         });
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
         notification.error({ message: "Error" });
+        setLoading(false);
       });
   };
 
@@ -161,13 +171,15 @@ const CSUpload = forwardRef((props: ICSUpload, ref) => {
         ]}
         label={props.label}
       >
-        <Upload
-          {...props}
-          {...uploadProps}
-          fileList={files as unknown as ICSUploadFile[]}
-        >
-          {props.children}
-        </Upload>
+        <Spin spinning={loading}>
+          <Upload
+            {...props}
+            {...uploadProps}
+            fileList={files as unknown as ICSUploadFile[]}
+          >
+            {props.children}
+          </Upload>
+        </Spin>
       </CSFormItem>
     </div>
   );

@@ -5,7 +5,6 @@ import CSInput from "../atoms/cs-input";
 import CSSelect from "../atoms/cs-select";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import CSCheckbox from "../atoms/cs-checkbox";
-import { Fragment } from "react";
 
 const CSFormFieldDetail = (props: { id: number }) => {
   return (

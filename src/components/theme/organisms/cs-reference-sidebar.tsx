@@ -1,4 +1,4 @@
-import { Drawer, DrawerProps, Skeleton, Spin } from "antd";
+import { Drawer, DrawerProps, Skeleton } from "antd";
 import { PropsWithChildren, useEffect, useState } from "react";
 import useQueryString from "../../../hooks/use-query-string";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";

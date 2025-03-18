@@ -8,6 +8,7 @@ import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
 import CSButton from "../atoms/cs-button";
 import { DeleteOutlined } from "@ant-design/icons";
 import { APP_CONSTANTS } from "../../../utils/constants/app.constant";
+import useFormInstance from "antd/es/form/hooks/useFormInstance";
 
 export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
@@ -15,6 +16,7 @@ export interface ICSDynamicField extends PropsWithChildren {
   onChange?: any;
 }
 const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
+  const form = useFormInstance();
   const getTypeField = () => {
     if (type)
       switch (type) {
@@ -52,7 +54,11 @@ const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
       }
   };
 
-  return <CSFormItem>{getTypeField()}</CSFormItem>;
+  return Boolean(nestedProps?.FormFieldReference?.identifier) ? (
+    <CSDynamicField.IDENTIFIER_FIELD />
+  ) : (
+    <CSFormItem>{getTypeField()}</CSFormItem>
+  );
 };
 
 CSDynamicField.CHECKBOX = (props: any) => {
@@ -249,6 +255,11 @@ CSDynamicField.ACCOMODATION = (props: any) => {
       </table>
     </CSFormItem>
   );
+};
+
+CSDynamicField.IDENTIFIER_FIELD = () => {
+  // const [] =
+  return <div>{/* {map(x => <li>{x.name}</li>)} */}</div>;
 };
 
 export default CSDynamicField;

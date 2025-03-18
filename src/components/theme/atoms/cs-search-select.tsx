@@ -14,7 +14,6 @@ export interface ICSSearchSelect {
 }
 
 const CSSearchSelect = (props: ICSSearchSelect) => {
-  // const [search, setSearch] = useState("");
   const [searchOptions, setSearchOptions] = useState<AnyObject[]>([]);
 
   /** GET Fields API */
@@ -54,8 +53,12 @@ const CSSearchSelect = (props: ICSSearchSelect) => {
         //   handleSearch();
         // }}
         filterOption={(input, option) =>
-          option?.label && typeof option?.label === "string"
-            ? option.label.toLowerCase().includes(input.toLowerCase())
+          props?.selectProps?.fieldNames?.label &&
+          option?.[props?.selectProps?.fieldNames?.label] &&
+          typeof option?.[props?.selectProps?.fieldNames?.label] === "string"
+            ? option?.[props?.selectProps?.fieldNames?.label]
+                ?.toLowerCase()
+                ?.includes(input.toLowerCase())
             : false
         }
         {...props.selectProps}

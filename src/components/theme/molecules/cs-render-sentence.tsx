@@ -5,16 +5,19 @@ import {
 } from "../../../utils/helper/general.helper";
 import CSRenderFieldValidator from "../atoms/cs-render-field-validator";
 import CSButton from "../atoms/cs-button";
+import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const CSRenderSentence = ({
   value,
   setValue,
   id,
+  onDelete,
 }: {
   value?: string;
   id: string;
   setValue: (selected: any, ind: string) => void;
   onChange?: any;
+  onDelete?: () => void;
 }) => {
   const sentenceRef = useRef<{ getValue: any }>();
   const [selected, setSelected] = useState<any>({});
@@ -34,17 +37,28 @@ const CSRenderSentence = ({
           selected={selected}
         />
       </div>
-
-      <CSButton
-        className="sentence-submit"
-        htmlType="submit"
-        onClick={() => {
-          let result = Object.values(sentenceRef.current?.getValue)?.join(" ");
-          setValue(result, id);
-        }}
-      >
-        Confirm
-      </CSButton>
+      <div className="action-btn">
+        <div className="confirm">
+          <CSButton
+            className="sentence-submit"
+            htmlType="submit"
+            icon={<CheckOutlined />}
+            onClick={() => {
+              let result = Object.values(sentenceRef.current?.getValue)?.join(
+                " "
+              );
+              setValue(result, id);
+            }}
+          />
+        </div>
+        <div className="delete">
+          <CSButton
+            icon={<DeleteOutlined />}
+            type="default"
+            onClick={onDelete}
+          />
+        </div>
+      </div>
     </div>
   );
 };

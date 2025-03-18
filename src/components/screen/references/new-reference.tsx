@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import CSButton from "../../theme/atoms/cs-button";
-import { Form, List, Modal, Popconfirm, Spin, Typography } from "antd";
+import {
+  ColorPicker,
+  Form,
+  List,
+  Modal,
+  Popconfirm,
+  Spin,
+  Typography,
+} from "antd";
 import CSInput from "../../theme/atoms/cs-input";
 import CSFormItem from "../../theme/atoms/cs-form-item";
 import { useForm } from "antd/es/form/Form";
@@ -209,6 +217,9 @@ const NewReference = () => {
                 placeholder: "Select Field",
               }}
             />
+            <CSFormItem label="Color" name={"color"}>
+              <ColorPicker size="small" allowClear showText />
+            </CSFormItem>
             <CSButton
               htmlType="submit"
               type="primary"

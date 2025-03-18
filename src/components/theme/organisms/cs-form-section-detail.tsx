@@ -5,6 +5,7 @@ import CSInput from "../atoms/cs-input";
 import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
 import CSLayoutLoader from "../molecules/cs-layout-loader";
 import useFormInstance from "antd/lib/form/hooks/useFormInstance";
+import CSColorPicker from "../atoms/cs-color-picker";
 
 const CSFormFieldDetail = lazy(() => import("./cs-form-field-detail"));
 
@@ -50,6 +51,14 @@ const CSFormSectionDetail = () => {
                       >
                         <CSInput placeholder="Section Order" type="number" />
                       </Form.Item>
+                      <Form.Item name={[index, "color"]}>
+                        <CSColorPicker
+                          size="small"
+                          allowClear
+                          showText
+                          mode={["single", "gradient"]}
+                        />
+                      </Form.Item>
                       <Popconfirm
                         title="Delete Section"
                         description="Do your really want to delete?"
@@ -58,7 +67,7 @@ const CSFormSectionDetail = () => {
                         <CSButton
                           className="dynamic-delete-button"
                           icon={<DeleteFilled />}
-                          type="primary"
+                          style={{ backgroundColor: "tomato", color: "white" }}
                         >
                           {/* Remove Section */}
                         </CSButton>

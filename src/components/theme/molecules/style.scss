@@ -32,16 +32,59 @@
     border: 1px solid rgb(212, 212, 212);
     border-radius: 2px;
     padding: 5px;
-    width: 100%;
+    width: calc(100% - 40px);
     .validator-p {
       margin: 0;
     }
+    height: 5rem;
   }
 
-  .sentence-submit {
-    margin: 6px 0;
-    width: 100%;
-    background-color: rgba(167, 102, 17, 0.623);
-    color: white;
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+
+    .confirm {
+      height: 2.5rem;
+      width: 2.5rem;
+      border-top-right-radius: 4px;
+      overflow: hidden;
+      border: 1px solid #84bb93;
+
+      .cs-button {
+        height: 100%;
+        width: 100%;
+        box-shadow: none;
+        background-color: #66a376;
+        border-radius: 0;
+        span {
+          color: white;
+          font-size: 18px;
+        }
+      }
+    }
+
+    .delete {
+      height: 2.5rem;
+      width: 2.5rem;
+      border-bottom-right-radius: 4px;
+      overflow: hidden;
+      border: 1px solid tomato;
+
+      .cs-button {
+        height: 100%;
+        width: 100%;
+        box-shadow: none;
+        background-color: tomato;
+        border-radius: 0;
+        span {
+          color: white;
+          font-size: 18px;
+        }
+      }
+    }
   }
+}
+
+.job-preview-page {
+  padding: 10px;
 }

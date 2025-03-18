@@ -9,17 +9,49 @@ import {
 } from "@ant-design/icons";
 import { getItem, MenuItem } from "../../../utils/helper/general.helper";
 import useDashboardLayout from "./useDashboardLayout";
+import { useNavigate } from "react-router-dom";
 
 const LayoutSidebar = () => {
+  const navigate = useNavigate();
   const { handleMenuChange, findSelectedMenu } = useDashboardLayout();
 
   const items: MenuItem[] = [
-    getItem("Dashboard", "/", <PieChartOutlined />),
-    getItem("Jobs", "/jobs", <DesktopOutlined />),
-    getItem("Forms", "/forms", <DesktopOutlined />),
-    getItem("References", "/reference", <DesktopOutlined />),
-    getItem("Reports", "/reports", <UserOutlined />),
-    getItem("Floor Plans", "/floor-plans", <FileOutlined />),
+    getItem({
+      key: "Dashboard",
+      label: "Dashboard",
+      icon: <PieChartOutlined />,
+      onTitleClick: () => navigate("/"),
+    }),
+    getItem({
+      key: "Jobs",
+      label: "Jobs",
+      icon: <DesktopOutlined />,
+      onTitleClick: () => navigate("/jobs"),
+    }),
+    getItem({
+      key: "Forms",
+      label: "Forms",
+      icon: <DesktopOutlined />,
+      onTitleClick: () => navigate("/forms"),
+    }),
+    getItem({
+      key: "References",
+      label: "References",
+      icon: <DesktopOutlined />,
+      onTitleClick: () => navigate("/reference"),
+    }),
+    getItem({
+      key: "Reports",
+      label: "Reports",
+      icon: <UserOutlined />,
+      onTitleClick: () => navigate("/reports"),
+    }),
+    getItem({
+      key: "Floor Plans",
+      label: "Floor Plans",
+      icon: <FileOutlined />,
+      onTitleClick: () => navigate("/floor-plans"),
+    }),
   ];
 
   return (
