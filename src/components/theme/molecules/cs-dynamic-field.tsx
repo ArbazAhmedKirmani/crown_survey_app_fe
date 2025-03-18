@@ -8,7 +8,6 @@ import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
 import CSButton from "../atoms/cs-button";
 import { DeleteOutlined } from "@ant-design/icons";
 import { APP_CONSTANTS } from "../../../utils/constants/app.constant";
-import useFormInstance from "antd/es/form/hooks/useFormInstance";
 
 export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
@@ -16,7 +15,7 @@ export interface ICSDynamicField extends PropsWithChildren {
   onChange?: any;
 }
 const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
-  const form = useFormInstance();
+  // const form = useFormInstance();
   const getTypeField = () => {
     if (type)
       switch (type) {

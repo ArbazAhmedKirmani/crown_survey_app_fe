@@ -14,9 +14,9 @@ const NewReference = lazy(
 );
 const ReferencesScreen = lazy(() => import("../screens/reference"));
 const FloorPlan = lazy(() => import("../components/screen/jobs/floor-plan"));
-const FormsScreen = lazy(() => import("../screens/Forms"));
-const Forms = lazy(() => import("../components/screen/forms"));
-const NewForm = lazy(() => import("../components/screen/forms/new-form"));
+// const FormsScreen = lazy(() => import("../screens/Forms"));
+// const Forms = lazy(() => import("../components/screen/forms"));
+// const NewForm = lazy(() => import("../components/screen/forms/new-form"));
 const SignupScreen = lazy(() => import("../screens/authentication/signup"));
 const DashboardScreen = lazy(() => import("../screens/dashboard"));
 
@@ -51,14 +51,14 @@ const AppRouter = createBrowserRouter([
           { path: ":id", element: <NewJobScreen /> },
         ],
       },
-      {
-        path: "forms",
-        element: <FormsScreen />,
-        children: [
-          { index: true, element: <Forms /> },
-          { path: ":id", element: <NewForm /> },
-        ],
-      },
+      // {
+      //   path: "forms",
+      //   element: <FormsScreen />,
+      //   children: [
+      //     { index: true, element: <Forms /> },
+      //     { path: ":id", element: <NewForm /> },
+      //   ],
+      // },
       // {
       //   path: "templates",
       //   element: <TemplateScreen />,

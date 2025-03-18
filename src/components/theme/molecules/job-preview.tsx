@@ -1,4 +1,4 @@
-import { Collapse, Drawer, Modal, theme, Typography } from "antd";
+import { Collapse, Drawer, theme, Typography } from "antd";
 import { useState } from "react";
 import useGetApi from "../../../hooks/use-get-api";
 import { IApiResponse } from "../../../utils/interface/response.interface";
