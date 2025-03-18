@@ -3,25 +3,29 @@
 .new-job-cont {
   background-color: #fff;
   padding: 0;
+  display: flex;
+  height: 100%;
+
+  .first-list {
+    background-color: #fff;
+    overflow-y: auto;
+    max-height: Calc(100vh - 10.4rem);
+  }
 
   .flex-cont {
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
-    margin-bottom: 2px;
-    max-height: Calc(100vh - 12.5rem);
+    width: 100%;
 
-    .first-list,
-    .second-list,
     .content-section {
       display: flex;
       flex-direction: column;
       background-color: #fff;
-      padding-inline: 1rem;
-    }
-    .content-section {
+      padding-inline: 0.3rem;
       flex-grow: 1;
-      overflow-y: auto;
     }
+
     .first-list,
     .second-list {
       border-right: 1px solid lightgray;
@@ -34,7 +38,12 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 6px;
+    background-color: rgba(193, 180, 129, 0.2745098039);
+    padding: 0px 20px;
+    border-radius: 15px;
+    width: Calc(100% - 20px);
+    margin: 5px 0 0 10px;
   }
 }
 

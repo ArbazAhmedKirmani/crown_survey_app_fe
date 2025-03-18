@@ -13,22 +13,66 @@ import {
   SignatureFilled,
 } from "@ant-design/icons";
 import Logo from "../../../assets/icons/logo.svg";
+import { useNavigate } from "react-router-dom";
 
 const LayoutHeader = () => {
+  const navigate = useNavigate();
   const { handleMenuChange, findSelectedMenu } = useDashboardLayout();
 
   const items: MenuItem[] = [
-    getItem("Dashboard", "/", <HomeOutlined />),
-    getItem("Jobs", "/jobs", <SignatureFilled />),
+    getItem({
+      key: "/",
+      label: "Dashboard",
+      icon: <HomeOutlined />,
+      onTitleClick: () => navigate("/"),
+    }),
+    getItem({
+      key: "jobs",
+      label: "Jobs",
+      icon: <SignatureFilled />,
+      onTitleClick: () => navigate("/jobs"),
+    }),
 
-    getItem("Reports", "/reports", <BarChartOutlined />),
-    getItem("Settings", "", <SettingFilled />, [
-      getItem("References", "/reference", <SelectOutlined />),
-      getItem("Forms", "/forms", <FileTextFilled />),
-      getItem("Floor Plans", "/floor-plans", <SelectOutlined />),
-      getItem("Logout", "/logout", <LogoutOutlined />),
-    ]),
+    getItem({
+      key: "reports",
+      label: "Reports",
+      icon: <BarChartOutlined />,
+      onTitleClick: () => navigate("/reports"),
+    }),
+    getItem({
+      key: "setting",
+      label: "Setting",
+      icon: <SettingFilled />,
+      children: [
+        getItem({
+          key: "reference",
+          label: "References",
+          icon: <SelectOutlined />,
+          onTitleClick: () => navigate("/reference"),
+        }),
+        getItem({
+          key: "forms",
+          label: "Forms",
+          icon: <FileTextFilled />,
+          onTitleClick: () => navigate("/forms"),
+        }),
+
+        getItem({
+          key: "Floor-plans",
+          label: "Floor Plans",
+          icon: <SelectOutlined />,
+          onTitleClick: () => navigate("/floor-plan"),
+        }),
+        getItem({
+          key: "Logout",
+          label: "Logout",
+          icon: <LogoutOutlined />,
+          onTitleClick: () => navigate("/reports"),
+        }),
+      ],
+    }),
   ];
+
   return (
     <Header className="layout-header">
       <Row>

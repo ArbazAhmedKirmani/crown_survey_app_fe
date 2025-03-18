@@ -11,6 +11,7 @@ export interface IFormFields {
   response?: boolean;
   placeholder?: string;
   values?: string[];
+  links?: string[];
 }
 
 export interface IFormSection {

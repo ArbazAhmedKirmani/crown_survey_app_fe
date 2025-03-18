@@ -4,19 +4,23 @@ import { APP_CONSTANTS } from "../constants/app.constant";
 
 export type MenuItem = Required<MenuProps>["items"][number];
 
-export const getItem = (
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem => {
+export function getItem(data: {
+  label: React.ReactNode;
+  key: React.Key;
+  icon?: React.ReactNode;
+  children?: MenuItem[];
+  type?: "group";
+  onTitleClick?: (key: any) => void;
+}): MenuItem {
   return {
-    key,
-    icon,
-    children,
-    label,
+    key: data.key,
+    icon: data.icon,
+    children: data.children,
+    label: data.label,
+    type: data.type,
+    onTitleClick: data?.onTitleClick,
   } as MenuItem;
-};
+}
 
 export function createDynamicUrl(
   dynamicUrl: string,
@@ -102,7 +106,7 @@ const stringExtraction = (
     let currentMatch = match[0];
     updatedSentence = updatedSentence.replace(currentMatch, identifier);
     let array = match[1]
-      .split(",")
+      .split("/")
       .map((item: String) => item.trim().replace(/^['"]|['"]$/g, ""));
     return { identifier, array };
   });

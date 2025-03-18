@@ -16,6 +16,7 @@ export const QUERY_STRING = {
     SELECTED_CATEGORY: "_sl_ct",
     SELECTED_REFERENCE: "_sl_rf",
     REFERENCE_NAME: "_rf_nm",
+    FORM_FIELD_IDENTIFIER: "_f_F_id_f",
   },
   FILTERS: {
     DATE_FROM: "_dateFrom",

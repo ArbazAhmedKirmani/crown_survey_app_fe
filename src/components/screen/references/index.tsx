@@ -9,13 +9,16 @@ import useQueryString from "../../../hooks/use-query-string";
 import { QUERY_STRING } from "../../../utils/constants/query.constant";
 import CSTableAction from "../../theme/molecules/cs-table-action";
 import CSCheckbox from "../../theme/atoms/cs-checkbox";
+import usePostApi from "../../../hooks/use-post-api";
+import { useState } from "react";
+import { AxiosMethodEnum } from "../../../utils/enum/general.enum";
 
 const References = () => {
   const { getQuery } = useQueryString();
 
   const page = (getQuery(QUERY_STRING.PAGINATION.PAGE) as string) || "1";
   const search = getQuery(QUERY_STRING.PAGINATION.SEARCH) as string;
-
+  const [reference, setReference] = useState(null);
   const column: (ColumnType<AnyObject> | ColumnGroupType<AnyObject>)[] = [
     {
       title: "Name",
@@ -41,7 +44,15 @@ const References = () => {
       title: "Action",
       key: "action",
       render: (_, record, index) => (
-        <CSTableAction key={index} id={record.id} record={record} />
+        <CSTableAction
+          key={index}
+          id={record.id}
+          record={record}
+          handleDelete={() => {
+            setReference(record.id);
+            mutate(record);
+          }}
+        />
       ),
     },
   ];
@@ -57,11 +68,20 @@ const References = () => {
     },
   });
 
+  const { mutate, isPending } = usePostApi({
+    url: API_ROUTES.reference.getById(reference!),
+    method: AxiosMethodEnum.DELETE,
+    onSuccess: () => {
+      setReference(null);
+    },
+    invalidate: [[API_ROUTES.reference.get, page, search]],
+  });
+
   return (
     <CSTableForm
       columns={column}
       data={data}
-      loading={isLoading}
+      loading={isLoading || isPending}
       newBtnTitle="New Reference"
       navigateUrl="new"
     />

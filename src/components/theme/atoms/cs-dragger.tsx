@@ -60,9 +60,9 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
         setFiles((prev: IFiles[]) => [
           ...prev,
           {
-            id: response.data.data.id,
-            url: response.data.data.url,
-            name: response.data.data?.originalName,
+            id: response?.data?.data?.id,
+            url: response?.data?.data?.url,
+            name: response?.data?.data?.originalName,
           },
         ]);
         setLoading(false);
@@ -91,9 +91,9 @@ const CSDragger = forwardRef((props: ICSDragger, ref) => {
             ...prev.map((file) => {
               if (file.id === id)
                 return {
-                  id: response.data.data.id,
-                  url: response.data.data.url,
-                  name: response.data.data?.originalName,
+                  id: response?.data?.data?.id,
+                  url: response?.data?.data?.url,
+                  name: response?.data?.data?.originalName,
                 };
               else return file;
             }),

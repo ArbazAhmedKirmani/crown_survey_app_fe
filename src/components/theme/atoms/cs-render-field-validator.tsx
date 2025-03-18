@@ -6,7 +6,6 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { SaveFilled } from "@ant-design/icons";
 import CSButton from "./cs-button";
 import { Checkbox, Radio } from "antd";
 
@@ -14,6 +13,7 @@ interface IFormItemSelect {
   part: string;
   dataItem: AnyObject;
   onChange: (e: any, name: string, type: "checkbox" | "radio") => void;
+  selected?: any[];
 }
 interface ICSRenderFieldValidator {
   sentence: string;
@@ -54,34 +54,49 @@ const CSRenderFieldValidator = forwardRef(
           };
         });
       }
-      console.log(_sentence);
     };
 
     return Object.values(_sentence).map((part: string, index: number) => {
       const dataItem = props.data.find((d: any) => d.identifier === part);
 
       if (dataItem) {
-        const inputType = part.includes("**") ? "checkbox" : "radio";
+        const inputType = part?.includes("**") ? "checkbox" : "radio";
 
         return (
-          <span key={part + index}>
+          <span key={part + index} className="cs-render-field-validator">
             {inputType === "checkbox" ? (
               <div style={{ display: "flex", margin: "0 5px" }}>
                 <FormItemSelect.Checkbox
                   dataItem={dataItem}
                   part={part}
                   onChange={handleChange}
+                  selected={props.selected[part]}
                 />
                 <CSButton
-                  icon={<SaveFilled />}
+                  icon={"✓"}
                   size="small"
                   type="primary"
                   onClick={() => {
                     _setSentence((prev: any) => {
                       let obj = { ...prev };
-                      obj[index] = props.selected?.[part].join(", ");
+                      obj[index] = props.selected?.[part]?.join(", ");
                       return obj;
                     });
+                    console.log("props.selected: ", props?.selected);
+                  }}
+                />
+                <CSButton
+                  icon={"×"}
+                  size="small"
+                  onClick={() => {
+                    props.setSelected((prev: AnyObject) => {
+                      const result = {
+                        ...prev,
+                      };
+                      delete result[part];
+                      return result;
+                    });
+                    console.log("props.selected: ", props.selected);
                   }}
                 />
               </div>
@@ -91,9 +106,10 @@ const CSRenderFieldValidator = forwardRef(
                   dataItem={dataItem}
                   part={part}
                   onChange={handleChange}
+                  selected={props.selected[part]}
                 />
                 <CSButton
-                  icon={<SaveFilled />}
+                  icon={"✓"}
                   size="small"
                   type="primary"
                   onClick={() => {
@@ -103,6 +119,21 @@ const CSRenderFieldValidator = forwardRef(
                       return obj;
                     });
                   }}
+                  style={{ height: 20, width: 20 }}
+                />
+                <CSButton
+                  icon={"×"}
+                  size="small"
+                  onClick={() => {
+                    props.setSelected((prev: AnyObject) => {
+                      const result = {
+                        ...prev,
+                      };
+                      delete result[part];
+                      return result;
+                    });
+                  }}
+                  style={{ height: 20, width: 20 }}
                 />
               </div>
             )}
@@ -126,6 +157,8 @@ const FormItemSelect = (props: PropsWithChildren<HTMLInputElement>) => {
 FormItemSelect.Checkbox = (props: IFormItemSelect) => {
   return (
     <Checkbox.Group
+      rootClassName="styled-checkbox-button"
+      value={props.selected}
       options={props.dataItem.array.map((x: any) => ({ label: x, value: x }))}
       onChange={(e) => {
         props.onChange(e, props.part, "checkbox");
@@ -137,16 +170,17 @@ FormItemSelect.Checkbox = (props: IFormItemSelect) => {
 FormItemSelect.Radio = (props: IFormItemSelect) => {
   return (
     <Radio.Group
+      rootClassName="styled-radio-group"
+      value={props.selected}
       block={true}
       size="small"
-      optionType="button"
-      buttonStyle="solid"
       options={props.dataItem.array.map((x: string) => ({
         label: x,
         value: x,
       }))}
-      defaultValue="Apple"
-      onChange={(e) => props.onChange(e, props.part, "radio")}
+      onChange={(e) => {
+        props.onChange(e, props.part, "radio");
+      }}
     />
   );
 };
