@@ -13,3 +13,32 @@
 @forward "../../components/screen/jobs/style.scss";
 @forward "../../components/screen/forms/style.scss";
 @forward "../../components/screen/references/style.scss";
+
+/* Target the entire scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+/* Handle (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: $colorPrimary;
+  border-radius: 6px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $colorPrimaryActive;
+  width: 10px;
+}
+
+/* Track (the area behind the handle) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+/* Corner (where vertical and horizontal scrollbars meet) */
+::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
