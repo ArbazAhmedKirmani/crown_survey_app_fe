@@ -42,7 +42,7 @@ const LoginForm = () => {
           },
         ]}
       >
-        <Input type="password" placeholder="Password" />
+        <Input.Password type="password" placeholder="Password" />
       </CSFormItem>
       <div className="multi-fields">
         <CSFormItem name="remember_me" valuePropName="checked">
