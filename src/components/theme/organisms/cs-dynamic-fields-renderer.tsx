@@ -40,7 +40,7 @@ export interface IFormFieldResponse {
   type: FormFieldType;
   response: boolean;
   placeholder: String;
-  values: string;
+  values: any;
   rating: boolean;
   links: string[];
   FormFieldReference?: {
@@ -218,11 +218,13 @@ const CSDynamicFieldsRenderer = forwardRef(
                     padding: "0 5px",
                   }}
                 >
-                  <ReferenceFields
-                    reference={reference}
-                    setSentence={setSentence}
-                    setReference={setReference}
-                  />
+                  {reference && (
+                    <ReferenceFields
+                      reference={reference}
+                      setSentence={setSentence}
+                      setReference={setReference}
+                    />
+                  )}
                   <FormRating data={data} />
                   <CSFormItem name={"id"} hidden>
                     <input hidden />
@@ -230,6 +232,8 @@ const CSDynamicFieldsRenderer = forwardRef(
                   <CSDynamicField
                     type={data?.data?.type}
                     nestedProps={data?.data}
+                    mutateFn={debounceMutate}
+                    formData={fieldData?.data?.data}
                   />
                   {data?.data?.response && (
                     <JobFormFields
@@ -287,7 +291,7 @@ const FormRating = (props: any) => {
             <div
               className="cs-rating-list"
               style={{
-                backgroundColor: "#fe9926",
+                backgroundColor: "#ffc107",
               }}
             >
               2

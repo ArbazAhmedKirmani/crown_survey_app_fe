@@ -1,21 +1,27 @@
 import { PropsWithChildren, useState } from "react";
 import CSFormItem from "../atoms/cs-form-item";
-import { Checkbox, Form, Radio, Upload, UploadProps } from "antd";
+import { Checkbox, Radio, Upload, UploadProps } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import CSInput from "../atoms/cs-input";
 import { FormFieldType } from "../../../utils/enum/general.enum";
 import { IFormFieldResponse } from "../organisms/cs-dynamic-fields-renderer";
-import CSButton from "../atoms/cs-button";
-import { DeleteOutlined } from "@ant-design/icons";
 import { APP_CONSTANTS } from "../../../utils/constants/app.constant";
+import CSDynamicFieldTableElement from "./cs-dynamic-field-table-element";
 
 export interface ICSDynamicField extends PropsWithChildren {
   type?: FormFieldType;
-  nestedProps?: IFormFieldResponse;
+  nestedProps: IFormFieldResponse;
   onChange?: any;
+  mutateFn: (val: any) => void;
+  formData: Object;
 }
-const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
-  // const form = useFormInstance();
+const CSDynamicField = ({
+  type,
+  nestedProps,
+  onChange,
+  formData,
+  mutateFn,
+}: ICSDynamicField) => {
   const getTypeField = () => {
     if (type)
       switch (type) {
@@ -43,9 +49,14 @@ const CSDynamicField = ({ type, nestedProps, onChange }: ICSDynamicField) => {
           );
         case FormFieldType.TABLE_ELEMENT:
           return (
-            <CSDynamicField.TABLE_ELEMENT
-              onChange={onChange}
-              {...nestedProps}
+            // <CSDynamicField.TABLE_ELEMENT
+            //   onChange={onChange}
+            //   {...nestedProps}
+            // />
+            <CSDynamicFieldTableElement
+              nestedProps={nestedProps}
+              form={formData}
+              mutateFn={mutateFn}
             />
           );
         default:
@@ -66,6 +77,8 @@ CSDynamicField.CHECKBOX = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
+      <label>{props?.placeholder}</label>
+      <br />
       <Checkbox.Group
         key={props.mapperName}
         name={props.mapperName}
@@ -90,6 +103,8 @@ CSDynamicField.RADIO = (props: any) => {
       name={props.mapperName}
       rules={[{ required: props.required, message: "" }]}
     >
+      <label>{props?.placeholder}</label>
+      <br />
       <Radio.Group options={props?.values} />
     </CSFormItem>
   );
@@ -117,48 +132,51 @@ CSDynamicField.DATE = (props: any) => {
     </CSFormItem>
   );
 };
-CSDynamicField.TABLE_ELEMENT = (props: any) => {
-  return (
-    <Form.List name={props.mapperName}>
-      {(fields, { add, remove }) => {
-        return (
-          <div>
-            {fields.map((item, index) => (
-              <div
-                key={item.key}
-                style={{ display: "flex", gap: 10, margin: "0 0 10px" }}
-              >
-                {props?.values?.map?.((x: string, ind: number) => (
-                  <CSFormItem
-                    key={x + ind}
-                    label={x}
-                    name={[index, x]}
-                    // rules={[{ required: props.required, message: "" }]}
-                  >
-                    <CSInput />
-                  </CSFormItem>
-                ))}
-                <CSButton
-                  type="text"
-                  style={{ color: "tomato", marginTop: 21 }}
-                  icon={<DeleteOutlined />}
-                  onClick={() => remove(index)}
-                />
-              </div>
-            ))}
-            <CSButton
-              type="primary"
-              onClick={() => add()}
-              style={{ marginBottom: 10 }}
-            >
-              Add Element
-            </CSButton>
-          </div>
-        );
-      }}
-    </Form.List>
-  );
-};
+// CSDynamicField.TABLE_ELEMENT = (props: any) => {
+//   const form = useFormInstance();
+//   console.log("Form Instance ::: ", form?.getFieldsValue());
+
+//   return (
+//     <Form.List name={props.mapperName}>
+//       {(fields, { add, remove }) => {
+//         return (
+//           <div>
+//             {fields.map((item, index) => (
+//               <div
+//                 key={item.key}
+//                 style={{ display: "flex", gap: 10, margin: "0 0 10px" }}
+//               >
+//                 {props?.values?.map?.((x: string, ind: number) => (
+//                   <CSFormItem
+//                     key={x + ind}
+//                     label={x}
+//                     name={[index, x]}
+//                     // rules={[{ required: props.required, message: "" }]}
+//                   >
+//                     <CSInput />
+//                   </CSFormItem>
+//                 ))}
+//                 <CSButton
+//                   type="text"
+//                   style={{ color: "tomato", marginTop: 21 }}
+//                   icon={<DeleteOutlined />}
+//                   onClick={() => remove(index)}
+//                 />
+//               </div>
+//             ))}
+//             <CSButton
+//               type="primary"
+//               onClick={() => add()}
+//               style={{ marginBottom: 10 }}
+//             >
+//               Add Element
+//             </CSButton>
+//           </div>
+//         );
+//       }}
+//     </Form.List>
+//   );
+// };
 
 CSDynamicField.ACCOMODATION = (props: any) => {
   const value = useState(

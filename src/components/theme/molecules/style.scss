@@ -88,3 +88,19 @@
 .job-preview-page {
   padding: 10px;
 }
+
+.cs-job-field-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 10;
+
+  div > label {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}

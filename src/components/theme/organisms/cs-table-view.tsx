@@ -93,6 +93,7 @@ const CSTableForm = (props: ICSTableView) => {
       {centerSection}
 
       <CSTable
+        rootClassName="new-job-table"
         loading={loading}
         dataSource={data?.data || []}
         columns={columns}
