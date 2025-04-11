@@ -24,14 +24,7 @@ const CSJobFieldPagination = (props: ICSJobFieldPagination) => {
 
   return (
     data?.[index] && (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-evenly",
-          gap: 10,
-        }}
-      >
+      <div className="cs-job-field-pagination">
         <CSButton
           icon={<LeftOutlined />}
           onClick={() => {

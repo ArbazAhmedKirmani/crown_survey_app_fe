@@ -81,7 +81,7 @@ const NewJob = () => {
       setPdfDownload(true);
       const token = localStorage.getItem(APP_CONSTANTS.AUTH.AUTH_TOKEN);
       const response = await fetch(
-        APP_CONSTANTS.API.BASE_URL + API_ROUTES.jobs.generatePdf(param.id),
+        APP_CONSTANTS.API.BASE_URL + API_ROUTES.jobs.generateForm(param.id),
         {
           method: AxiosMethodEnum.GET,
           headers: {
